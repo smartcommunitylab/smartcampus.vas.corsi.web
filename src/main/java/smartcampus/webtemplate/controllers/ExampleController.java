@@ -184,8 +184,7 @@ public class ExampleController {
 		try {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 
-			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-					serverAddress, appName);
+			CommunicatorConnector communicatorConnector = null;
 
 			List<Notification> result = communicatorConnector.getNotifications(
 					0L, 0, -1, token);
@@ -254,7 +253,13 @@ public class ExampleController {
 		return socialsrv.getGroups(token);
 	}
 
-	
+	@RequestMapping(method = RequestMethod.GET, value = "/gettime")
+	public @ResponseBody
+	String getTime(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+			throws IOException {
+			return "ciao";
+	}
 
 	
 	
