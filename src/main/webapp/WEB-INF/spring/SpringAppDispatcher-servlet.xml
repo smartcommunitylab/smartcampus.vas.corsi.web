@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2012-2013 Trento RISE Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. -->
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util" xmlns:mongo="http://www.springframework.org/schema/data/mongo" xmlns:sec="http://www.springframework.org/schema/security"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xmlns:sec="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
     http://www.springframework.org/schema/mvc 
     http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
@@ -20,8 +24,16 @@
 	<!-- Scan controllers in this package -->
 	<context:component-scan base-package="smartcampus.webtemplate.controllers"/>
 
-	<context:property-placeholder location="classpath:webtemplate.properties"/>
+	<context:property-placeholder location="classpath:corsi.properties"/>
 
+	
+		<mongo:mongo host="${smartcampus.vas.web.mongo.host}" port="${smartcampus.vas.web.mongo.port}" />
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongo" />
+		<constructor-arg name="databaseName"
+			value="${smartcampus.vas.web.mongo.db}" />
+	</bean>
 
 	<bean id="acClient" class="eu.trentorise.smartcampus.ac.provider.filters.AcClient">
 		<property name="endpointUrl" value="https://vas-dev.smartcampuslab.it/acService"/>

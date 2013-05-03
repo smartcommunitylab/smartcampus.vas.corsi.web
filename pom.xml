@@ -22,6 +22,13 @@
 			<version>${ac-service-provider-api}</version>
 			<type>jar</type>
 		</dependency>
+		
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>syncstorage.web</artifactId>
+			<version>1.1</version>
+		</dependency>
+		
 
 		<!-- this -->
 		<dependency>
