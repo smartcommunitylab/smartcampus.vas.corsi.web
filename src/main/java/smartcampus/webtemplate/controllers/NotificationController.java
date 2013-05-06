@@ -72,7 +72,7 @@ public class NotificationController
 	/*
 	 * Example to get the profile of the authenticated user.
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/getnotify")
+	@RequestMapping(method = RequestMethod.GET, value = "/notifiche/get")
 	public @ResponseBody
 	
 	List<Notification> getNotifications(HttpServletRequest request, HttpServletResponse response, HttpSession session)

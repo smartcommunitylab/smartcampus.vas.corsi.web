@@ -21,6 +21,8 @@ public class Corsi
 	//descrizione del corso
 	private String descrizione;
 	
+	//lista dei commenti del corso
+	private List<Commento> commenti;
 	
 	public Corsi()
 	{
