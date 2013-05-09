@@ -6,21 +6,11 @@ public class CorsiLite
 	private int id;
 	
 	//nome del corso
-	private String name;
+	private String nome;
 	
 	
 	public CorsiLite()
 	{
-	}
-
-	public String getName()
-	{
-		return name;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
 	}
 
 	public int getId()
@@ -31,6 +21,14 @@ public class CorsiLite
 	public void setId(int id)
 	{
 		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 	
 	

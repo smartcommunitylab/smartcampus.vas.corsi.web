@@ -9,6 +9,7 @@ import it.sayservice.platform.smartplanner.data.message.otpbeans.Route;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.CorsiLite;
+import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.discovertrento.DiscoverTrentoConnector;
 import eu.trentorise.smartcampus.dt.model.EventObject;
 import eu.trentorise.smartcampus.dt.model.ObjectFilter;
@@ -49,11 +51,11 @@ import eu.trentorise.smartcampus.socialservice.SocialService;
 import eu.trentorise.smartcampus.socialservice.SocialServiceException;
 import eu.trentorise.smartcampus.socialservice.model.Group;
 
-@Controller("corsiController")
-public class CorsiController extends SCController
+@Controller("eventiController")
+public class EventiController extends SCController
 {
 	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
-	private static final Logger logger = Logger.getLogger(CorsiController.class);
+	private static final Logger logger = Logger.getLogger(EventiController.class);
 	@Autowired
 	private AcService acService;
 
@@ -78,7 +80,7 @@ public class CorsiController extends SCController
 	@RequestMapping(method = RequestMethod.GET, value = "/corsi/all")
 	public @ResponseBody
 	
-	List<CorsiLite> getCorsiAll(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	List<Evento> getEventi(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 	
 	throws IOException
 	{
@@ -88,110 +90,37 @@ public class CorsiController extends SCController
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 						
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
+			ArrayList<Evento> list = new ArrayList<Evento>();
 			
-			CorsiLite c = new CorsiLite();
-			c.setId(1);
-			c.setNome("Fisica dei materiali");
-			list.add(c);	
+			Evento e = new Evento();
+			e.setId(1);
+			e.setNome("Evento 1");
+			e.setLuogo("A101");
+			e.setData_inizio(new Date(2013,5,6,9,0));
+			e.setData_fine(new Date(2013,5,6,12,0));
+			e.setRicorrente(false);
 			
-			c = new CorsiLite();
-			c.setId(1);
-			c.setNome("Analisi matematica 2");
-			list.add(c);	
-			
-			c = new CorsiLite();
-			c.setId(1);
-			c.setNome("Lettere 1");
-			list.add(c);	
-			
-			return list;
-		}
-		catch (Exception e)
-		{
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-	
-	/*
-	 *   Ritorna tutti i corsi della facoltˆ in versione lite
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/facolta")
-	public @ResponseBody
-	
-	List<CorsiLite> getCorsiFacolta(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			ArrayList<String> note = new ArrayList<String>();
+			note.add("sono una nota di prova");
+			note.add("Sono anche io una nota di prova");
+			e.setNote(note);
 						
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
+			list.add(e);	
 			
-			CorsiLite c = new CorsiLite();
-			c.setId(1);
-			c.setNome("Analisi matematica 3");
-			list.add(c);	
 			
-			c = new CorsiLite();
-			c.setId(1);
-			c.setNome("Chimica 2");
-			list.add(c);	
+		
+			e = new Evento();
+			e.setNome("Evento 2");
+			e.setLuogo("A103");
+			e.setRicorrente(true);
 			
-			c = new CorsiLite();
-			c.setId(1);
-			c.setNome("Fisica 2");
-			list.add(c);	
+			CorsiLite corso = new CorsiLite();
+			corso.setId(10);
+			corso.setNome("Programmazione 1");
+			e.setCorso(corso);
 			
-			return list;
-		}
-		catch (Exception e)
-		{
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-	
-	/*
-	 *   Ritorna tutti i corsi dal libretto dell'utente in versione lite
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/frequentati")
-	public @ResponseBody
-	
-	List<CorsiLite> getCorsiLibrettoUtente(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			list.add(e);
 			
-			User us = retrieveUser(request);
-			
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
-			
-			CorsiLite c = new CorsiLite();
-			c.setId(1);
-			c.setNome("Analisi matematica 1");
-			list.add(c);	
-			
-			c = new CorsiLite();
-			c.setId(1);
-			c.setNome("Matematica Discreta 1");
-			list.add(c);	
-			
-			c = new CorsiLite();
-			c.setId(1);
-			c.setNome("Programmazione 2");
-			list.add(c);	
 			
 			return list;
 		}
@@ -202,38 +131,4 @@ public class CorsiController extends SCController
 		return null;
 	}
 	
-	
-	/*
-	 *   Ritorna il corso dato l'id
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/{id}")
-	public @ResponseBody
-	
-	List<CorsiLite> getCorsoByID(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") String id)
-	
-	throws IOException
-	{
-		try
-		{
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-						
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
-			
-			String id_corso = request.getParameter("id");
-			
-			CorsiLite c = new CorsiLite();
-			c.setId(1);
-			c.setNome("id vale " + id);
-			list.add(c);		
-			
-			return list;
-		}
-		catch (Exception e)
-		{
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
 }

@@ -4,11 +4,14 @@ import java.util.Date;
 
 public class Commento
 {	
+	//id del commento
+	private int id;
+	
 	//testo del commento
 	private String testo;
 	
-	//data in cui è stato scritto commento
-	private Date data;
+	//data in cui e' stato scritto commento
+	private Date data_inserimento;
 	
 	//utente che ha scritto commento
 	private UtenteCorsi autore;
@@ -30,12 +33,12 @@ public class Commento
 
 	public Date getData()
 	{
-		return data;
+		return data_inserimento;
 	}
 
-	public void setData(Date data)
+	public void setData(Date data_inserimento)
 	{
-		this.data = data;
+		this.data_inserimento = data_inserimento;
 	}
 
 	public UtenteCorsi getAutore()
@@ -46,6 +49,14 @@ public class Commento
 	public void setAutore(UtenteCorsi autore)
 	{
 		this.autore = autore;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	
