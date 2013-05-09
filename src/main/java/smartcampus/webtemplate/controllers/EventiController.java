@@ -75,9 +75,9 @@ public class EventiController extends SCController
 	
 	
 	/*
-	 *   Ritorna tutti i corsi in versione lite
+	 *   Ritorna tutti gli eventi
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/eventi/all")
 	public @ResponseBody
 	
 	List<Evento> getEventi(HttpServletRequest request, HttpServletResponse response, HttpSession session)

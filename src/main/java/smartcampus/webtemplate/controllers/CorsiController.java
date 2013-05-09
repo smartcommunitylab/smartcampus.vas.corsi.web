@@ -116,7 +116,7 @@ public class CorsiController extends SCController
 	
 	
 	/*
-	 *   Ritorna tutti i corsi della facoltˆ in versione lite
+	 *   Ritorna tutti i corsi della facolta' in versione lite
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsi/facolta")
 	public @ResponseBody
@@ -147,6 +147,44 @@ public class CorsiController extends SCController
 			c.setId(1);
 			c.setNome("Fisica 2");
 			list.add(c);	
+			
+			return list;
+		}
+		catch (Exception e)
+		{
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	/*
+	 * Ritorna tutti i corsi del dipartimento in versione lite
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corsi/dipartimento")
+	public @ResponseBody
+	
+	List<CorsiLite> getCorsiDipartimento(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	
+	throws IOException
+	{
+		try
+		{
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+						
+			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
+			
+			CorsiLite c = new CorsiLite();
+			c.setId(1);
+			c.setNome("Analisi matematica 3");
+			list.add(c);	
+			
+			c = new CorsiLite();
+			c.setId(1);
+			c.setNome("Analisi 2");
+			list.add(c);		
 			
 			return list;
 		}
