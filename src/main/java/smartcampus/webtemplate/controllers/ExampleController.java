@@ -212,6 +212,7 @@ public class ExampleController
 			CommunicatorConnector communicatorConnector = null;
 
 			List<Notification> result = communicatorConnector.getNotifications(0L, 0, -1, token);
+			
 			return (List<Notification>) result;
 		}
 		catch (Exception e)

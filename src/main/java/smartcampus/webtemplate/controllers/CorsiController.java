@@ -116,12 +116,12 @@ public class CorsiController extends SCController
 	
 	
 	/*
-	 *   Ritorna tutti i corsi della facolta' in versione lite
+	 *   Ritorna tutti i corsi del corso di laurea in versione lite
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/facolta")
+	@RequestMapping(method = RequestMethod.GET, value = "/corsi/laurea")
 	public @ResponseBody
 	
-	List<CorsiLite> getCorsiFacolta(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	List<CorsiLite> getCorsiLaurea(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 	
 	throws IOException
 	{

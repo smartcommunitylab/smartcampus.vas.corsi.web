@@ -89,11 +89,15 @@ public class NotificationController
 			
 			Notification n = new Notification();
 			n.setTitle("Lezione sospesa");
-			n.setDescription("Le lezioni del corso di Logica (Serafini, Ghidini, Maltese) previste Martedi' 30 Aprile sono sospese");
+			n.setUser("10");
+			n.setTimestamp(System.currentTimeMillis());
+			n.setDescription("Le lezione del corso di Logica (Serafini, Ghidini, Maltese) previste Martedi' 30 Aprile sono sospese");
 			list.add(n);	
 			
 			n = new Notification();
 			n.setTitle("Lezione spostata");
+			n.setUser("20");
+			n.setTimestamp(System.currentTimeMillis());
 			n.setDescription("MATEMATICA DISCRETA 2 (prof. S. Baratella) : la lezione di Venerdi' 3 Maggio, ore 10.30-12.30, si terr� in aula A102 anzich� A105");
 			list.add(n);
 			
