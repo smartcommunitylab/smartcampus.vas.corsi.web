@@ -16,6 +16,9 @@ public class Commento
 	//utente che ha scritto commento
 	private UtenteCorsi autore;
 	
+	//valutazione commento
+	private float valutazione;
+	
 	
 	public Commento()
 	{
@@ -51,12 +54,24 @@ public class Commento
 		this.autore = autore;
 	}
 
-	public int getId() {
+	public int getId() 
+	{
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(int id) 
+	{
 		this.id = id;
+	}
+
+	public float getValutazione()
+	{
+		return valutazione;
+	}
+
+	public void setValutazione(float valutazione)
+	{
+		this.valutazione = valutazione;
 	}
 	
 	

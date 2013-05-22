@@ -34,7 +34,7 @@ import eu.trentorise.smartcampus.communicator.CommunicatorConnectorException;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.controllers.SCController;
-import eu.trentorise.smartcampus.corsi.model.CorsiLite;
+import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.discovertrento.DiscoverTrentoConnector;
 import eu.trentorise.smartcampus.dt.model.EventObject;
@@ -77,10 +77,10 @@ public class EventiController extends SCController
 	/*
 	 *   Ritorna tutti gli eventi
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/eventi/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/eventi/{id}")
 	public @ResponseBody
 	
-	List<Evento> getEventi(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	List<Evento> getEventi(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") String id)
 	
 	throws IOException
 	{
@@ -89,39 +89,20 @@ public class EventiController extends SCController
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
+			
+			String id_corso = request.getParameter("id");
+
 						
 			ArrayList<Evento> list = new ArrayList<Evento>();
 			
-			Evento e = new Evento();
-			e.setId(1);
-			e.setNome("Evento 1");
-			e.setLuogo("A101");
-			e.setData_inizio(new Date(2013,5,6,9,0));
-			e.setData_fine(new Date(2013,5,6,12,0));
-			e.setRicorrente(false);
+			Evento e1 = new Evento();
+			e1.setAll_day(true);
+			e1.setTitolo("Analisi 1");
+			e1.setDescrizione("Descrizione di prova");
+			e1.setGuests_can_invite(false);
 			
-			ArrayList<String> note = new ArrayList<String>();
-			note.add("sono una nota di prova");
-			note.add("Sono anche io una nota di prova");
-			e.setNote(note);
+			list.add(e1);
 						
-			list.add(e);	
-			
-			
-		
-			e = new Evento();
-			e.setNome("Evento 2");
-			e.setLuogo("A103");
-			e.setRicorrente(true);
-			
-			CorsiLite corso = new CorsiLite();
-			corso.setId(10);
-			corso.setNome("Programmazione 1");
-			e.setCorso(corso);
-			
-			list.add(e);
-			
-			
 			return list;
 		}
 		catch (Exception e)

@@ -1,10 +1,11 @@
 package eu.trentorise.smartcampus.corsi.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
-public class Corsi
+public class Corso
 {
 	//id del corso
 	private int id;
@@ -22,10 +23,15 @@ public class Corsi
 	private String descrizione;
 	
 	//lista dei commenti del corso
-	private List<Commento> commenti;
+	private ArrayList<Commento> commenti;
 	
-	public Corsi()
+	//valutazione media di tutti gli UtenteCorsi
+	private float valutazione_media;
+	
+	
+	public Corso()
 	{
+		this.commenti = new ArrayList();
 	}
 
 	public int getId()
@@ -33,9 +39,9 @@ public class Corsi
 		return id;
 	}
 
-	public void setId(int id)
+	public void setId(int id_corso)
 	{
-		this.id = id;
+		this.id = id_corso;
 	}
 
 	public String getNome()
@@ -76,6 +82,26 @@ public class Corsi
 	public void setDescrizione(String descrizione)
 	{
 		this.descrizione = descrizione;
+	}
+
+	public List<Commento> getCommenti()
+	{
+		return commenti;
+	}
+
+	public void setCommenti(ArrayList<Commento> commenti)
+	{
+		this.commenti = commenti;
+	}
+
+	public float getValutazione_media()
+	{
+		return valutazione_media;
+	}
+
+	public void setValutazione_media(float valutazione_media)
+	{
+		this.valutazione_media = valutazione_media;
 	}
 	
 }

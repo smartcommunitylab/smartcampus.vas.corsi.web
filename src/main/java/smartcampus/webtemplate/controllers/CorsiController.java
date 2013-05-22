@@ -9,6 +9,7 @@ import it.sayservice.platform.smartplanner.data.message.otpbeans.Route;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,10 @@ import eu.trentorise.smartcampus.communicator.CommunicatorConnectorException;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.controllers.SCController;
-import eu.trentorise.smartcampus.corsi.model.CorsiLite;
+import eu.trentorise.smartcampus.corsi.model.Commento;
+import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.CorsoLite;
+import eu.trentorise.smartcampus.corsi.model.UtenteCorsi;
 import eu.trentorise.smartcampus.discovertrento.DiscoverTrentoConnector;
 import eu.trentorise.smartcampus.dt.model.EventObject;
 import eu.trentorise.smartcampus.dt.model.ObjectFilter;
@@ -48,6 +52,7 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.socialservice.SocialService;
 import eu.trentorise.smartcampus.socialservice.SocialServiceException;
 import eu.trentorise.smartcampus.socialservice.model.Group;
+
 
 @Controller("corsiController")
 public class CorsiController extends SCController
@@ -78,7 +83,7 @@ public class CorsiController extends SCController
 	@RequestMapping(method = RequestMethod.GET, value = "/corsi/all")
 	public @ResponseBody
 	
-	List<CorsiLite> getCorsiAll(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	List<CorsoLite> getCorsiAll(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 	
 	throws IOException
 	{
@@ -88,20 +93,20 @@ public class CorsiController extends SCController
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 						
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
+			ArrayList<CorsoLite> list = new ArrayList<CorsoLite>();
 			
-			CorsiLite c = new CorsiLite();
+			CorsoLite c = new CorsoLite();
 			c.setId(1);
 			c.setNome("Fisica dei materiali");
 			list.add(c);	
 			
-			c = new CorsiLite();
-			c.setId(1);
+			c = new CorsoLite();
+			c.setId(2);
 			c.setNome("Analisi matematica 2");
 			list.add(c);	
 			
-			c = new CorsiLite();
-			c.setId(1);
+			c = new CorsoLite();
+			c.setId(3);
 			c.setNome("Lettere 1");
 			list.add(c);	
 			
@@ -121,7 +126,7 @@ public class CorsiController extends SCController
 	@RequestMapping(method = RequestMethod.GET, value = "/corsi/laurea")
 	public @ResponseBody
 	
-	List<CorsiLite> getCorsiLaurea(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	List<CorsoLite> getCorsiLaurea(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 	
 	throws IOException
 	{
@@ -131,20 +136,20 @@ public class CorsiController extends SCController
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 						
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
+			ArrayList<CorsoLite> list = new ArrayList<CorsoLite>();
 			
-			CorsiLite c = new CorsiLite();
+			CorsoLite c = new CorsoLite();
 			c.setId(1);
 			c.setNome("Analisi matematica 3");
 			list.add(c);	
 			
-			c = new CorsiLite();
-			c.setId(1);
+			c = new CorsoLite();
+			c.setId(2);
 			c.setNome("Chimica 2");
 			list.add(c);	
 			
-			c = new CorsiLite();
-			c.setId(1);
+			c = new CorsoLite();
+			c.setId(3);
 			c.setNome("Fisica 2");
 			list.add(c);	
 			
@@ -164,7 +169,7 @@ public class CorsiController extends SCController
 	@RequestMapping(method = RequestMethod.GET, value = "/corsi/dipartimento")
 	public @ResponseBody
 	
-	List<CorsiLite> getCorsiDipartimento(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	List<CorsoLite> getCorsiDipartimento(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 	
 	throws IOException
 	{
@@ -174,15 +179,15 @@ public class CorsiController extends SCController
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 						
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
+			ArrayList<CorsoLite> list = new ArrayList<CorsoLite>();
 			
-			CorsiLite c = new CorsiLite();
+			CorsoLite c = new CorsoLite();
 			c.setId(1);
 			c.setNome("Analisi matematica 3");
 			list.add(c);	
 			
-			c = new CorsiLite();
-			c.setId(1);
+			c = new CorsoLite();
+			c.setId(2);
 			c.setNome("Analisi 2");
 			list.add(c);		
 			
@@ -202,7 +207,7 @@ public class CorsiController extends SCController
 	@RequestMapping(method = RequestMethod.GET, value = "/corsi/frequentati")
 	public @ResponseBody
 	
-	List<CorsiLite> getCorsiLibrettoUtente(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	List<CorsoLite> getCorsiLibrettoUtente(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 	
 	throws IOException
 	{
@@ -214,20 +219,20 @@ public class CorsiController extends SCController
 			
 			User us = retrieveUser(request);
 			
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
+			ArrayList<CorsoLite> list = new ArrayList<CorsoLite>();
 			
-			CorsiLite c = new CorsiLite();
+			CorsoLite c = new CorsoLite();
 			c.setId(1);
 			c.setNome("Analisi matematica 1");
 			list.add(c);	
 			
-			c = new CorsiLite();
-			c.setId(1);
+			c = new CorsoLite();
+			c.setId(2);
 			c.setNome("Matematica Discreta 1");
 			list.add(c);	
 			
-			c = new CorsiLite();
-			c.setId(1);
+			c = new CorsoLite();
+			c.setId(3);
 			c.setNome("Programmazione 2");
 			list.add(c);	
 			
@@ -247,7 +252,7 @@ public class CorsiController extends SCController
 	@RequestMapping(method = RequestMethod.GET, value = "/corsi/{id}")
 	public @ResponseBody
 	
-	List<CorsiLite> getCorsoByID(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") String id)
+	Corso getCorsoByID(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") String id)
 	
 	throws IOException
 	{
@@ -256,17 +261,40 @@ public class CorsiController extends SCController
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
-						
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
-			
+					
 			String id_corso = request.getParameter("id");
+
+			Corso corso = new Corso();
+			corso.setId(10);
+			corso.setNome("Analisi 2");
+			corso.setData_inizio(new Date("10/01/2013"));
+			corso.setData_fine(new Date("01/06/2013"));
+			corso.setValutazione_media(7);
+			corso.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut " +
+					"labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut " +
+					"aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum " +
+					"dolore eu fugiat nulla pariatur.");	
 			
-			CorsiLite c = new CorsiLite();
-			c.setId(1);
-			c.setNome("id vale " + id);
-			list.add(c);		
 			
-			return list;
+			ArrayList<Commento> commenti = new ArrayList<Commento>();
+			
+			Commento co = new Commento();
+			UtenteCorsi utente = new UtenteCorsi();
+			utente.setId(50);
+			utente.setNome("Gino Paoli");
+			
+			co.setAutore(utente);
+			co.setData(new Date("20/03/2013"));
+			co.setId(44);
+			co.setTesto("Bella materia, bel corso.. peccato che faccia dare i numeri!");
+			co.setValutazione(7);
+			
+			commenti.add(co);
+			
+			corso.setCommenti(commenti);
+
+			
+			return corso;
 		}
 		catch (Exception e)
 		{

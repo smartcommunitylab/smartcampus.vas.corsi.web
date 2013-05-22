@@ -1,6 +1,6 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-public class CorsiLite
+public class CorsoLite
 {
 	//id del corso
 	private int id;
@@ -9,7 +9,7 @@ public class CorsiLite
 	private String nome;
 	
 	
-	public CorsiLite()
+	public CorsoLite()
 	{
 	}
 
