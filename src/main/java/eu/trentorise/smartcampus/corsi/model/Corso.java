@@ -28,6 +28,9 @@ public class Corso
 	//valutazione media di tutti gli UtenteCorsi
 	private float valutazione_media;
 	
+	//seguo o non seguo il corso
+	private boolean seguito;
+	
 	
 	public Corso()
 	{
@@ -102,6 +105,14 @@ public class Corso
 	public void setValutazione_media(float valutazione_media)
 	{
 		this.valutazione_media = valutazione_media;
+	}
+
+	public Boolean getSeguito() {
+		return seguito;
+	}
+
+	public void setSeguito(Boolean seguito) {
+		this.seguito = seguito;
 	}
 	
 }
