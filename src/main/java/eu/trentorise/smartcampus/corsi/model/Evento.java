@@ -20,8 +20,14 @@ public class Evento
 	// where the place takes places 
 	private String event_location;
 	
+	// the room where the place takes places 
+	private String room;
+	
 	// the description of the event
 	private String descrizione;
+	
+	// the description of the event
+	private ArrayList<Nota> note;
 	
 	// The time the event starts in UTC milliseconds since the epoch
 	private Date dt_start;
@@ -47,9 +53,9 @@ public class Evento
 	
 	// Whether guests can modify the event.
 	private boolean guests_can_modify;
-	
-	// Whether guests can invite other guests
-	private boolean guests_can_invite;
+
+//	// Whether guests can invite other guests
+//	private boolean guests_can_invite;
 		
 	// Whether guests can see the list of attendees
 	private boolean guests_can_see;
@@ -232,16 +238,16 @@ public class Evento
 	}
 
 
-	public boolean isGuests_can_invite()
-	{
-		return guests_can_invite;
-	}
-
-
-	public void setGuests_can_invite(boolean guests_can_invite)
-	{
-		this.guests_can_invite = guests_can_invite;
-	}
+//	public boolean isGuests_can_invite()
+//	{
+//		return guests_can_invite;
+//	}
+//
+//
+//	public void setGuests_can_invite(boolean guests_can_invite)
+//	{
+//		this.guests_can_invite = guests_can_invite;
+//	}
 
 
 	public boolean isGuests_can_see()
@@ -265,5 +271,25 @@ public class Evento
 	public void setIstanze(ArrayList<Istanza> istanze)
 	{
 		this.istanze = istanze;
+	}
+
+
+	public String getRoom() {
+		return room;
+	}
+
+
+	public void setRoom(String room) {
+		this.room = room;
+	}
+
+
+	public ArrayList<Nota> getNote() {
+		return note;
+	}
+
+
+	public void setNote(ArrayList<Nota> note) {
+		this.note = note;
 	}
 }

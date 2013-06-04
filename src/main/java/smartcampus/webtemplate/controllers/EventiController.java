@@ -79,7 +79,6 @@ public class EventiController extends SCController
 			e1.setAll_day(true);
 			e1.setTitolo("Analisi 1");
 			e1.setDescrizione("Descrizione di prova");
-			e1.setGuests_can_invite(false);
 			
 			list.add(e1);
 						

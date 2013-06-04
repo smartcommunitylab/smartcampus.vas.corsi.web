@@ -101,6 +101,13 @@ public class NotificationController
 			n.setDescription("MATEMATICA DISCRETA 2 (prof. S. Baratella) : la lezione di Venerdi' 3 Maggio, ore 10.30-12.30, si terr� in aula A102 anzich� A105");
 			list.add(n);
 			
+			n = new Notification();
+			n.setTitle("Vogliamo piu lavoro sul client");
+			n.setUser("30");
+			n.setTimestamp(System.currentTimeMillis());
+			n.setDescription("Ma che bella è l'UniTN?");
+			list.add(n);
+			
 			return list;
 		}
 		catch (Exception e)

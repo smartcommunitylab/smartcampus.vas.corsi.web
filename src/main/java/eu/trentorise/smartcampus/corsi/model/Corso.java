@@ -31,6 +31,9 @@ public class Corso
 	//seguo o non seguo il corso
 	private boolean seguito;
 	
+	//aula del corso
+	private String aula;
+	
 	
 	public Corso()
 	{
@@ -113,6 +116,14 @@ public class Corso
 
 	public void setSeguito(Boolean seguito) {
 		this.seguito = seguito;
+	}
+
+	public String getAula() {
+		return aula;
+	}
+
+	public void setAula(String aula) {
+		this.aula = aula;
 	}
 	
 }
