@@ -38,6 +38,7 @@ import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.UtenteCorsi;
+import eu.trentorise.smartcampus.corsi.repository.CorsoLiteRepository;
 import eu.trentorise.smartcampus.discovertrento.DiscoverTrentoConnector;
 import eu.trentorise.smartcampus.dt.model.EventObject;
 import eu.trentorise.smartcampus.dt.model.ObjectFilter;
@@ -77,6 +78,10 @@ public class CorsiController extends SCController
 	private String appName;
 	
 	
+	@Autowired
+	private CorsoLiteRepository corsoLiteRepository;
+	
+	
 	/*
 	 *   Ritorna tutti i corsi in versione lite
 	 */
@@ -91,26 +96,24 @@ public class CorsiController extends SCController
 		{
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-						
-			ArrayList<CorsoLite> list = new ArrayList<CorsoLite>();
+		
 			
 			CorsoLite c = new CorsoLite();
-			c.setId(1);
+		
 			c.setNome("Fisica dei materiali");
-			list.add(c);	
+			corsoLiteRepository.save(c);
 			
 			c = new CorsoLite();
-			c.setId(2);
+		
 			c.setNome("Analisi matematica 2");
-			list.add(c);	
+			corsoLiteRepository.save(c);
 			
 			c = new CorsoLite();
-			c.setId(3);
+	
 			c.setNome("Lettere 1");
-			list.add(c);	
+			corsoLiteRepository.save(c);
 			
-			return list;
+			return corsoLiteRepository.findAll();
 		}
 		catch (Exception e)
 		{

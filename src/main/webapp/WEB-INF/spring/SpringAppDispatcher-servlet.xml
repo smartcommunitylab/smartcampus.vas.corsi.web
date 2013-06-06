@@ -55,6 +55,6 @@
 		<constructor-arg name="mongoDbFactory" ref="factory" />
 	</bean>
 	
-	
+	<import resource="datalayer.xml"/>
 	
 </beans>
