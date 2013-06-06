@@ -3,79 +3,66 @@ package eu.trentorise.smartcampus.corsi.model;
 import java.util.Date;
 import java.util.List;
 
-
-public class Corsi
-{
-	//id del corso
+public class Corsi {
+	// id del corso
 	private int id;
-	
-	//nome del corso
+
+	// nome del corso
 	private String nome;
-	
-	//data di inizio del corso
+
+	// data di inizio del corso
 	private Date data_inizio;
-	
-	//data di fine del corso
+
+	// data di fine del corso
 	private Date data_fine;
-	
-	//descrizione del corso
+
+	// descrizione del corso
 	private String descrizione;
-	
-	//lista dei commenti del corso
+
+	// lista dei commenti del corso
 	private List<Commento> commenti;
-	
-	public Corsi()
-	{
+
+	public Corsi() {
 	}
 
-	public int getId()
-	{
+	public int getId() {
 		return id;
 	}
 
-	public void setId(int id)
-	{
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getNome()
-	{
+	public String getNome() {
 		return nome;
 	}
 
-	public void setNome(String nome)
-	{
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-	public Date getData_inizio()
-	{
+	public Date getData_inizio() {
 		return data_inizio;
 	}
 
-	public void setData_inizio(Date data_inizio)
-	{
+	public void setData_inizio(Date data_inizio) {
 		this.data_inizio = data_inizio;
 	}
 
-	public Date getData_fine()
-	{
+	public Date getData_fine() {
 		return data_fine;
 	}
 
-	public void setData_fine(Date data_fine)
-	{
+	public void setData_fine(Date data_fine) {
 		this.data_fine = data_fine;
 	}
 
-	public String getDescrizione()
-	{
+	public String getDescrizione() {
 		return descrizione;
 	}
 
-	public void setDescrizione(String descrizione)
-	{
+	public void setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
 	}
-	
+
 }

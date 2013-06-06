@@ -1,37 +1,29 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-public class CorsiLite
-{
-	//id del corso
+public class CorsiLite {
+	// id del corso
 	private int id;
-	
-	//nome del corso
+
+	// nome del corso
 	private String name;
-	
-	
-	public CorsiLite()
-	{
+
+	public CorsiLite() {
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public int getId()
-	{
+	public int getId() {
 		return id;
 	}
 
-	public void setId(int id)
-	{
+	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
+
 }

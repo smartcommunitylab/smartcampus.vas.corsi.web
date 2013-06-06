@@ -8,7 +8,6 @@ import it.sayservice.platform.smartplanner.data.message.journey.SingleJourney;
 import it.sayservice.platform.smartplanner.data.message.otpbeans.Route;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
-import eu.trentorise.smartcampus.communicator.CommunicatorConnectorException;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.discovertrento.DiscoverTrentoConnector;
 import eu.trentorise.smartcampus.dt.model.EventObject;
@@ -46,11 +43,11 @@ import eu.trentorise.smartcampus.socialservice.SocialServiceException;
 import eu.trentorise.smartcampus.socialservice.model.Group;
 
 @Controller("exampleController")
-public class ExampleController
-{
+public class ExampleController {
 
 	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
-	private static final Logger logger = Logger.getLogger(ExampleController.class);
+	private static final Logger logger = Logger
+			.getLogger(ExampleController.class);
 	@Autowired
 	private AcService acService;
 
@@ -73,21 +70,18 @@ public class ExampleController
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/getprofile")
 	public @ResponseBody
-	
-	BasicProfile getProfile(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
+	BasicProfile getProfile(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
-			
+
 			return profile;
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -98,21 +92,18 @@ public class ExampleController
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/getroutes")
 	public @ResponseBody
-	
-	List<Route> getRoutes(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
+	List<Route> getRoutes(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			JourneyPlannerConnector journeyPlannerConnector = new JourneyPlannerConnector(serverAddress);
+			JourneyPlannerConnector journeyPlannerConnector = new JourneyPlannerConnector(
+					serverAddress);
 			List<Route> routes = journeyPlannerConnector.getRoutes("12", token);
-			
+
 			return routes;
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -123,41 +114,39 @@ public class ExampleController
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/plansinglejourney")
 	public @ResponseBody
-	
-	List<Itinerary> planSingleJourney(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
+	List<Itinerary> planSingleJourney(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			JourneyPlannerConnector journeyPlannerConnector = new JourneyPlannerConnector(serverAddress);
-			
+			JourneyPlannerConnector journeyPlannerConnector = new JourneyPlannerConnector(
+					serverAddress);
+
 			SingleJourney req = new SingleJourney();
 			req.setDate("03/28/2013");
 			req.setDepartureTime("10:25");
-			
+
 			Position from = new Position();
 			from.setLat("46.062005");
 			from.setLon("11.129169");
-			
+
 			Position to = new Position();
 			to.setLat("46.068854");
 			to.setLon("11.151184");
-			
+
 			req.setFrom(from);
 			req.setTo(to);
-			
+
 			TType[] tt = new TType[] { TType.TRANSIT };
 			req.setTransportTypes(tt);
 			req.setResultsNumber(1);
 			req.setRouteType(RType.fastest);
 
-			List<Itinerary> itineraries = journeyPlannerConnector.planSingleJourney(req, token);
+			List<Itinerary> itineraries = journeyPlannerConnector
+					.planSingleJourney(req, token);
 			return itineraries;
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -168,29 +157,28 @@ public class ExampleController
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/getconcerts")
 	public @ResponseBody
-	
-	List<EventObject> getConterts(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
+	List<EventObject> getConterts(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			DiscoverTrentoConnector discoverTrentoConnector = new DiscoverTrentoConnector(serverAddress);
-			
-			ObjectFilter filter = new ObjectFilter();		
+			DiscoverTrentoConnector discoverTrentoConnector = new DiscoverTrentoConnector(
+					serverAddress);
+
+			ObjectFilter filter = new ObjectFilter();
 			filter.setClassName(EVENT_OBJECT);
 			filter.setType("Concerts");
 			filter.setFromTime(System.currentTimeMillis());
-			
-			Map<String, List<?>> result = discoverTrentoConnector.getObjects(filter, token);
+
+			Map<String, List<?>> result = discoverTrentoConnector.getObjects(
+					filter, token);
 
 			@SuppressWarnings("unchecked")
-			List<EventObject> list = (List<EventObject>) result.get(EVENT_OBJECT);
+			List<EventObject> list = (List<EventObject>) result
+					.get(EVENT_OBJECT);
 			return list;
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -201,21 +189,18 @@ public class ExampleController
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/getnotifications")
 	public @ResponseBody
-	
-	List<Notification> getNotifications(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
+	List<Notification> getNotifications(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			CommunicatorConnector communicatorConnector = null;
 
-			List<Notification> result = communicatorConnector.getNotifications(0L, 0, -1, token);
+			List<Notification> result = communicatorConnector.getNotifications(
+					0L, 0, -1, token);
 			return (List<Notification>) result;
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -227,11 +212,9 @@ public class ExampleController
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/appaccount")
 	public @ResponseBody
-	
 	List<AppAccount> getAppAccounts(HttpServletRequest request)
-	
-	throws FilestorageException
-	{
+
+	throws FilestorageException {
 		Filestorage filestorage = new Filestorage(serverAddress, "hackathon");
 		return filestorage.getAppAccounts();
 	}
@@ -243,11 +226,9 @@ public class ExampleController
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/useraccount")
 	public @ResponseBody
-	
 	List<UserAccount> getuserAccounts(HttpServletRequest request)
-	
-	throws FilestorageException
-	{
+
+	throws FilestorageException {
 		String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 		Filestorage filestorage = new Filestorage(serverAddress, "hackathon");
 
@@ -261,15 +242,14 @@ public class ExampleController
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/metadata")
 	public @ResponseBody
-	
 	Metadata getResourceMetadata(HttpServletRequest request)
-	
-	throws FilestorageException
-	{
+
+	throws FilestorageException {
 		String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 		Filestorage filestorage = new Filestorage(serverAddress, "hackathon");
-		
-		return filestorage.getResourceMetadata(token, "513da746975aa4412a383769");
+
+		return filestorage.getResourceMetadata(token,
+				"513da746975aa4412a383769");
 	}
 
 	/*
@@ -278,23 +258,19 @@ public class ExampleController
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/group")
 	public @ResponseBody
-	
 	List<Group> getUsergroups(HttpServletRequest request)
-	
-	throws SecurityException, SocialServiceException
-	{
+
+	throws SecurityException, SocialServiceException {
 		String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 		SocialService socialsrv = new SocialService(serverAddress);
-		
+
 		return socialsrv.getGroups(token);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/gettime")
 	public @ResponseBody
-	
-	String getTime(HttpServletRequest request, HttpServletResponse response,HttpSession session) 
-	throws IOException
-	{
+	String getTime(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session) throws IOException {
 		return "it works";
 	}
 
