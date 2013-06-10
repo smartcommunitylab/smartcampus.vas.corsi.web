@@ -12,18 +12,22 @@ public class CorsoLite
 	//id del corso
 	@Id
 	@GeneratedValue
-	private int id;
+	private long id;
 	
 	//nome del corso
 	@Column(name = "NOME")
 	private String nome;
+	
+	//nome del corso
+	@Column(name = "FK_DIPARTIMENTO")
+	private long dipartimento;
 	
 	
 	public CorsoLite()
 	{
 	}
 
-	public int getId()
+	public long getId()
 	{
 		return id;
 	}
@@ -39,6 +43,14 @@ public class CorsoLite
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public long getDipartimento() {
+		return dipartimento;
+	}
+
+	public void setDipartimento(long dipartimento) {
+		this.dipartimento = dipartimento;
 	}
 	
 	

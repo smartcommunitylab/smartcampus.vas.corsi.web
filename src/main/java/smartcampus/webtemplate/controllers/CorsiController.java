@@ -98,6 +98,7 @@ public class CorsiController extends SCController
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 		
 			
+			//TEST
 			CorsoLite c = new CorsoLite();
 		
 			c.setNome("Fisica dei materiali");
@@ -112,6 +113,8 @@ public class CorsiController extends SCController
 	
 			c.setNome("Lettere 1");
 			corsoLiteRepository.save(c);
+			
+			//TEST
 			
 			return corsoLiteRepository.findAll();
 		}
