@@ -197,5 +197,49 @@ public class CorsiController extends SCController {
 		}
 		return null;
 	}
-
+	
+	
+	
+	
+	/*
+	 *   Ritorna una lista di ciao "number" volte solo se il profilo è autenticato
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/prova/{number}")
+	public @ResponseBody
+	
+	ArrayList<String> getCiao(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("number") String number)
+	
+	throws IOException
+	{
+		
+		ArrayList<String> lista;
+		
+		try
+		{
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+						
+			if(profile!=null){
+				lista = new ArrayList<String>();
+				String num = request.getParameter("number");
+				int numInt = Integer.valueOf(num);
+				
+				
+				for(int i=0;i<numInt;i++){
+					lista.add("ciao");
+				}
+			}else{
+				return null;
+			}
+			
+			
+			return lista;
+		}
+		catch (Exception e)
+		{
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
 }
