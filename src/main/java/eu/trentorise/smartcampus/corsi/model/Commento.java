@@ -4,10 +4,16 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQuery(name = "Commento.getCommentoByCorsoId",
+query = "select c from Commento c where c.corso = ?1")
 public class Commento {
 	// id del commento
 	@Id
@@ -31,8 +37,9 @@ public class Commento {
 	private float valutazione;
 
 	// valutazione commento
-	@Column(name = "id_corso")
-	private long id_corso;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "corso_id")
+	private Corso corso;
 
 	public Commento() {
 	}
@@ -53,9 +60,7 @@ public class Commento {
 		this.data_inserimento = data_inserimento;
 	}
 
-	public long getId_corso() {
-		return id_corso;
-	}
+	
 
 	public Date getData_inserimento() {
 		return data_inserimento;
@@ -69,9 +74,7 @@ public class Commento {
 		this.data_inserimento = data_inserimento;
 	}
 
-	public void setId_corso(long id_corso) {
-		this.id_corso = id_corso;
-	}
+	
 
 	public void setId_studente(long id_studente) {
 		this.id_studente = id_studente;
@@ -91,6 +94,14 @@ public class Commento {
 
 	public void setValutazione(float valutazione) {
 		this.valutazione = valutazione;
+	}
+
+	public Corso getCorso() {
+		return corso;
+	}
+
+	public void setCorso(Corso corso) {
+		this.corso = corso;
 	}
 
 }

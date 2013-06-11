@@ -5,5 +5,6 @@
 	<persistence-unit name="corsi.db">
 		<class>eu.trentorise.smartcampus.corsi.model.CorsoLite</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Commento</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.Corso</class>
 	</persistence-unit>
 </persistence>

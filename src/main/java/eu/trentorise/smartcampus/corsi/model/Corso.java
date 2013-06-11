@@ -4,10 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+@Entity
 public class Corso
 {
 	//id del corso
+	@Id
+	@GeneratedValue
 	private int id;
 	
 	//nome del corso
@@ -23,6 +31,7 @@ public class Corso
 	private String descrizione;
 	
 	//lista dei commenti del corso
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "corso")
 	private ArrayList<Commento> commenti;
 	
 	//valutazione media di tutti gli UtenteCorsi

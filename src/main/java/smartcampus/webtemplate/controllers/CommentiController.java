@@ -21,7 +21,9 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Commento;
+import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
+import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 
 @Controller("commentiController")
@@ -50,6 +52,9 @@ public class CommentiController extends SCController {
 	@Autowired
 	private CommentiRepository commentiRepository;
 	
+	@Autowired
+	private CorsoRepository corsoRepository;
+	
 	
 	/*
 	 *   Ritorna tutte le recensioni dato l'id di un corso
@@ -57,7 +62,7 @@ public class CommentiController extends SCController {
 	@RequestMapping(method = RequestMethod.GET, value = "/commenti/{id_corso}")
 	public @ResponseBody
 	
-	List<Commento> getCorsiAll(HttpServletRequest request, HttpServletResponse response, HttpSession session,  @PathVariable("id_corso") long id_corso)
+	List<Commento> getCommentoByCorsoId(HttpServletRequest request, HttpServletResponse response, HttpSession session,  @PathVariable("id_corso") long id_corso)
 	
 	throws IOException
 	{
@@ -70,32 +75,34 @@ public class CommentiController extends SCController {
 			//TEST
 			Commento c = new Commento();
 		
+			Corso x= corsoRepository.findOne(id_corso);
+			
 			Date d = new Date("2013/06/11");
 			c.setData_inserimento(d);
-			c.setTesto("questa è una valutazione del corso. Una valutazione valutazione valutazione.");
+			c.setTesto("questa ï¿½ una valutazione del corso. Una valutazione valutazione valutazione.");
 			c.setValutazione(3);
 			c.setId_studente(41432);
-			c.setId_corso(id_corso);
+			c.setCorso(x);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			
 			c = new Commento();
 		
 			c.setData_inserimento(d);
-			c.setTesto("questa è una valutazione del corso. Una valutazione valutazione valutazione.");
+			c.setTesto("questa ï¿½ una valutazione del corso. Una valutazione valutazione valutazione.");
 			c.setValutazione(3);
 			c.setId_studente(41432);
-			c.setId_corso(id_corso);
+			c.setCorso(x);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			
 			c = new Commento();
 	
 			c.setData_inserimento(d);
-			c.setTesto("questa è una valutazione del corso. Una valutazione valutazione valutazione.");
+			c.setTesto("questa ï¿½ una valutazione del corso. Una valutazione valutazione valutazione.");
 			c.setValutazione(3);
 			c.setId_studente(41432);
-			c.setId_corso(id_corso);
+			c.setCorso(x);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			
