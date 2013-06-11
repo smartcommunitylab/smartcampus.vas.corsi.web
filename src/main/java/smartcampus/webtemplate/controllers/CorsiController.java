@@ -289,7 +289,7 @@ public class CorsiController extends SCController
 			utente.setId(50);
 			utente.setNome("Gino Paoli");
 			
-			co.setAutore(utente);
+			co.setId_studente(1);
 			co.setData(new Date("20/03/2013"));
 			co.setId(44);
 			co.setTesto("Bella materia, bel corso.. peccato che faccia dare i numeri!");
@@ -308,4 +308,7 @@ public class CorsiController extends SCController
 		}
 		return null;
 	}
+	
+	
+	
 }
