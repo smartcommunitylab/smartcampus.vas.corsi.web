@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -16,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
-import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 
 @Controller("notificationController")
 public class NotificationController
 {
-
+	private static final Logger logger = Logger
+			.getLogger(NotificationController.class);
 	@Autowired
 	private AcService acService;
 
@@ -93,6 +94,8 @@ public class NotificationController
 		}
 		catch (Exception e)
 		{
+			logger.error(e.getMessage());
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;

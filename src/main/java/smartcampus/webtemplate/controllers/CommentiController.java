@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 public class CommentiController extends SCController {
 
 
-	//private static final Logger logger = Logger.getLogger(CommentiController.class);
+	private static final Logger logger = Logger.getLogger(CommentiController.class);
 	
 	
 	@Autowired
@@ -178,6 +179,8 @@ public class CommentiController extends SCController {
 		}
 		catch (Exception e)
 		{
+			logger.error(e.getMessage());
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;

@@ -18,7 +18,7 @@ public class CorsoLite
 	@Column(name = "NOME")
 	private String nome;
 	
-	//nome del corso
+	//nome del dipartimento
 	@Column(name = "FK_DIPARTIMENTO")
 	private long dipartimento;
 	
