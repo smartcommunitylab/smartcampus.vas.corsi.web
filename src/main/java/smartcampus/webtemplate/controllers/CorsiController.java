@@ -1,17 +1,13 @@
 package smartcampus.webtemplate.controllers;
 
-import it.sayservice.platform.smartplanner.data.message.Itinerary;
-import it.sayservice.platform.smartplanner.data.message.Position;
-import it.sayservice.platform.smartplanner.data.message.RType;
-import it.sayservice.platform.smartplanner.data.message.TType;
-import it.sayservice.platform.smartplanner.data.message.journey.SingleJourney;
-import it.sayservice.platform.smartplanner.data.message.otpbeans.Route;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.ListIterator;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,38 +24,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
-import eu.trentorise.smartcampus.ac.provider.model.User;
-import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
-import eu.trentorise.smartcampus.communicator.CommunicatorConnectorException;
-import eu.trentorise.smartcampus.communicator.model.Notification;
-import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.UtenteCorsi;
-import eu.trentorise.smartcampus.corsi.repository.CorsoLiteRepository;
-import eu.trentorise.smartcampus.discovertrento.DiscoverTrentoConnector;
-import eu.trentorise.smartcampus.dt.model.EventObject;
-import eu.trentorise.smartcampus.dt.model.ObjectFilter;
-import eu.trentorise.smartcampus.filestorage.client.Filestorage;
-import eu.trentorise.smartcampus.filestorage.client.FilestorageException;
-import eu.trentorise.smartcampus.filestorage.client.model.AppAccount;
-import eu.trentorise.smartcampus.filestorage.client.model.Metadata;
-import eu.trentorise.smartcampus.filestorage.client.model.UserAccount;
-import eu.trentorise.smartcampus.journeyplanner.JourneyPlannerConnector;
+import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.socialservice.SocialService;
-import eu.trentorise.smartcampus.socialservice.SocialServiceException;
-import eu.trentorise.smartcampus.socialservice.model.Group;
 
 
 @Controller("corsiController")
-public class CorsiController extends SCController
-{
+public class CorsiController  extends SCController {
+
+	
 	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
-	private static final Logger logger = Logger.getLogger(CorsiController.class);
+	private static final Logger logger = Logger.getLogger(CorsiLiteController.class);
 	@Autowired
 	private AcService acService;
 
@@ -79,186 +59,20 @@ public class CorsiController extends SCController
 	
 	
 	@Autowired
-	private CorsoLiteRepository corsoLiteRepository;
+	private CorsoRepository corsoRepository;
+	
+	
+	
+	
 	
 	
 	/*
-	 *   Ritorna tutti i corsi in versione lite
+	 *   Ritorna i dati completi di un corso dato l'id
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/corsi/{id_corso}")
 	public @ResponseBody
 	
-	List<CorsoLite> getCorsiAll(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-		
-			
-			//TEST
-			CorsoLite c = new CorsoLite();
-		
-			c.setNome("Fisica dei materiali");
-			corsoLiteRepository.save(c);
-			
-			c = new CorsoLite();
-		
-			c.setNome("Analisi matematica 2");
-			corsoLiteRepository.save(c);
-			
-			c = new CorsoLite();
-	
-			c.setNome("Lettere 1");
-			corsoLiteRepository.save(c);
-			
-			//TEST
-			
-			return corsoLiteRepository.findAll();
-		}
-		catch (Exception e)
-		{
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-	
-	/*
-	 *   Ritorna tutti i corsi del corso di laurea in versione lite
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/laurea")
-	public @ResponseBody
-	
-	List<CorsoLite> getCorsiLaurea(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-						
-			ArrayList<CorsoLite> list = new ArrayList<CorsoLite>();
-			
-			CorsoLite c = new CorsoLite();
-			c.setId(1);
-			c.setNome("Analisi matematica 3");
-			list.add(c);	
-			
-			c = new CorsoLite();
-			c.setId(2);
-			c.setNome("Chimica 2");
-			list.add(c);	
-			
-			c = new CorsoLite();
-			c.setId(3);
-			c.setNome("Fisica 2");
-			list.add(c);	
-			
-			return list;
-		}
-		catch (Exception e)
-		{
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-	
-	/*
-	 * Ritorna tutti i corsi del dipartimento in versione lite
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/dipartimento")
-	public @ResponseBody
-	
-	List<CorsoLite> getCorsiDipartimento(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-						
-			ArrayList<CorsoLite> list = new ArrayList<CorsoLite>();
-			
-			CorsoLite c = new CorsoLite();
-			c.setId(1);
-			c.setNome("Analisi matematica 3");
-			list.add(c);	
-			
-			c = new CorsoLite();
-			c.setId(2);
-			c.setNome("Analisi 2");
-			list.add(c);		
-			
-			return list;
-		}
-		catch (Exception e)
-		{
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-	
-	/*
-	 *   Ritorna tutti i corsi dal libretto dell'utente in versione lite
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/frequentati")
-	public @ResponseBody
-	
-	List<CorsoLite> getCorsiLibrettoUtente(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			
-			User us = retrieveUser(request);
-			
-			ArrayList<CorsoLite> list = new ArrayList<CorsoLite>();
-			
-			CorsoLite c = new CorsoLite();
-			c.setId(1);
-			c.setNome("Analisi matematica 1");
-			list.add(c);	
-			
-			c = new CorsoLite();
-			c.setId(2);
-			c.setNome("Matematica Discreta 1");
-			list.add(c);	
-			
-			c = new CorsoLite();
-			c.setId(3);
-			c.setNome("Programmazione 2");
-			list.add(c);	
-			
-			return list;
-		}
-		catch (Exception e)
-		{
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-	
-	/*
-	 *   Ritorna il corso dato l'id
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/{id}")
-	public @ResponseBody
-	
-	Corso getCorsoByID(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") String id)
+	Corso getCorsoByID(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id_corso") String id)
 	
 	throws IOException
 	{
@@ -268,7 +82,7 @@ public class CorsiController extends SCController
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 					
-			String id_corso = request.getParameter("id");
+			String id_corso = request.getParameter("id_corso");
 
 			Corso corso = new Corso();
 			corso.setId(10);
@@ -282,20 +96,18 @@ public class CorsiController extends SCController
 					"dolore eu fugiat nulla pariatur.");	
 			
 			
-			ArrayList<Commento> commenti = new ArrayList<Commento>();
+			List<Commento> commenti = new ArrayList<Commento>();
+
 			
-			Commento co = new Commento();
-			UtenteCorsi utente = new UtenteCorsi();
-			utente.setId(50);
-			utente.setNome("Gino Paoli");
-			
-			co.setId_studente(1);
-			co.setData(new Date("20/03/2013"));
-			co.setId(44);
-			co.setTesto("Bella materia, bel corso.. peccato che faccia dare i numeri!");
-			co.setValutazione(7);
-			
-			commenti.add(co);
+			Date data = new Date("2013/04/23");
+			for(int i=0 ;i<10;i++){
+				Commento co = new Commento();
+				co.setCorso(corso);
+				co.setData_inserimento(data);
+				co.setTesto("Commento del corso Commento del corso Commento del corso Commento del corso. ");
+				co.setValutazione(4);
+				commenti.add(co);
+			}
 			
 			corso.setCommenti(commenti);
 
@@ -308,7 +120,6 @@ public class CorsiController extends SCController
 		}
 		return null;
 	}
-	
 	
 	
 }
