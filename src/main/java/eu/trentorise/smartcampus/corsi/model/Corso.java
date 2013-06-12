@@ -14,17 +14,9 @@ import javax.persistence.OneToMany;
 
 
 @Entity
-public class Corso
+public class Corso extends CorsoLite
 {
-	//id del corso
-	@Id
-	@GeneratedValue
-	private long id;
-	
-	//nome del corso
-	@Column(name = "nome")
-	private String nome;
-	
+		
 	//data di inizio del corso
 	@Column(name = "data_inizio")
 	private Date data_inizio;
@@ -60,26 +52,7 @@ public class Corso
 		
 	}
 
-	public long getId()
-	{
-		return id;
-	}
-
-	public void setId(long id_corso)
-	{
-		this.id = id_corso;
-	}
-
-	public String getNome()
-	{
-		return nome;
-	}
-
-	public void setNome(String nome)
-	{
-		this.nome = nome;
-	}
-
+	
 	public Date getData_inizio()
 	{
 		return data_inizio;

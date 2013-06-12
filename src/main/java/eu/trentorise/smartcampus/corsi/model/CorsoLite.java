@@ -18,7 +18,7 @@ public class CorsoLite
 	@Column(name = "NOME")
 	private String nome;
 	
-	//nome del corso
+	//nome del dipartimento
 	@Column(name = "FK_DIPARTIMENTO")
 	private long dipartimento;
 	
@@ -32,7 +32,7 @@ public class CorsoLite
 		return id;
 	}
 
-	public void setId(int id)
+	public void setId(long id)
 	{
 		this.id = id;
 	}

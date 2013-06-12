@@ -1,8 +1,6 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,19 +9,24 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+		//@NamedQuery(name = "Evento.findEventoByUser", query = "select c from Evento c where c.corso = ?1"),
+		@NamedQuery(name = "Evento.findEventoByCorso", query = "select c from Evento c where c.corso = ?1") })
 public class Evento {
 	// id dell'evento
 	@Id
 	@GeneratedValue
 	private long id;
 
-	 // corso di riferimento
-//	 @Column(name = "CORSOLITE")
-	 @ManyToOne
-	 @JoinColumn(name = "CORSO_LITE")
-	 private CorsoLite corsoLite;
+	// corso di riferimento
+	// @Column(name = "CORSOLITE")
+	@ManyToOne
+	@JoinColumn(name = "idCORSO")
+	private Corso corso;
 
 	// mail of the owner
 	@Column(name = "ORGANIZER")
@@ -47,9 +50,9 @@ public class Evento {
 	private String descrizione;
 
 	// the description of the event
-	/*@Column(name = "NOTE")
-	private ArrayList<Nota> note;
-*/
+	/*
+	 * @Column(name = "NOTE") private ArrayList<Nota> note;
+	 */
 	// The time the event starts in UTC milliseconds since the epoch
 	@Column(name = "START")
 	private Date dt_start;
@@ -95,10 +98,9 @@ public class Evento {
 	private boolean guests_can_see;
 
 	// List of all istance of the event
-/*	@Column(name = "ISTANZE")
-	private List<Istanza> istanze;
-*/
-	
+	/*
+	 * @Column(name = "ISTANZE") private List<Istanza> istanze;
+	 */
 
 	public long getId() {
 		return id;
@@ -108,13 +110,13 @@ public class Evento {
 		this.id = id;
 	}
 
-	 public CorsoLite getCorsoLite() {
-	 return corsoLite;
-	 }
-	
-	 public void setCorsoLite(CorsoLite corsoLite) {
-	 this.corsoLite = corsoLite;
-	 }
+	public Corso getCorso() {
+		return corso;
+	}
+
+	public void setCorso(Corso corso) {
+		this.corso = corso;
+	}
 
 	public String getOrganizer() {
 		return organizer;
@@ -228,8 +230,6 @@ public class Evento {
 		this.guests_can_see = guests_can_see;
 	}
 
-	
-
 	public String getRoom() {
 		return room;
 	}
@@ -238,5 +238,4 @@ public class Evento {
 		this.room = room;
 	}
 
-	
 }
