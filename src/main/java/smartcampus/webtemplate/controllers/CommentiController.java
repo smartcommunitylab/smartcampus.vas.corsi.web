@@ -25,6 +25,7 @@ import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
+import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("commentiController")
 public class CommentiController extends SCController {
@@ -70,20 +71,90 @@ public class CommentiController extends SCController {
 		{
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			
+			
+			if(profile!=null){
+				//TEST
+				Commento c = new Commento();
+			
+				//Corso x= corsoRepository.findOne(id_corso);
+				
+				Date d = new Date("2013/06/11");
+				c.setData_inserimento(d);
+				c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
+				c.setValutazione(3);
+				c.setId_studente(41432);
+				//////////////////////////////////////c.setCorso(x);
+				c.setData_inserimento(d);
+				commentiRepository.save(c);
+				
+				c = new Commento();
+			
+				c.setData_inserimento(d);
+				c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
+				c.setValutazione(3);
+				c.setId_studente(41432);
+				//////////////////////////////////////c.setCorso(x);
+				c.setData_inserimento(d);
+				commentiRepository.save(c);
+				
+				c = new Commento();
+		
+				c.setData_inserimento(d);
+				c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
+				c.setValutazione(3);
+				c.setId_studente(41432);
+				//////////////////////////////////////c.setCorso(x);
+				c.setData_inserimento(d);
+				commentiRepository.save(c);
+				
+				//TEST
+				
+				return commentiRepository.findAll();
+				
+			}else{
+				return null;
+			}
+				
+			
+			
+		}
+		catch (Exception e)
+		{
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
+	/*
+	 *   Ritorna tutte le recensioni dato l'id di un corso
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/commenti/all")
+	public @ResponseBody
+	
+	List<Commento> getCommentoAll(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+	
+	throws IOException
+	{
+		try
+		{
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 		
 			
 			//TEST
 			Commento c = new Commento();
-		
-			Corso x= corsoRepository.findOne(id_corso);
 			
 			Date d = new Date("2013/06/11");
 			c.setData_inserimento(d);
 			c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
 			c.setValutazione(3);
 			c.setId_studente(41432);
-			c.setCorso(x);
-			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			
 			c = new Commento();
@@ -92,7 +163,6 @@ public class CommentiController extends SCController {
 			c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
 			c.setValutazione(3);
 			c.setId_studente(41432);
-			c.setCorso(x);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			
@@ -102,7 +172,6 @@ public class CommentiController extends SCController {
 			c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
 			c.setValutazione(3);
 			c.setId_studente(41432);
-			c.setCorso(x);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			
@@ -116,6 +185,5 @@ public class CommentiController extends SCController {
 		}
 		return null;
 	}
-	
 	
 }

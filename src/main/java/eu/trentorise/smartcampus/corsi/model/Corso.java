@@ -1,18 +1,15 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 @Entity
 public class Corso
@@ -23,15 +20,19 @@ public class Corso
 	private int id;
 	
 	//nome del corso
+	@Column(name = "nome")
 	private String nome;
 	
 	//data di inizio del corso
+	@Column(name = "data_inizio")
 	private Date data_inizio;
 	
 	//data di fine del corso
+	@Column(name = "data_fine")
 	private Date data_fine;
 	
 	//descrizione del corso
+	@Column(name = "descrizione")
 	private String descrizione;
 	
 	//lista dei commenti del corso
@@ -39,12 +40,15 @@ public class Corso
 	private List<Commento> commenti;
 	
 	//valutazione media di tutti gli UtenteCorsi
+	@Column(name = "valutazione_media")
 	private float valutazione_media;
 	
 	//seguo o non seguo il corso
+	@Column(name = "seguito")
 	private boolean seguito;
 	
 	//aula del corso
+	@Column(name = "aula")
 	private String aula;
 	
 	
