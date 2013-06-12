@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -21,17 +20,17 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Commento;
-import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
-import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("commentiController")
 public class CommentiController extends SCController {
 
-	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
-	private static final Logger logger = Logger.getLogger(CommentiController.class);
+
+	//private static final Logger logger = Logger.getLogger(CommentiController.class);
+	
+	
 	@Autowired
 	private AcService acService;
 
@@ -71,20 +70,21 @@ public class CommentiController extends SCController {
 		{
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+		
+			long userId=Long.valueOf(profileConnector.getBasicProfile(token).getUserId());
 			
 			
-			if(profile!=null){
 				//TEST
 				Commento c = new Commento();
 			
 				//Corso x= corsoRepository.findOne(id_corso);
 				
+				@SuppressWarnings("deprecation")
 				Date d = new Date("2013/06/11");
 				c.setData_inserimento(d);
 				c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
 				c.setValutazione(3);
-				c.setId_studente(41432);
+				c.setId_studente(userId);
 				//////////////////////////////////////c.setCorso(x);
 				c.setData_inserimento(d);
 				commentiRepository.save(c);
@@ -94,7 +94,7 @@ public class CommentiController extends SCController {
 				c.setData_inserimento(d);
 				c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
 				c.setValutazione(3);
-				c.setId_studente(41432);
+				c.setId_studente(userId);
 				//////////////////////////////////////c.setCorso(x);
 				c.setData_inserimento(d);
 				commentiRepository.save(c);
@@ -104,7 +104,7 @@ public class CommentiController extends SCController {
 				c.setData_inserimento(d);
 				c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
 				c.setValutazione(3);
-				c.setId_studente(41432);
+				c.setId_studente(userId);
 				//////////////////////////////////////c.setCorso(x);
 				c.setData_inserimento(d);
 				commentiRepository.save(c);
@@ -112,11 +112,7 @@ public class CommentiController extends SCController {
 				//TEST
 				
 				return commentiRepository.findAll();
-				
-			}else{
-				return null;
-			}
-				
+			
 			
 			
 		}
@@ -145,16 +141,17 @@ public class CommentiController extends SCController {
 		{
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-		
+			long userId=Long.valueOf(profileConnector.getBasicProfile(token).getUserId());
 			
 			//TEST
 			Commento c = new Commento();
 			
+			@SuppressWarnings("deprecation")
 			Date d = new Date("2013/06/11");
 			c.setData_inserimento(d);
 			c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
 			c.setValutazione(3);
-			c.setId_studente(41432);
+			c.setId_studente(userId);
 			commentiRepository.save(c);
 			
 			c = new Commento();
@@ -162,7 +159,7 @@ public class CommentiController extends SCController {
 			c.setData_inserimento(d);
 			c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
 			c.setValutazione(3);
-			c.setId_studente(41432);
+			c.setId_studente(userId);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			
@@ -171,7 +168,7 @@ public class CommentiController extends SCController {
 			c.setData_inserimento(d);
 			c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
 			c.setValutazione(3);
-			c.setId_studente(41432);
+			c.setId_studente(userId);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			

@@ -1,18 +1,15 @@
 package smartcampus.webtemplate.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,23 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mongodb.Mongo;
-
 import eu.trentorise.smartcampus.ac.provider.AcService;
-import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
-
-import eu.trentorise.smartcampus.profileservice.ProfileConnector;
-import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 
 @Controller("eventiController")
 public class EventiController extends SCController
 {
-	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
-	private static final Logger logger = Logger.getLogger(EventiController.class);
+	
 	@Autowired
 	private AcService acService;
 
@@ -67,10 +57,7 @@ public class EventiController extends SCController
 	{
 		try
 		{
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			
+		
 			
 			Evento e = new Evento();
 			e.setAll_day(true);

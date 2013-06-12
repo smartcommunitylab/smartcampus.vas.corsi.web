@@ -2,18 +2,13 @@ package smartcampus.webtemplate.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -27,8 +22,6 @@ import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
-import eu.trentorise.smartcampus.corsi.model.CorsoLite;
-import eu.trentorise.smartcampus.corsi.model.UtenteCorsi;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
@@ -36,9 +29,8 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 @Controller("corsiController")
 public class CorsiController extends SCController {
 
-	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
-	private static final Logger logger = Logger
-			.getLogger(CorsiLiteController.class);
+	
+	//private static final Logger logger = Logger.getLogger(CorsiLiteController.class);
 	@Autowired
 	private AcService acService;
 
@@ -129,6 +121,7 @@ public class CorsiController extends SCController {
 	/*
 	 * Ritorna i dati completi di un corso dato l'id
 	 */
+	@SuppressWarnings("deprecation")
 	@RequestMapping(method = RequestMethod.GET, value = "/corsi/{id_corso}")
 	public @ResponseBody
 	Corso getCorsoByID(HttpServletRequest request,
@@ -137,15 +130,12 @@ public class CorsiController extends SCController {
 
 	throws IOException {
 		try {
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-
-			String id_corso = request.getParameter("id_corso");
+		
+		
+			long id_corso = Long.valueOf(request.getParameter("id_corso"));
 
 			Corso corso = new Corso();
-			corso.setId(10);
+			corso.setId(id_corso);
 			corso.setNome("Analisi 2");
 			corso.setData_inizio(new Date("10/01/2013"));
 			corso.setData_fine(new Date("01/06/2013"));
@@ -168,8 +158,10 @@ public class CorsiController extends SCController {
 			}
 
 			corso.setCommenti(commenti);
+			
+			corsoRepository.save(corso);
 
-			return corso;
+			return corsoRepository.findOne(id_corso);
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

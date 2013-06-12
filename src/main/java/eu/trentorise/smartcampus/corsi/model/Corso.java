@@ -12,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Cascade;
-
 
 @Entity
 public class Corso
@@ -21,7 +19,7 @@ public class Corso
 	//id del corso
 	@Id
 	@GeneratedValue
-	private int id;
+	private long id;
 	
 	//nome del corso
 	@Column(name = "nome")
@@ -62,12 +60,12 @@ public class Corso
 		
 	}
 
-	public int getId()
+	public long getId()
 	{
 		return id;
 	}
 
-	public void setId(int id_corso)
+	public void setId(long id_corso)
 	{
 		this.id = id_corso;
 	}
