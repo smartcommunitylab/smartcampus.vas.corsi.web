@@ -6,5 +6,6 @@
 		<class>eu.trentorise.smartcampus.corsi.model.CorsoLite</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Commento</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Corso</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.Evento</class>
 	</persistence-unit>
 </persistence>

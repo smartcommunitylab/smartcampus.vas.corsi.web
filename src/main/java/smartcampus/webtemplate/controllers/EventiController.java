@@ -26,6 +26,7 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Evento;
+import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
@@ -52,7 +53,7 @@ public class EventiController extends SCController
 	@Autowired
 	@Value("${webapp.name}")
 	private String appName;
-	
+	private EventoRepository eventoRepository;
 	
 	/*
 	 *   Ritorna tutti gli eventi
@@ -70,19 +71,14 @@ public class EventiController extends SCController
 			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			
-			String id_corso = request.getParameter("id");
-
-						
-			ArrayList<Evento> list = new ArrayList<Evento>();
 			
-			Evento e1 = new Evento();
-			e1.setAll_day(true);
-			e1.setTitolo("Analisi 1");
-			e1.setDescrizione("Descrizione di prova");
-			
-			list.add(e1);
+			Evento e = new Evento();
+			e.setAll_day(true);
+			e.setTitolo("Analisi 1");
+			e.setDescrizione("Descrizione di prova");
+			eventoRepository.save(e);
 						
-			return list;
+			return eventoRepository.findAll();
 		}
 		catch (Exception e)
 		{
