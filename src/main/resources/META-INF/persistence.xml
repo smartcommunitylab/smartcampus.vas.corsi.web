@@ -7,5 +7,6 @@
  		<class>eu.trentorise.smartcampus.corsi.model.Commento</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Corso</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Evento</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.RisorsaPhl</class>
 	</persistence-unit>
 </persistence>
