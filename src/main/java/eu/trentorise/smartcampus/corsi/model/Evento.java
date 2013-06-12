@@ -7,6 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Evento {
@@ -15,9 +18,11 @@ public class Evento {
 	@GeneratedValue
 	private long id;
 
-	// corso di riferimento
-	@Column(name = "CORSOLITE")
-	private long corsoLite;
+	 // corso di riferimento
+//	 @Column(name = "CORSOLITE")
+	 @ManyToOne
+	 @JoinColumn(name = "CORSO_LITE")
+	 private CorsoLite corsoLite;
 
 	// mail of the owner
 	@Column(name = "ORGANIZER")
@@ -36,7 +41,8 @@ public class Evento {
 	private String room;
 
 	// the description of the event
-	@Column(name = "DESCRIZIONE")
+	@Lob
+	@Column(name = "DESCRIZIONE", length = 100000)
 	private String descrizione;
 
 	// the description of the event
@@ -79,8 +85,9 @@ public class Evento {
 	@Column(name = "CANMODIFY")
 	private boolean guests_can_modify;
 
-	// // Whether guests can invite other guests
-	// private boolean guests_can_invite;
+	// Whether guests can invite other guests
+	@Column(name = "CANINVITE")
+	private boolean guests_can_invite;
 
 	// Whether guests can see the list of attendees
 	@Column(name = "CANSEE")
@@ -94,29 +101,6 @@ public class Evento {
 		this.setIstanze(new ArrayList<Istanza>());
 	}
 
-	// public int getId()
-	// {
-	// return id;
-	// }
-	//
-	//
-	// public void setId(int id)
-	// {
-	// this.id = id;
-	// }
-	//
-	//
-	// public CorsoLite getCorso()
-	// {
-	// return corso;
-	// }
-	//
-	//
-	// public void setCorso(CorsoLite corso)
-	// {
-	// this.corso = corso;
-	// }
-
 	public long getId() {
 		return id;
 	}
@@ -125,13 +109,13 @@ public class Evento {
 		this.id = id;
 	}
 
-	public long getCorsoLite() {
-		return corsoLite;
-	}
-
-	public void setCorsoLite(long corsoLite) {
-		this.corsoLite = corsoLite;
-	}
+	 public CorsoLite getCorsoLite() {
+	 return corsoLite;
+	 }
+	
+	 public void setCorsoLite(CorsoLite corsoLite) {
+	 this.corsoLite = corsoLite;
+	 }
 
 	public String getOrganizer() {
 		return organizer;
@@ -229,19 +213,16 @@ public class Evento {
 		this.guests_can_modify = guests_can_modify;
 	}
 
-	// public boolean isGuests_can_invite()
-	// {
-	// return guests_can_invite;
-	// }
-	//
-	//
-	// public void setGuests_can_invite(boolean guests_can_invite)
-	// {
-	// this.guests_can_invite = guests_can_invite;
-	// }
-
 	public boolean isGuests_can_see() {
 		return guests_can_see;
+	}
+
+	public boolean isGuests_can_invite() {
+		return guests_can_invite;
+	}
+
+	public void setGuests_can_invite(boolean guests_can_invite) {
+		this.guests_can_invite = guests_can_invite;
 	}
 
 	public void setGuests_can_see(boolean guests_can_see) {

@@ -11,7 +11,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +20,7 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
+
 
 
 @Controller("eventiController")
@@ -51,7 +51,7 @@ public class EventiController extends SCController
 	@RequestMapping(method = RequestMethod.GET, value = "/eventi/{id}")
 	public @ResponseBody
 	
-	List<Evento> getEventi(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("id") String id)
+	List<Evento> getEventi(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 	
 	throws IOException
 	{
@@ -60,7 +60,9 @@ public class EventiController extends SCController
 		
 			
 			Evento e = new Evento();
+			
 			e.setAll_day(true);
+			//e.setId(1);
 			e.setTitolo("Analisi 1");
 			e.setDescrizione("Descrizione di prova");
 			eventoRepository.save(e);
