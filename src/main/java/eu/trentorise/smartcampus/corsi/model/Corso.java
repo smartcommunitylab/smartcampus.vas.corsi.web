@@ -3,12 +3,16 @@ package eu.trentorise.smartcampus.corsi.model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
 public class Corso
@@ -31,8 +35,8 @@ public class Corso
 	private String descrizione;
 	
 	//lista dei commenti del corso
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "corso")
-	private ArrayList<Commento> commenti;
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="corso")
+	private List<Commento> commenti;
 	
 	//valutazione media di tutti gli UtenteCorsi
 	private float valutazione_media;
@@ -46,7 +50,7 @@ public class Corso
 	
 	public Corso()
 	{
-		this.commenti = new ArrayList();
+		
 	}
 
 	public int getId()
@@ -104,9 +108,9 @@ public class Corso
 		return commenti;
 	}
 
-	public void setCommenti(ArrayList<Commento> commenti)
+	public void setCommenti(List<Commento> commenti2)
 	{
-		this.commenti = commenti;
+		this.commenti = commenti2;
 	}
 
 	public float getValutazione_media()
