@@ -108,6 +108,10 @@ public class CorsiController extends SCController {
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 					+ "dolore eu fugiat nulla pariatur.");
 				c.setValutazione_media(4);
+				Commento x=new Commento();
+				c.setCommenti(new ArrayList<Commento>());
+				c.getCommenti().add(x);
+				
 				corsoRepository.save(c);
 
 				// TEST
