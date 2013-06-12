@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 
+import org.hibernate.annotations.ForeignKey;
+
 @Entity
 @NamedQuery(name = "Commento.getCommentoByCorsoId",
 query = "select c from Commento c where c.corso = ?1")
@@ -37,7 +39,7 @@ public class Commento {
 	private float valutazione;
 
 	// valutazione commento
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "corso_id")
 	private Corso corso;
 
@@ -75,7 +77,6 @@ public class Commento {
 	}
 
 	
-
 	public void setId_studente(long id_studente) {
 		this.id_studente = id_studente;
 	}
