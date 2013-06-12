@@ -2,6 +2,7 @@ package eu.trentorise.smartcampus.corsi.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,9 +47,9 @@ public class Evento {
 	private String descrizione;
 
 	// the description of the event
-	@Column(name = "NOTE")
+	/*@Column(name = "NOTE")
 	private ArrayList<Nota> note;
-
+*/
 	// The time the event starts in UTC milliseconds since the epoch
 	@Column(name = "START")
 	private Date dt_start;
@@ -94,12 +95,10 @@ public class Evento {
 	private boolean guests_can_see;
 
 	// List of all istance of the event
-	@Column(name = "ISTANZE")
-	private ArrayList<Istanza> istanze;
-
-	public Evento() {
-		this.setIstanze(new ArrayList<Istanza>());
-	}
+/*	@Column(name = "ISTANZE")
+	private List<Istanza> istanze;
+*/
+	
 
 	public long getId() {
 		return id;
@@ -229,13 +228,7 @@ public class Evento {
 		this.guests_can_see = guests_can_see;
 	}
 
-	public ArrayList<Istanza> getIstanze() {
-		return istanze;
-	}
-
-	public void setIstanze(ArrayList<Istanza> istanze) {
-		this.istanze = istanze;
-	}
+	
 
 	public String getRoom() {
 		return room;
@@ -245,11 +238,5 @@ public class Evento {
 		this.room = room;
 	}
 
-	public ArrayList<Nota> getNote() {
-		return note;
-	}
-
-	public void setNote(ArrayList<Nota> note) {
-		this.note = note;
-	}
+	
 }

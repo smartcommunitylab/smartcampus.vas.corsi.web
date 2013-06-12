@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
+import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 
 @Controller("notificationController")
@@ -53,6 +54,13 @@ public class NotificationController
 		try
 		{
 	
+		
+		
+		//	CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+		//			serverAddress);// , appName);
+
+			//communicatorConnector.sendAppNotification(n, appId, users, token);
+			
 			
 			ArrayList<Notification> list = new ArrayList<Notification>();
 			
@@ -76,6 +84,10 @@ public class NotificationController
 			n.setTimestamp(System.currentTimeMillis());
 			n.setDescription("Ma che bella è l'UniTN?");
 			list.add(n);
+			
+			
+		
+			
 			
 			return list;
 		}
