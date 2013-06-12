@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -30,7 +31,7 @@ import eu.trentorise.smartcampus.corsi.repository.RisorsaPhlRepository;
 public class RisorseController extends SCController
 {
 	
-//	private static final Logger logger = Logger.getLogger(RisorseController.class);
+	private static final Logger logger = Logger.getLogger(RisorseController.class);
 	@Autowired
 	private AcService acService;
 
@@ -117,6 +118,8 @@ public class RisorseController extends SCController
 		}
 		catch (Exception e)
 		{
+			logger.error(e.getMessage());
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
