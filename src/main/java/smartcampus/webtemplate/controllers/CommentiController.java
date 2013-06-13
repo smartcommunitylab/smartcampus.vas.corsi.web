@@ -84,7 +84,11 @@ public class CommentiController extends SCController {
 				Date d = new Date("2013/06/11");
 				c.setData_inserimento(d);
 				c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
-				c.setValutazione(3);
+				c.setRating_carico_studio(3);
+				c.setRating_contenuto(3);
+				c.setRating_esame(3);
+				c.setRating_lezioni(3);
+				c.setRating_materiali(3);
 				c.setId_studente(userId);
 				//////////////////////////////////////c.setCorso(x);
 				c.setData_inserimento(d);
@@ -94,7 +98,11 @@ public class CommentiController extends SCController {
 			
 				c.setData_inserimento(d);
 				c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
-				c.setValutazione(3);
+				c.setRating_carico_studio(3);
+				c.setRating_contenuto(3);
+				c.setRating_esame(3);
+				c.setRating_lezioni(3);
+				c.setRating_materiali(3);
 				c.setId_studente(userId);
 				//////////////////////////////////////c.setCorso(x);
 				c.setData_inserimento(d);
@@ -104,7 +112,11 @@ public class CommentiController extends SCController {
 		
 				c.setData_inserimento(d);
 				c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
-				c.setValutazione(3);
+				c.setRating_carico_studio(3);
+				c.setRating_contenuto(3);
+				c.setRating_esame(3);
+				c.setRating_lezioni(3);
+				c.setRating_materiali(3);
 				c.setId_studente(userId);
 				//////////////////////////////////////c.setCorso(x);
 				c.setData_inserimento(d);
@@ -151,7 +163,11 @@ public class CommentiController extends SCController {
 			Date d = new Date("2013/06/11");
 			c.setData_inserimento(d);
 			c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
-			c.setValutazione(3);
+			c.setRating_carico_studio(3);
+			c.setRating_contenuto(3);
+			c.setRating_esame(3);
+			c.setRating_lezioni(3);
+			c.setRating_materiali(3);
 			c.setId_studente(userId);
 			commentiRepository.save(c);
 			
@@ -159,7 +175,11 @@ public class CommentiController extends SCController {
 		
 			c.setData_inserimento(d);
 			c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
-			c.setValutazione(3);
+			c.setRating_carico_studio(3);
+			c.setRating_contenuto(3);
+			c.setRating_esame(3);
+			c.setRating_lezioni(3);
+			c.setRating_materiali(3);
 			c.setId_studente(userId);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
@@ -168,7 +188,11 @@ public class CommentiController extends SCController {
 	
 			c.setData_inserimento(d);
 			c.setTesto("questa � una valutazione del corso. Una valutazione valutazione valutazione.");
-			c.setValutazione(3);
+			c.setRating_carico_studio(3);
+			c.setRating_contenuto(3);
+			c.setRating_esame(3);
+			c.setRating_lezioni(3);
+			c.setRating_materiali(3);
 			c.setId_studente(userId);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);

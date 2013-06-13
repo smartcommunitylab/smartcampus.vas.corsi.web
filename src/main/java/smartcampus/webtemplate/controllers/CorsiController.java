@@ -156,7 +156,12 @@ public class CorsiController extends SCController {
 				co.setCorso(corso);
 				co.setData_inserimento(data);
 				co.setTesto("Commento del corso Commento del corso Commento del corso Commento del corso. ");
-				co.setValutazione(4);
+				//co.setValutazione(4);
+				co.setRating_carico_studio(3);
+				co.setRating_contenuto(3);
+				co.setRating_esame(3);
+				co.setRating_lezioni(3);
+				co.setRating_materiali(3);
 				commenti.add(co);
 			}
 
