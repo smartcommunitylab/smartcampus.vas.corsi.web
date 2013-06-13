@@ -29,6 +29,9 @@ public class Evento {
 	@JoinColumn(name = "ID_CORSO")
 	private Corso corso;
 
+	@ManyToOne
+	@JoinColumn(name = "CALENDAR_ID")
+	private Calendario calendario;
 	// // mail of the owner
 	// @Column(name = "ORGANIZER")
 	// private String organizer;
@@ -161,6 +164,14 @@ public class Evento {
 
 	public void setAvailability(boolean availability) {
 		this.availability = availability;
+	}
+
+	public Calendario getCalendario() {
+		return calendario;
+	}
+
+	public void setCalendario(Calendario calendario) {
+		this.calendario = calendario;
 	}
 
 }

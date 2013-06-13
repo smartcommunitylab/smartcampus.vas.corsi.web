@@ -35,7 +35,7 @@ public class Studente {
 	private String email;
 	
 	@OneToOne
-	@JoinColumn(name = "Studente_ID")
+	@JoinColumn(name = "CALENDARIO_ID")
 	private Calendario calendario;
 
 	public int getId() {
