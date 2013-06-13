@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -26,13 +25,9 @@ import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Corso;
-import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Evento;
-import eu.trentorise.smartcampus.corsi.repository.CorsoLiteRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
-import eu.trentorise.smartcampus.profileservice.ProfileConnector;
-import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("eventiController")
 public class EventiController extends SCController {

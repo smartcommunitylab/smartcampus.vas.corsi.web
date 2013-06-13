@@ -73,7 +73,6 @@ public class CorsiController extends SCController {
 				Corso c = new Corso();
 
 				c.setNome("Fisica dei materiali");
-				c.setAula("a101");
 				c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
@@ -84,7 +83,6 @@ public class CorsiController extends SCController {
 				c = new Corso();
 
 				c.setNome("Analisi matematica 2");
-				c.setAula("a101");
 				c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
@@ -95,7 +93,6 @@ public class CorsiController extends SCController {
 				c = new Corso();
 
 				c.setNome("Lettere 1");
-				c.setAula("a101");
 				c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
