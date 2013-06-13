@@ -15,7 +15,7 @@ import eu.trentorise.smartcampus.corsi.model.Evento;
 @Repository
 public interface EventoRepository extends JpaRepository<Evento, Long>{
 	
-	List<Evento> findEventoByUser(User user);
+	//List<Evento> findEventoByUser(User user);
 	
 	List<Evento> findEventoByCorso(Corso corso);
 }

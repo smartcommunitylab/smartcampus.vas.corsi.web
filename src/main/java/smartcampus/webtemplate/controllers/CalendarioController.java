@@ -63,10 +63,10 @@ private static final Logger logger = Logger.getLogger(CommentiController.class);
 	/*
 	 *   Ritorna tutte le recensioni dato l'id di un corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/calendario/{id_student}")
+	@RequestMapping(method = RequestMethod.GET, value = "/calendario/all")
 	public @ResponseBody
 	
-	List<Calendario> getAllEventsFromStudentId(HttpServletRequest request, HttpServletResponse response, HttpSession session,  @PathVariable("id_corso") long id_corso)
+	List<Calendario> getAllCalendar(HttpServletRequest request, HttpServletResponse response, HttpSession session)
 	
 	throws IOException
 	{
