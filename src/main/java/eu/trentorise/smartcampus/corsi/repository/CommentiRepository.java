@@ -8,12 +8,9 @@ import org.springframework.stereotype.Repository;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 
-
 @Repository
-public interface CommentiRepository extends JpaRepository<Commento, Long>{
-	
+public interface CommentiRepository extends JpaRepository<Commento, Long> {
+
 	List<Commento> getCommentoByCorsoId(Corso corso);
-	
+
 }
-
-

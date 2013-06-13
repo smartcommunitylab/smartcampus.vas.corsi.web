@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.controllers.SCController;
-import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Risorsa;
-import eu.trentorise.smartcampus.corsi.model.RisorsaPhl;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 
 @Controller("risorsaController")
@@ -78,7 +76,7 @@ public class RisorseController extends SCController {
 
 	throws IOException {
 		try {
-			
+
 			Risorse listRisorsaPhl = null;
 
 			Risorse risorsaReturn = new Risorse();
@@ -87,8 +85,7 @@ public class RisorseController extends SCController {
 
 				WebClient client = WebClient.create(phlUrl);
 
-				listRisorsaPhl = client.path("getFiles")
-						.accept("text/xml")
+				listRisorsaPhl = client.path("getFiles").accept("text/xml")
 						.post("{id_sc:" + idcorso + "}", Risorse.class);
 
 			}

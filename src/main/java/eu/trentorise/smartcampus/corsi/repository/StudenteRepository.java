@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 
 @Repository
-public interface StudenteRepository extends JpaRepository<Studente, Long>{
+public interface StudenteRepository extends JpaRepository<Studente, Long> {
+
+	Studente findStudenteByUserId(long id);
 
 }

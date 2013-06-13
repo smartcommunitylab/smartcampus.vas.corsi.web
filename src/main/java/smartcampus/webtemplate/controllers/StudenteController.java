@@ -1,7 +1,6 @@
 package smartcampus.webtemplate.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,23 +18,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
-import eu.trentorise.smartcampus.corsi.model.Commento;
-import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Studente;
-import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
-
 @Controller("studenteController")
 public class StudenteController {
 
-	
-	
-private static final Logger logger = Logger.getLogger(CommentiController.class);
-	
-	
+	private static final Logger logger = Logger
+			.getLogger(CommentiController.class);
+
 	@Autowired
 	private AcService acService;
 
@@ -52,21 +45,18 @@ private static final Logger logger = Logger.getLogger(CommentiController.class);
 	@Autowired
 	@Value("${webapp.name}")
 	private String appName;
-	
-	
+
 	@Autowired
 	private StudenteRepository studenteRepository;
 
-	
-	
-	
 	/*
 	 * Ritorna tutti i corsi in versione lite
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/studente/{id_studente}")
 	public @ResponseBody
 	List<Studente> getInfoStudentFromId(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("id_studente") long id_studente)
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_studente") long id_studente)
 
 	throws IOException {
 		try {
@@ -82,18 +72,16 @@ private static final Logger logger = Logger.getLogger(CommentiController.class);
 
 				c.setNome("Manuel");
 				c.setCognome("Visentin");
-				
+
 				studenteRepository.save(c);
-				
-				
+
 				c.setNome("Nome");
 				c.setCognome("Cognome");
 				c.setDipartimento("Ingeneria");
-				
+
 				c.setNome("Maiandffdsa");
 				c.setCognome("Mmpifew");
-				
-				
+
 				studenteRepository.save(c);
 
 				// TEST
@@ -110,6 +98,4 @@ private static final Logger logger = Logger.getLogger(CommentiController.class);
 		return null;
 	}
 
-	
-	
 }

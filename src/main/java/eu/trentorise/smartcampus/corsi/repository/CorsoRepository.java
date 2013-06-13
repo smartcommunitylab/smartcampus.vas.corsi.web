@@ -5,12 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import eu.trentorise.smartcampus.corsi.model.Corso;
 
-
-
-
 @Repository
-public interface CorsoRepository extends JpaRepository<Corso, Long>{
-	
-	
-	
+public interface CorsoRepository extends JpaRepository<Corso, Long> {
+
 }

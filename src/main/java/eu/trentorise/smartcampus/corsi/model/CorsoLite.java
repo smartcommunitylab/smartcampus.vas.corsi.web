@@ -5,35 +5,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-
 @Entity
-public class CorsoLite
-{
-	//id del corso
+public class CorsoLite {
+	// id del corso
 	@Id
 	@GeneratedValue
 	private long id;
-	
-	//nome del corso
+
+	// nome del corso
 	@Column(name = "NOME")
 	private String nome;
-	
-	//nome del dipartimento
+
+	// nome del dipartimento
 	@Column(name = "FK_DIPARTIMENTO")
 	private long dipartimento;
-	
-	
-	public CorsoLite()
-	{
+
+	public CorsoLite() {
 	}
 
-	public long getId()
-	{
+	public long getId() {
 		return id;
 	}
 
-	public void setId(long id)
-	{
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -52,6 +46,5 @@ public class CorsoLite
 	public void setDipartimento(long dipartimento) {
 		this.dipartimento = dipartimento;
 	}
-	
-	
+
 }

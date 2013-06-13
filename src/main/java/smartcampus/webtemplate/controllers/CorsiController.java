@@ -30,8 +30,8 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 @Controller("corsiController")
 public class CorsiController extends SCController {
 
-	
-	private static final Logger logger = Logger.getLogger(CorsiLiteController.class);
+	private static final Logger logger = Logger
+			.getLogger(CorsiLiteController.class);
 	@Autowired
 	private AcService acService;
 
@@ -74,9 +74,9 @@ public class CorsiController extends SCController {
 
 				c.setNome("Fisica dei materiali");
 				c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
+						+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+						+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+						+ "dolore eu fugiat nulla pariatur.");
 				c.setValutazione_media(4);
 				corsoRepository.save(c);
 
@@ -84,9 +84,9 @@ public class CorsiController extends SCController {
 
 				c.setNome("Analisi matematica 2");
 				c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
+						+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+						+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+						+ "dolore eu fugiat nulla pariatur.");
 				c.setValutazione_media(4);
 				corsoRepository.save(c);
 
@@ -94,14 +94,14 @@ public class CorsiController extends SCController {
 
 				c.setNome("Lettere 1");
 				c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
+						+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+						+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+						+ "dolore eu fugiat nulla pariatur.");
 				c.setValutazione_media(4);
-				Commento x=new Commento();
+				Commento x = new Commento();
 				c.setCommenti(new ArrayList<Commento>());
 				c.getCommenti().add(x);
-				
+
 				corsoRepository.save(c);
 
 				// TEST
@@ -126,13 +126,12 @@ public class CorsiController extends SCController {
 	public @ResponseBody
 	Corso getCorsoByID(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_corso") String id)
+			@PathVariable("id_corso") long id_corso)
 
 	throws IOException {
 		try {
-		
-		
-			long id_corso = Long.valueOf(request.getParameter("id_corso"));
+
+			// long id_corso = Long.valueOf(request.getParameter("id_corso"));
 
 			Corso corso = new Corso();
 			corso.setId(id_corso);
@@ -153,7 +152,7 @@ public class CorsiController extends SCController {
 				co.setCorso(corso);
 				co.setData_inserimento(data);
 				co.setTesto("Commento del corso Commento del corso Commento del corso Commento del corso. ");
-				//co.setValutazione(4);
+				// co.setValutazione(4);
 				co.setRating_carico_studio(3);
 				co.setRating_contenuto(3);
 				co.setRating_esame(3);
@@ -163,7 +162,7 @@ public class CorsiController extends SCController {
 			}
 
 			corso.setCommenti(commenti);
-			
+
 			corsoRepository.save(corso);
 
 			return corsoRepository.findOne(id_corso);

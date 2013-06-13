@@ -5,16 +5,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 
-
 @Entity
+@NamedQueries({ @NamedQuery(name = "Studente.findStudenteByUserId", query = "select c from Studente c where c.userSCId = ?1") })
 public class Studente {
-	
+
 	@Id
 	@GeneratedValue
-	private int id;
+	private long id;
 
 	@JoinColumn(name = "NOME")
 	private String nome;
@@ -24,25 +25,36 @@ public class Studente {
 
 	@Column(name = "CORSO_LAUREA")
 	private String corso_laurea;
-	
+
 	@Column(name = "DIPARTIMENTO")
 	private String dipartimento;
-	
+
 	@Column(name = "ANNO_CORSO")
 	private String anno_corso;
-	
+
 	@Column(name = "EMAIL")
 	private String email;
-	
+
+	@Column(name = "USER_SC_ID")
+	private long userSCId;
+
+	public long getUserSCId() {
+		return userSCId;
+	}
+
+	public void setUserSCId(long userSCId) {
+		this.userSCId = userSCId;
+	}
+
 	@OneToOne
 	@JoinColumn(name = "CALENDARIO_ID")
 	private Calendario calendario;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -101,7 +113,5 @@ public class Studente {
 	public void setCalendario(Calendario calendario) {
 		this.calendario = calendario;
 	}
-	
-	
-	
+
 }

@@ -5,12 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 
-
-
-
 @Repository
-public interface CorsoLiteRepository extends JpaRepository<CorsoLite, Long>{
-	
-	
-	
+public interface CorsoLiteRepository extends JpaRepository<CorsoLite, Long> {
+
 }

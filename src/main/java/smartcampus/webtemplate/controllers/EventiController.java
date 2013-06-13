@@ -25,7 +25,6 @@ import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Corso;
-import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
@@ -73,15 +72,12 @@ public class EventiController extends SCController {
 
 			Evento e = new Evento();
 
-
 			e.setAll_day(true);
 			// e.setId(1);
 			e.setTitolo(corso.getNome());
 			e.setDescrizione("Descrizione di prova");
 			e.setCorso(corso);
 			eventoRepository.save(e);
-			
-			
 
 			return eventoRepository.findEventoByCorso(corso);
 		} catch (Exception e) {

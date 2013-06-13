@@ -92,5 +92,5 @@ public class Corso extends CorsoLite {
 	public void setSeguito(boolean seguito) {
 		this.seguito = seguito;
 	}
-	
+
 }

@@ -14,9 +14,8 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({
-// @NamedQuery(name = "Evento.findEventoByUser", query =
-// "select c from Evento c where c.corso = ?1"),
-@NamedQuery(name = "Evento.findEventoByCorso", query = "select c from Evento c where c.corso = ?1") })
+		@NamedQuery(name = "Evento.findEventoByCalendarioId", query = "select c from Evento c where c.calendario = ?1"),
+		@NamedQuery(name = "Evento.findEventoByCorso", query = "select c from Evento c where c.corso = ?1") })
 public class Evento {
 	// id dell'evento
 	@Id

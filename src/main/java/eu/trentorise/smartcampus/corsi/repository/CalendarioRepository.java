@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import eu.trentorise.smartcampus.corsi.model.Calendario;
 
 @Repository
-public interface CalendarioRepository extends JpaRepository<Calendario, Long>{
+public interface CalendarioRepository extends JpaRepository<Calendario, Long> {
 
 }
