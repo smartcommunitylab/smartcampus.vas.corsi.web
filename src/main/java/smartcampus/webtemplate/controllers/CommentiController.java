@@ -89,7 +89,7 @@ public class CommentiController extends SCController {
 				c.setRating_esame(3);
 				c.setRating_lezioni(3);
 				c.setRating_materiali(3);
-				c.setId_studente(userId);
+				//c.setId_studente(userId);
 				//////////////////////////////////////c.setCorso(x);
 				c.setData_inserimento(d);
 				commentiRepository.save(c);
@@ -103,7 +103,7 @@ public class CommentiController extends SCController {
 				c.setRating_esame(3);
 				c.setRating_lezioni(3);
 				c.setRating_materiali(3);
-				c.setId_studente(userId);
+				//c.setId_studente(userId);
 				//////////////////////////////////////c.setCorso(x);
 				c.setData_inserimento(d);
 				commentiRepository.save(c);
@@ -117,7 +117,7 @@ public class CommentiController extends SCController {
 				c.setRating_esame(3);
 				c.setRating_lezioni(3);
 				c.setRating_materiali(3);
-				c.setId_studente(userId);
+				//c.setId_studente(userId);
 				//////////////////////////////////////c.setCorso(x);
 				c.setData_inserimento(d);
 				commentiRepository.save(c);
@@ -168,7 +168,7 @@ public class CommentiController extends SCController {
 			c.setRating_esame(3);
 			c.setRating_lezioni(3);
 			c.setRating_materiali(3);
-			c.setId_studente(userId);
+			//c.setId_studente(userId);
 			commentiRepository.save(c);
 			
 			c = new Commento();
@@ -180,7 +180,7 @@ public class CommentiController extends SCController {
 			c.setRating_esame(3);
 			c.setRating_lezioni(3);
 			c.setRating_materiali(3);
-			c.setId_studente(userId);
+			//c.setId_studente(userId);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			
@@ -193,7 +193,7 @@ public class CommentiController extends SCController {
 			c.setRating_esame(3);
 			c.setRating_lezioni(3);
 			c.setRating_materiali(3);
-			c.setId_studente(userId);
+			//c.setId_studente(userId);
 			c.setData_inserimento(d);
 			commentiRepository.save(c);
 			

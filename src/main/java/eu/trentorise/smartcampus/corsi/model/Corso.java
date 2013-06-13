@@ -14,16 +14,16 @@ import javax.persistence.OneToMany;
 public class Corso extends CorsoLite {
 
 	// data di inizio del corso
-	@Column(name = "data_inizio")
+	@Column(name = "DATA_INIZIO")
 	private Date data_inizio;
 
 	// data di fine del corso
-	@Column(name = "data_fine")
+	@Column(name = "DATA_FINE")
 	private Date data_fine;
 
 	// descrizione del corso
 	@Lob
-	@Column(name = "descrizione", length = 100000)
+	@Column(name = "DESCRIZIONE", length = 100000)
 	private String descrizione;
 
 	// lista dei commenti del corso
@@ -31,11 +31,11 @@ public class Corso extends CorsoLite {
 	private List<Commento> commenti;
 
 	// valutazione media di tutti gli UtenteCorsi
-	@Column(name = "valutazione_media")
+	@Column(name = "VALUTAZIONE_MEDIA")
 	private float valutazione_media;
 
 	// seguo o non seguo il corso
-	@Column(name = "seguito")
+	@Column(name = "SEGUITO")
 	private boolean seguito;
 
 	// lista di note

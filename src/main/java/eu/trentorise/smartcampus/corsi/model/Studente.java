@@ -22,20 +22,20 @@ public class Studente {
 	@Column(name = "COGNOME")
 	private String cognome;
 
-	@Column(name = "corso_laurea")
+	@Column(name = "CORSO_LAUREA")
 	private String corso_laurea;
 	
 	@Column(name = "DIPARTIMENTO")
 	private String dipartimento;
 	
-	@Column(name = "anno_corso")
+	@Column(name = "ANNO_CORSO")
 	private String anno_corso;
 	
-	@Column(name = "email")
+	@Column(name = "EMAIL")
 	private String email;
 	
 	@OneToOne
-	@JoinColumn(name = "studente_id")
+	@JoinColumn(name = "Studente_ID")
 	private Calendario calendario;
 
 	public int getId() {

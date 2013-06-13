@@ -24,15 +24,16 @@ public class Commento {
 	private Corso corso;
 
 	// utente che ha scritto commento
-	@Column(name = "ID_STUDENTE")
-	private long id_studente;
+	@ManyToOne
+	@JoinColumn(name = "ID_STUDENTE")
+	private Studente id_studente;
 
 	// testo del commento
-	@Column(name = "testo")
+	@Column(name = "TESTO")
 	private String testo;
 
 	// data in cui e' stato scritto commento
-	@Column(name = "data_inserimento")
+	@Column(name = "DATA_INSERIMENTO")
 	private Date data_inserimento;
 
 	// valutazione contenuto
@@ -74,11 +75,11 @@ public class Commento {
 		this.corso = corso;
 	}
 
-	public long getId_studente() {
+	public Studente getId_studente() {
 		return id_studente;
 	}
 
-	public void setId_studente(long id_studente) {
+	public void setId_studente(Studente id_studente) {
 		this.id_studente = id_studente;
 	}
 
@@ -138,5 +139,4 @@ public class Commento {
 		this.rating_esame = rating_esame;
 	}
 
-	
 }

@@ -26,7 +26,7 @@ public class Evento {
 	// corso di riferimento
 	// @Column(name = "CORSOLITE")
 	@ManyToOne
-	@JoinColumn(name = "idCORSO")
+	@JoinColumn(name = "ID_CORSO")
 	private Corso corso;
 
 	// // mail of the owner

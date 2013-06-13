@@ -22,7 +22,7 @@ public class RisorsaPhl
 	private String idRisorsaElFinder;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "corso_id")
+	@JoinColumn(name = "CORSO_ID")
 	private Corso corso;
 
 	public long getId() {
