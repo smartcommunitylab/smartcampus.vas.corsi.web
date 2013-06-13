@@ -1,51 +1,25 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
+public class RisorsaPhl extends Risorsa{
 
-@Entity
-@NamedQuery(name = "RisorsaPhl.getRisorsaPhlByCorsoId",
-query = "select c from RisorsaPhl c where c.corso = ?1")
-public class RisorsaPhl
-{
-	@Id
-	@GeneratedValue
-	private long id;
+	private String nome;
 
-	@Column(name="ID_RISORSA_ELFINDER")
-	private String idRisorsaElFinder;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "CORSO_ID")
-	private Corso corso;
+	private String hash;
 
-	public long getId() {
-		return id;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-	
-	public String getIdRisorsaElFinder() {
-		return idRisorsaElFinder;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 
-	public void setIdRisorsaElFinder(String idRisorsaElFinder) {
-		this.idRisorsaElFinder = idRisorsaElFinder;
+	public String getHash() {
+		return hash;
 	}
 
-	public Corso getCorso() {
-		return corso;
+	public void setHash(String hash) {
+		this.hash = hash;
 	}
 
-	public void setCorso(Corso corso) {
-		this.corso = corso;
-	}
 }

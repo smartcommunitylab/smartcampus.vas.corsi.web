@@ -24,14 +24,12 @@ import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Risorsa;
 import eu.trentorise.smartcampus.corsi.model.RisorsaPhl;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
-import eu.trentorise.smartcampus.corsi.repository.RisorsaPhlRepository;
-
 
 @Controller("risorsaController")
-public class RisorseController extends SCController
-{
-	
-	private static final Logger logger = Logger.getLogger(RisorseController.class);
+public class RisorseController extends SCController {
+
+	private static final Logger logger = Logger
+			.getLogger(RisorseController.class);
 	@Autowired
 	private AcService acService;
 
@@ -48,86 +46,77 @@ public class RisorseController extends SCController
 	@Autowired
 	@Value("${phl.url}")
 	private String phlUrl;
-	
-	
-	@Autowired
-	private RisorsaPhlRepository risorsaPhlRepository;
-	
+
 	@Autowired
 	private CorsoRepository corsoRepository;
-	
-	
+
 	/*
-	 *   Ritorna tutti i corsi in versione lite
+	 * Ritorna tutti i corsi in versione lite
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/risorsa/all")
 	public @ResponseBody
-	
-	List<Risorsa> getRisorsaAll(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-	
-	throws IOException
-	{
-		try
-		{
-			
-			
-		
-			
-			
-		}
-		catch (Exception e)
-		{
+	List<Risorsa> getRisorsaAll(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+
+		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
 	}
-	
+
 	/*
-	 *   Ritorna tutti i corsi in versione lite
+	 * Ritorna tutti i corsi in versione lite
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/risorsa/{idcorso}")
 	public @ResponseBody
-	
-	List<Risorsa> getRisorsaByCorsoId(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("idcorso") String idcorso)
-	
-	throws IOException
-	{
-		try
-		{
-		
+	Risorse getRisorsaByCorsoId(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("idcorso") String idcorso)
+
+	throws IOException {
+		try {
 			
-			List<Risorsa> risorsaReturn=new ArrayList<Risorsa>();
-			
-			Corso corsoRicerca=corsoRepository.findOne(Long.valueOf(idcorso));
-			
-			RisorsaPhl risorsaPhl=risorsaPhlRepository.getRisorsaPhlByCorsoId(corsoRicerca);
-			
-			WebClient client = WebClient.create(phlUrl);
-			@SuppressWarnings("unchecked")
-			List<Risorsa> listRisorsaPhl = (List<Risorsa>) client.path("engine?cmd=open&target="+risorsaPhl.getIdRisorsaElFinder()).accept("text/xml").getCollection(Risorsa.class);
-			
-			//TODO Aggiungere ricerca su moodle e mettere in unica lista
-			
-			
+			Risorse listRisorsaPhl = null;
+
+			Risorse risorsaReturn = new Risorse();
+
+			if (corsoRepository.findOne(Long.valueOf(idcorso)) != null) {
+
+				WebClient client = WebClient.create(phlUrl);
+
+				listRisorsaPhl = client.path("getFiles")
+						.accept("text/xml")
+						.post("{id_sc:" + idcorso + "}", Risorse.class);
+
+			}
+			// TODO Aggiungere ricerca su moodle e mettere in unica lista
+
 			risorsaReturn.addAll(listRisorsaPhl);
-			
+
 			return risorsaReturn;
-			
-			
-		
-		}
-		catch (Exception e)
-		{
+
+		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
-	
+
+	class Risorse extends ArrayList<Risorsa> {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public Risorse() {
+			super();
+		}
+
+	}
+
 }

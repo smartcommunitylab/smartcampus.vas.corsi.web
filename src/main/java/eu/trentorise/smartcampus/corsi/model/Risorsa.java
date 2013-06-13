@@ -8,4 +8,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "RISORSA")
 public class Risorsa {
 
+	
+	//TODO add filed when moodle knowledge was arrived
 }
