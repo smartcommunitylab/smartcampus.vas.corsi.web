@@ -20,7 +20,7 @@ public class Studente {
 	private String nome;
 
 	@Column(name = "COGNOME")
-	private long cognome;
+	private String cognome;
 
 	@Column(name = "corso_laurea")
 	private String corso_laurea;
@@ -37,4 +37,71 @@ public class Studente {
 	@OneToOne
 	@JoinColumn(name = "studente_id")
 	private Calendario calendario;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getCognome() {
+		return cognome;
+	}
+
+	public void setCognome(String cognome) {
+		this.cognome = cognome;
+	}
+
+	public String getCorso_laurea() {
+		return corso_laurea;
+	}
+
+	public void setCorso_laurea(String corso_laurea) {
+		this.corso_laurea = corso_laurea;
+	}
+
+	public String getDipartimento() {
+		return dipartimento;
+	}
+
+	public void setDipartimento(String dipartimento) {
+		this.dipartimento = dipartimento;
+	}
+
+	public String getAnno_corso() {
+		return anno_corso;
+	}
+
+	public void setAnno_corso(String anno_corso) {
+		this.anno_corso = anno_corso;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Calendario getCalendario() {
+		return calendario;
+	}
+
+	public void setCalendario(Calendario calendario) {
+		this.calendario = calendario;
+	}
+	
+	
+	
 }

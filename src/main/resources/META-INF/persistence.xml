@@ -8,5 +8,7 @@
  		<class>eu.trentorise.smartcampus.corsi.model.Corso</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Evento</class>
  		<class>eu.trentorise.smartcampus.corsi.model.RisorsaPhl</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.Calendario</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.Studente</class>
 	</persistence-unit>
 </persistence>
