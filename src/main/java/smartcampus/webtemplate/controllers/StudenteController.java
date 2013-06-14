@@ -11,21 +11,23 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
+import eu.trentorise.smartcampus.ac.provider.model.User;
+import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("studenteController")
-public class StudenteController {
+public class StudenteController extends SCController {
 
 	private static final Logger logger = Logger
 			.getLogger(CommentiController.class);
@@ -50,54 +52,50 @@ public class StudenteController {
 	@Autowired
 	private StudenteRepository studenteRepository;
 
+	@Autowired
+	private CorsoRepository corsoRepository;
+
 	/*
 	 * Ritorna tutti i corsi in versione lite
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/studente/{id_studente}")
+	@RequestMapping(method = RequestMethod.GET, value = "/studente/me")
 	public @ResponseBody
 	Studente getInfoStudentFromId(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_studente") long id_studente)
+			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
+
+			logger.info("/studente/me");
+
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
+			User utente = retrieveUser(request);
 
-			if (profile != null) {
+			Studente studente = studenteRepository.findStudenteByUserId(utente
+					.getId());
+			if (studente == null) {
+				studente = new Studente();
+				studente.setNome(profile.getName());
+				studente = studenteRepository.save(studente);
 
-				
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
 				// TEST
-				Studente c = new Studente();
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
 
-				c.setNome("Manuel");
-				c.setCognome("Visentin");
-
-				studenteRepository.save(c);
-
-				c.setNome("Nome");
-				c.setCognome("Cognome");
-				c.setDipartimento("Ingeneria");
-
-				c.setNome("Maiandffdsa");
-				c.setCognome("Mmpifew");
-
-				studenteRepository.save(c);
-
-				
-				Studente stud = studenteRepository.findOne(Long.valueOf(id_studente));
-				
-				
 				// TEST
 
-				return stud;
-			} else {
-				return null;
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+
 			}
+			return studenteRepository.save(studente);
+
 		} catch (Exception e) {
-			logger.error(e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

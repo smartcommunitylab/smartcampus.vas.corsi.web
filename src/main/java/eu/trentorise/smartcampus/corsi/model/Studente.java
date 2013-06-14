@@ -11,11 +11,15 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "Studente.findStudenteByUserId", query = "select c from Studente c where c.userSCId = ?1") })
-public class Studente {
+public class Studente extends BasicEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8681710690984309605L;
 
 	@Id
 	@GeneratedValue

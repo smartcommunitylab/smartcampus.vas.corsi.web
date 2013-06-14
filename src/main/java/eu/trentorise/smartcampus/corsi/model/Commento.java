@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQuery(name = "Commento.getCommentoByCorsoId", query = "select c from Commento c where c.corso = ?1")
+@NamedQuery(name = "Commento.getCommentoByCorso", query = "select c from Commento c where c.corso = ?1")
 public class Commento {
 	// id del commento
 	@Id

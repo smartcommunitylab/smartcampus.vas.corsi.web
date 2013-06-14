@@ -26,8 +26,12 @@ import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Evento;
+import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
+import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
+import eu.trentorise.smartcampus.profileservice.ProfileConnector;
+import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("eventiController")
 public class EventiController extends SCController {
@@ -51,37 +55,35 @@ public class EventiController extends SCController {
 	private String appName;
 
 	@Autowired
-	private EventoRepository eventoRepository;
+	private CorsoRepository corsoRepository;
 
 	@Autowired
-	private CorsoRepository corsoRepository;
+	private StudenteRepository studenteRepository;
+
+	@Autowired
+	private EventoRepository eventoRepository;
 
 	/*
 	 * Ritorna tutti gli eventi per corso
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/eventi/{idcorso}")
 	public @ResponseBody
-	List<Evento> getEventi4Course(HttpServletRequest request,
+	List<Evento> getEventoByCorso(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("idcorso") String idcorso)
+			@PathVariable("idcorso") Long idcorso)
 
 	throws IOException {
 		try {
+			logger.info("/eventi/{idcorso}");
+
+			if (idcorso == null)
+				return null;
 
 			Corso corso = corsoRepository.findOne(Long.valueOf(idcorso));
 
-			Evento e = new Evento();
-
-			e.setAll_day(true);
-			// e.setId(1);
-			e.setTitolo(corso.getNome());
-			e.setDescrizione("Descrizione di prova");
-			e.setCorso(corso);
-			eventoRepository.save(e);
-
 			return eventoRepository.findEventoByCorso(corso);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -93,7 +95,7 @@ public class EventiController extends SCController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/eventi")
 	public @ResponseBody
-	Evento saveEvent(HttpServletRequest request, HttpServletResponse response,
+	Evento saveEvento(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @RequestBody Evento evento)
 
 	throws IOException {
@@ -123,6 +125,65 @@ public class EventiController extends SCController {
 			return eventoRepository.save(evento);
 
 		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	/*
+	 * Ritorna tutti gli eventi per corso
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/eventi/me")
+	public @ResponseBody
+	List<Evento> getEventoByMe(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			logger.info("/eventi/me");
+
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			User utente = retrieveUser(request);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			// test
+
+			Studente studente = studenteRepository.findStudenteByUserId(utente
+					.getId());
+			if (studente == null) {
+				studente = new Studente();
+				studente.setNome(profile.getName());
+				studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				// TEST
+
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+
+			}
+
+			studente = studenteRepository.save(studente);
+
+			List<Evento> eventiListByCorso = new ArrayList<Evento>();
+
+			for (Corso index : studente.getCorsi()) {
+
+				eventiListByCorso.addAll(eventoRepository
+						.findEventoByCorso(index));
+
+			}
+
+			return eventiListByCorso;
+		} catch (Exception e) {
+
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;

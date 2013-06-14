@@ -6,7 +6,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class CorsoLite {
+public class CorsoLite extends BasicEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1619282265752237328L;
+
 	// id del corso
 	@Id
 	@GeneratedValue
@@ -23,14 +29,6 @@ public class CorsoLite {
 	public CorsoLite() {
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public String getNome() {
 		return nome;
 	}
@@ -45,6 +43,14 @@ public class CorsoLite {
 
 	public void setDipartimento(long dipartimento) {
 		this.dipartimento = dipartimento;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }

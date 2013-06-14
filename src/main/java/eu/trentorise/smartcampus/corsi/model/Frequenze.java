@@ -1,13 +1,10 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Frequenze {
@@ -19,14 +16,12 @@ public class Frequenze {
 	@ManyToOne
 	@JoinColumn(name = "STUDENTE_ID")
 	private Studente studente;
-	
+
 	// testo del commento
 	@ManyToOne
 	@JoinColumn(name = "CORSO_ID")
 	private Corso corso;
 
-	
-	
 	public long getId() {
 		return id;
 	}
@@ -51,6 +46,4 @@ public class Frequenze {
 		this.corso = corso;
 	}
 
-	
-	
 }

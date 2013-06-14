@@ -13,8 +13,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQueries({
-		@NamedQuery(name = "Evento.findEventoByCorso", query = "select c from Evento c where c.corso = ?1") })
+@NamedQueries({ @NamedQuery(name = "Evento.findEventoByCorso", query = "select c from Evento c where c.corso = ?1") })
 public class Evento {
 	// id dell'evento
 	@Id
@@ -160,6 +159,5 @@ public class Evento {
 	public void setAvailability(boolean availability) {
 		this.availability = availability;
 	}
-
 
 }
