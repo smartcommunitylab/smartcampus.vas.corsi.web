@@ -1,5 +1,6 @@
 package eu.trentorise.smartcampus.corsi.model;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -36,6 +38,9 @@ public class Corso extends CorsoLite {
 
 	// lista di note
 	// private List<Note> note;
+	
+	 @ManyToMany(mappedBy="corsi")
+	 private Collection<Studente> studentiFrequentanti;
 
 	public Corso() {
 

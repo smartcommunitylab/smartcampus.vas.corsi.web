@@ -1,10 +1,14 @@
 package eu.trentorise.smartcampus.corsi.model;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -17,7 +21,7 @@ public class Studente {
 	@GeneratedValue
 	private long id;
 
-	@JoinColumn(name = "NOME")
+	@Column(name = "NOME")
 	private String nome;
 
 	@Column(name = "COGNOME")
@@ -37,6 +41,18 @@ public class Studente {
 
 	@Column(name = "USER_SC_ID")
 	private long userSCId;
+
+	@ManyToMany
+	@JoinTable(name = "Frequenze", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "CORSO_ID"))
+	private Collection<Corso> corsi;
+
+	public Collection<Corso> getCorsi() {
+		return corsi;
+	}
+
+	public void setCorsi(Collection<Corso> corsi) {
+		this.corsi = corsi;
+	}
 
 	public long getUserSCId() {
 		return userSCId;

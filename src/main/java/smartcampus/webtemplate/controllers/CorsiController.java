@@ -2,6 +2,7 @@ package smartcampus.webtemplate.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -20,10 +21,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
+import eu.trentorise.smartcampus.ac.provider.model.User;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.Frequenze;
+import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
+import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
+import eu.trentorise.smartcampus.corsi.repository.FrequenzeRepository;
+import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
@@ -50,7 +57,17 @@ public class CorsiController extends SCController {
 	private String appName;
 
 	@Autowired
+	private FrequenzeRepository frequenzeRepository;
+
+	@Autowired
 	private CorsoRepository corsoRepository;
+
+	@Autowired
+	private StudenteRepository studenteRepository;
+
+	@Autowired
+	private EventoRepository eventoRepository;
+
 
 	/*
 	 * Ritorna tutti i corsi in versione lite
@@ -65,9 +82,9 @@ public class CorsiController extends SCController {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			//BasicProfile profile = profileConnector.getBasicProfile(token);
 
-			if (profile != null) {
+		//	if (profile != null) {
 
 				// TEST
 				Corso c = new Corso();
@@ -104,9 +121,9 @@ public class CorsiController extends SCController {
 				// TEST
 
 				return corsoRepository.findAll();
-			} else {
-				return null;
-			}
+		//	} else {
+		//	/	return null;
+		//	}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
@@ -151,5 +168,63 @@ public class CorsiController extends SCController {
 		}
 		return null;
 	}
+	
+	
+	
+	/*
+	 * Ritorna tutte le recensioni dato l'id di un corso
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/me/corsi")
+	public @ResponseBody
+	Collection<Corso> getAllFrequences(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			User utente = retrieveUser(request);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+		//	BasicProfile profile = profileConnector.getBasicProfile(token);
+			// test
+
+			Studente studente = studenteRepository.findStudenteByUserId(utente
+					.getId());
+			if (studente == null) {
+				studente = new Studente();
+		//		studente.setNome(profile.getName());
+				studente = studenteRepository.save(studente);
+				
+				//TODO caricare corsi da esse3
+				//Creare associazione su frequenze
+				
+				//TEST
+				List<Corso> corsiEsse3=corsoRepository.findAll();
+				
+				//TEST
+				
+				for(Corso index: corsiEsse3){
+					Frequenze frequenze = new Frequenze();
+					
+					frequenze.setStudente(studente);
+					frequenze.setCorso(index);
+						frequenze = frequenzeRepository
+								.save(frequenze);
+				}
+				
+			}
+
+			
+
+			return studenteRepository.findOne(studente.getId()).getCorsi();
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
 
 }
