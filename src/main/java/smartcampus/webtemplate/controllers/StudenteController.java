@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
+import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
@@ -54,7 +55,7 @@ public class StudenteController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/studente/{id_studente}")
 	public @ResponseBody
-	List<Studente> getInfoStudentFromId(HttpServletRequest request,
+	Studente getInfoStudentFromId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("id_studente") long id_studente)
 
@@ -67,6 +68,7 @@ public class StudenteController {
 
 			if (profile != null) {
 
+				
 				// TEST
 				Studente c = new Studente();
 
@@ -84,9 +86,13 @@ public class StudenteController {
 
 				studenteRepository.save(c);
 
+				
+				Studente stud = studenteRepository.findOne(Long.valueOf(id_studente));
+				
+				
 				// TEST
 
-				return studenteRepository.findAll();
+				return stud;
 			} else {
 				return null;
 			}

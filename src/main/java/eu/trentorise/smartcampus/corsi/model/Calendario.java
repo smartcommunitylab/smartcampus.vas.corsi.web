@@ -4,13 +4,33 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 
 @Entity
+@NamedQueries({ @NamedQuery(name = "Calendario.getCalendarioByIdStudente", query = "select c from Studente c where c.userSCId = ?1") })
 public class Calendario {
 
 	@Id
 	@GeneratedValue
 	private long id;
+
+	// testo del commento
+	@OneToOne
+	@JoinColumn(name = "CALENDAR_ID")
+	private long id_calendario;
+
+	// testo del commento
+	@OneToOne
+	@JoinColumn(name = "STUDENTE_ID")
+	private Studente studente;
+
+	// testo del commento
+	@OneToOne
+	@JoinColumn(name = "EVENTO_ID")
+	private Evento evento;
 
 	// testo del commento
 	@Column(name = "CANCELLATO")

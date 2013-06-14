@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -123,4 +124,73 @@ public class CalendarioController extends SCController {
 		}
 		return null;
 	}
+	
+	
+	
+	
+	
+	
+	/*
+	 * Ritorna tutti i calendari di un determinato utente (cioè tutti tutti i riferimenti agli eventi di quello studente)
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/{id_studente}/calendario")
+	public @ResponseBody
+	List<Evento> getCalendarioByIdStudente(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @PathVariable("id_studente") long id_studente)
+
+	throws IOException {
+		try {
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			User utente = retrieveUser(request);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			// test
+
+			Studente studente = studenteRepository.findStudenteByUserId(utente
+					.getId());
+			if (studente == null) {
+				studente = new Studente();
+				studente.setNome(profile.getName());
+				studente = studenteRepository.save(studente);
+			}
+			List<Corso> corsiDaEsse3DelloStudente = corsoRepository.findAll();
+
+			Calendario calendarioStudente = studente.getCalendario();
+			if (calendarioStudente == null) {
+				calendarioStudente = new Calendario();
+				calendarioStudente = calendarioRepository
+						.save(calendarioStudente);
+				studente.setCalendario(calendarioStudente);
+			}
+
+			for (Corso corso : corsiDaEsse3DelloStudente) {
+				for (int i = 0; i < 5; i++) {
+					Evento evento = new Evento();
+					evento.setTitolo("evento prova " + i);
+					evento.setCorso(corso);
+					evento.setCalendario(calendarioStudente);
+
+					eventoRepository.save(evento);
+				}
+
+			}
+
+			calendarioStudente = calendarioRepository.save(calendarioStudente);
+			// test
+
+			return eventoRepository
+					.findEventoByCalendarioId(calendarioStudente);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
 }
