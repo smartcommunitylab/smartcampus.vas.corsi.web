@@ -4,10 +4,9 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import eu.trentorise.smartcampus.corsi.model.Calendario;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Evento;
+import eu.trentorise.smartcampus.corsi.model.Frequenze;
 
 @Repository
 public interface EventoRepository extends JpaRepository<Evento, Long> {
@@ -16,5 +15,4 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 
 	List<Evento> findEventoByCorso(Corso corso);
 
-	List<Evento> findEventoByCalendarioId(Calendario calendario);
 }

@@ -98,9 +98,6 @@ public class CorsiController extends SCController {
 						+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 						+ "dolore eu fugiat nulla pariatur.");
 				c.setValutazione_media(4);
-				Commento x = new Commento();
-				c.setCommenti(new ArrayList<Commento>());
-				c.getCommenti().add(x);
 
 				corsoRepository.save(c);
 
@@ -144,24 +141,7 @@ public class CorsiController extends SCController {
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 					+ "dolore eu fugiat nulla pariatur.");
 
-			List<Commento> commenti = new ArrayList<Commento>();
-
-			Date data = new Date("2013/04/23");
-			for (int i = 0; i < 10; i++) {
-				Commento co = new Commento();
-				co.setCorso(corso);
-				co.setData_inserimento(data);
-				co.setTesto("Commento del corso Commento del corso Commento del corso Commento del corso. ");
-				// co.setValutazione(4);
-				co.setRating_carico_studio(3);
-				co.setRating_contenuto(3);
-				co.setRating_esame(3);
-				co.setRating_lezioni(3);
-				co.setRating_materiali(3);
-				commenti.add(co);
-			}
-
-			corso.setCommenti(commenti);
+			
 
 			corsoRepository.save(corso);
 

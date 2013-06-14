@@ -20,19 +20,19 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.ac.provider.model.User;
 import eu.trentorise.smartcampus.controllers.SCController;
-import eu.trentorise.smartcampus.corsi.model.Calendario;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Evento;
+import eu.trentorise.smartcampus.corsi.model.Frequenze;
 import eu.trentorise.smartcampus.corsi.model.Studente;
-import eu.trentorise.smartcampus.corsi.repository.CalendarioRepository;
+import eu.trentorise.smartcampus.corsi.repository.FrequenzeRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
-@Controller("calendarioController")
-public class CalendarioController extends SCController {
+@Controller("frequenzeController")
+public class FrequenzeController extends SCController {
 
 	private static final Logger logger = Logger
 			.getLogger(CommentiController.class);
@@ -55,7 +55,7 @@ public class CalendarioController extends SCController {
 	private String appName;
 
 	@Autowired
-	private CalendarioRepository calendarioRepository;
+	private FrequenzeRepository frequenzeRepository;
 
 	@Autowired
 	private CorsoRepository corsoRepository;
@@ -69,9 +69,9 @@ public class CalendarioController extends SCController {
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/calendario")
+	@RequestMapping(method = RequestMethod.GET, value = "/frequenze")
 	public @ResponseBody
-	List<Evento> getAllEventsFromStudentId(HttpServletRequest request,
+	List<Frequenze> getAllFrequences(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
@@ -90,33 +90,27 @@ public class CalendarioController extends SCController {
 				studente.setNome(profile.getName());
 				studente = studenteRepository.save(studente);
 			}
-			List<Corso> corsiDaEsse3DelloStudente = corsoRepository.findAll();
 
-			Calendario calendarioStudente = studente.getCalendario();
-			if (calendarioStudente == null) {
-				calendarioStudente = new Calendario();
-				calendarioStudente = calendarioRepository
-						.save(calendarioStudente);
-				studente.setCalendario(calendarioStudente);
-			}
+			Corso corso = new Corso();
+			corso.setNome("Fisica organica");
+			
+			
+			Frequenze frequenze = new Frequenze();
+		
+			frequenze.setStudente(studente);
+			frequenze.setCorso(corso);
+				frequenze = frequenzeRepository
+						.save(frequenze);
+			
+		
+		
 
-			for (Corso corso : corsiDaEsse3DelloStudente) {
-				for (int i = 0; i < 5; i++) {
-					Evento evento = new Evento();
-					evento.setTitolo("evento prova " + i);
-					evento.setCorso(corso);
-					evento.setCalendario(calendarioStudente);
+			
 
-					eventoRepository.save(evento);
-				}
-
-			}
-
-			calendarioStudente = calendarioRepository.save(calendarioStudente);
+				frequenze = frequenzeRepository.save(frequenze);
 			// test
 
-			return eventoRepository
-					.findEventoByCalendarioId(calendarioStudente);
+			return frequenzeRepository.findAll();
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -133,9 +127,9 @@ public class CalendarioController extends SCController {
 	/*
 	 * Ritorna tutti i calendari di un determinato utente (cioè tutti tutti i riferimenti agli eventi di quello studente)
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/{id_studente}/calendario")
+	@RequestMapping(method = RequestMethod.GET, value = "/{id_studente}/frequenze")
 	public @ResponseBody
-	List<Evento> getCalendarioByIdStudente(HttpServletRequest request,
+	List<Frequenze> getFrequencesByIdStudente(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session, @PathVariable("id_studente") long id_studente)
 
 	throws IOException {
@@ -147,40 +141,7 @@ public class CalendarioController extends SCController {
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			// test
 
-			Studente studente = studenteRepository.findStudenteByUserId(utente
-					.getId());
-			if (studente == null) {
-				studente = new Studente();
-				studente.setNome(profile.getName());
-				studente = studenteRepository.save(studente);
-			}
-			List<Corso> corsiDaEsse3DelloStudente = corsoRepository.findAll();
-
-			Calendario calendarioStudente = studente.getCalendario();
-			if (calendarioStudente == null) {
-				calendarioStudente = new Calendario();
-				calendarioStudente = calendarioRepository
-						.save(calendarioStudente);
-				studente.setCalendario(calendarioStudente);
-			}
-
-			for (Corso corso : corsiDaEsse3DelloStudente) {
-				for (int i = 0; i < 5; i++) {
-					Evento evento = new Evento();
-					evento.setTitolo("evento prova " + i);
-					evento.setCorso(corso);
-					evento.setCalendario(calendarioStudente);
-
-					eventoRepository.save(evento);
-				}
-
-			}
-
-			calendarioStudente = calendarioRepository.save(calendarioStudente);
-			// test
-
-			return eventoRepository
-					.findEventoByCalendarioId(calendarioStudente);
+			
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());

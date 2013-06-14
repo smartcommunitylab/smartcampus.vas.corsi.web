@@ -46,10 +46,6 @@ public class Studente {
 		this.userSCId = userSCId;
 	}
 
-	@OneToOne
-	@JoinColumn(name = "CALENDARIO_ID")
-	private Calendario calendario;
-
 	public long getId() {
 		return id;
 	}
@@ -104,14 +100,6 @@ public class Studente {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Calendario getCalendario() {
-		return calendario;
-	}
-
-	public void setCalendario(Calendario calendario) {
-		this.calendario = calendario;
 	}
 
 }

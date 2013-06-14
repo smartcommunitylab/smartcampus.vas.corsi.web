@@ -26,10 +26,6 @@ public class Corso extends CorsoLite {
 	@Column(name = "DESCRIZIONE", length = 100000)
 	private String descrizione;
 
-	// lista dei commenti del corso
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "corso", cascade = CascadeType.ALL)
-	private List<Commento> commenti;
-
 	// valutazione media di tutti gli UtenteCorsi
 	@Column(name = "VALUTAZIONE_MEDIA")
 	private float valutazione_media;
@@ -69,13 +65,6 @@ public class Corso extends CorsoLite {
 		this.descrizione = descrizione;
 	}
 
-	public List<Commento> getCommenti() {
-		return commenti;
-	}
-
-	public void setCommenti(List<Commento> commenti) {
-		this.commenti = commenti;
-	}
 
 	public float getValutazione_media() {
 		return valutazione_media;
