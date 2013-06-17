@@ -101,29 +101,36 @@ public class EventiController extends SCController {
 
 	throws IOException {
 		try {
-			// TODO controlli se campi validi
+			
 
 			// User Request create event
 			// creati a notification and send to Communicator
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			User user = retrieveUser(request);
+			
+			// TODO controlli se campi validi
+			if (evento != null && evento.getTitolo() != "") {
 
-			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-					serverAddress);// , appName);
+				String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+				User user = retrieveUser(request);
 
-			List<String> users = new ArrayList<String>();
-			users.add(user.getId().toString());
+				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+						serverAddress);// , appName);
 
-			Notification n = new Notification();
-			n.setTitle(evento.getTitolo());
-			n.setUser(user.getId().toString());
-			n.setTimestamp(System.currentTimeMillis());
-			n.setDescription("Creazione Evento");
+				List<String> users = new ArrayList<String>();
+				users.add(user.getId().toString());
 
-			communicatorConnector.sendAppNotification(n, appName, users, token);
+				Notification n = new Notification();
+				n.setTitle(evento.getTitolo());
+				n.setUser(user.getId().toString());
+				n.setTimestamp(System.currentTimeMillis());
+				n.setDescription("Creazione Evento");
 
-			return eventoRepository.save(evento);
+				communicatorConnector.sendAppNotification(n, appName, users,
+						token);
+
+				return eventoRepository.save(evento);
+			} else
+				return null;
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -189,20 +196,20 @@ public class EventiController extends SCController {
 		}
 		return null;
 	}
-	
+
 	@PostConstruct
-	private void initEvento(){
-		
+	private void initEvento() {
+
 		List<Corso> esse3 = corsoRepository.findAll();
-		for(Corso index:esse3){
-			for(int i=0;i<2;i++){
-				Evento x=new Evento();
+		for (Corso index : esse3) {
+			for (int i = 0; i < 2; i++) {
+				Evento x = new Evento();
 				x.setCorso(index);
-				x.setTitolo("Lezione "+i);
+				x.setTitolo("Lezione " + i);
 				eventoRepository.save(x);
 			}
 		}
-		
+
 	}
 
 }

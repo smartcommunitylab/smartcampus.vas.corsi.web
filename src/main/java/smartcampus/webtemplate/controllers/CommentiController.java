@@ -74,6 +74,7 @@ public class CommentiController extends SCController {
 					.findOne(id_corso));
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -82,7 +83,7 @@ public class CommentiController extends SCController {
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/commento")
+	@RequestMapping(method = RequestMethod.POST, value = "/commento")//
 	public @ResponseBody
 	boolean saveCommento(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session, @RequestBody Commento commento)
@@ -90,6 +91,7 @@ public class CommentiController extends SCController {
 	throws IOException {
 		try {
 			logger.info("/commento");
+			//TODO control valid field
 			if (commento == null)
 				return false;
 
