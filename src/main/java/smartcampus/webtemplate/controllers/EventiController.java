@@ -203,10 +203,6 @@ public class EventiController extends SCController {
 			}
 		}
 		
-
-		
-		
-		
 	}
 
 }
