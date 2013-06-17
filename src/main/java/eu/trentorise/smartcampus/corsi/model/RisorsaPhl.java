@@ -1,25 +1,50 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-public class RisorsaPhl extends Risorsa {
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
-	private String nome;
 
-	private String hash;
-
-	public String getNome() {
-		return nome;
+public class RisorsaPhl extends Risorsa 
+{
+	private String name;
+	private boolean isDirectory;
+	private String url;
+		
+	@JsonProperty("name")
+	public String getName()
+	{
+		return name;
+	}
+	
+	@JsonProperty("name")
+	public void setName(String name)
+	{
+		this.name = name; 
+	}
+	
+	@JsonProperty("url")
+	public String getUrl()
+	{
+		return url;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	@JsonProperty("url")
+	public void setUrl(String url)
+	{
+		this.url = url;
 	}
 
-	public String getHash() {
-		return hash;
+	@JsonProperty("isDirectory")
+	public boolean isDirectory()
+	{
+		return isDirectory;
 	}
 
-	public void setHash(String hash) {
-		this.hash = hash;
+	@JsonProperty("isDirectory")
+	public void setDirectory(boolean isDirectory)
+	{
+		this.isDirectory = isDirectory;
 	}
-
+	
 }
