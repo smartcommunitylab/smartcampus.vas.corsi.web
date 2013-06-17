@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -187,6 +188,25 @@ public class EventiController extends SCController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
+	}
+	
+	@PostConstruct
+	private void initEvento(){
+		
+		List<Corso> esse3 = corsoRepository.findAll();
+		for(Corso index:esse3){
+			for(int i=0;i<2;i++){
+				Evento x=new Evento();
+				x.setCorso(index);
+				x.setTitolo("Lezione "+i);
+				eventoRepository.save(x);
+			}
+		}
+		
+
+		
+		
+		
 	}
 
 }

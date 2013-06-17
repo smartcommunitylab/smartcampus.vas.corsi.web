@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Commento;
+import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 
@@ -55,7 +57,7 @@ public class CommentiController extends SCController {
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/commenti/{id_corso}")
+	@RequestMapping(method = RequestMethod.GET, value = "/commento/{id_corso}")
 	public @ResponseBody
 	List<Commento> getCommentoByCorsoId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -74,6 +76,31 @@ public class CommentiController extends SCController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
+	}
+	
+	/*
+	 * Ritorna tutte le recensioni dato l'id di un corso
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/commento")
+	public @ResponseBody
+	boolean saveCommento(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @RequestBody Commento commento)
+
+	throws IOException {
+		try {
+			logger.info("/commento");
+			if (commento == null)
+				return false;
+
+			return commentiRepository.save(commento)!=null;
+
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return false;
+		}
+		
 	}
 
 	@PostConstruct

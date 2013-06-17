@@ -71,8 +71,10 @@ public class CorsiController extends SCController {
 
 	throws IOException {
 		try {
+			
+			List<Corso> getCor=corsoRepository.findAll();
 
-			return corsoRepository.findAll();
+			return getCor;
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());

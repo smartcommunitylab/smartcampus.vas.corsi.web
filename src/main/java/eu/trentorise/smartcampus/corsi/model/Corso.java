@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
@@ -47,8 +48,8 @@ public class Corso extends CorsoLite {
 	// lista di note
 	// private List<Note> note;
 
-	@ManyToMany(mappedBy = "corsi")
-	private Collection<Studente> studentiFrequentanti;
+	//@ManyToMany(mappedBy = "corsi",fetch=FetchType.EAGER)
+	//private Collection<Studente> studentiFrequentanti;
 
 	public Corso() {
 
@@ -102,13 +103,13 @@ public class Corso extends CorsoLite {
 		this.id_dipartimento = id_dipartimento;
 	}
 
-	public Collection<Studente> getStudentiFrequentanti() {
-		return studentiFrequentanti;
-	}
-
-	public void setStudentiFrequentanti(
-			Collection<Studente> studentiFrequentanti) {
-		this.studentiFrequentanti = studentiFrequentanti;
-	}
+//	public Collection<Studente> getStudentiFrequentanti() {
+//		return studentiFrequentanti;
+//	}
+//
+//	public void setStudentiFrequentanti(
+//			Collection<Studente> studentiFrequentanti) {
+//		this.studentiFrequentanti = studentiFrequentanti;
+//	}
 
 }

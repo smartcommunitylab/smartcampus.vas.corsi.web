@@ -14,7 +14,12 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "Evento.findEventoByCorso", query = "select c from Evento c where c.corso = ?1") })
-public class Evento {
+public class Evento extends BasicEntity{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4216708970101566299L;
+
 	// id dell'evento
 	@Id
 	@GeneratedValue

@@ -1,6 +1,8 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import java.util.Date;
+
+
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,7 +36,7 @@ public class Commento {
 
 	// data in cui e' stato scritto commento
 	@Column(name = "DATA_INSERIMENTO")
-	private Date data_inserimento;
+	private String data_inserimento;
 
 	// valutazione contenuto
 	@Column(name = "RATING_CONTENUTO")
@@ -91,11 +93,11 @@ public class Commento {
 		this.testo = testo;
 	}
 
-	public Date getData_inserimento() {
+	public String getData_inserimento() {
 		return data_inserimento;
 	}
 
-	public void setData_inserimento(Date data_inserimento) {
+	public void setData_inserimento(String data_inserimento) {
 		this.data_inserimento = data_inserimento;
 	}
 
