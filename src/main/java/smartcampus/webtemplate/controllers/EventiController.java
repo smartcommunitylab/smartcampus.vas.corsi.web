@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -66,7 +67,7 @@ public class EventiController extends SCController {
 	/*
 	 * Ritorna tutti gli eventi per corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/eventi/{idcorso}")
+	@RequestMapping(method = RequestMethod.GET, value = "/evento/{idcorso}")
 	public @ResponseBody
 	List<Evento> getEventoByCorso(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -93,36 +94,43 @@ public class EventiController extends SCController {
 	/*
 	 * Riceve evento e lo salva nel db
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/eventi")
+	@RequestMapping(method = RequestMethod.POST, value = "/evento")
 	public @ResponseBody
 	Evento saveEvento(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @RequestBody Evento evento)
 
 	throws IOException {
 		try {
-			// TODO controlli se campi validi
+			
 
 			// User Request create event
 			// creati a notification and send to Communicator
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			User user = retrieveUser(request);
+			
+			// TODO controlli se campi validi
+			if (evento != null && evento.getTitolo() != "") {
 
-			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-					serverAddress);// , appName);
+				String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+				User user = retrieveUser(request);
 
-			List<String> users = new ArrayList<String>();
-			users.add(user.getId().toString());
+				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+						serverAddress);// , appName);
 
-			Notification n = new Notification();
-			n.setTitle(evento.getTitolo());
-			n.setUser(user.getId().toString());
-			n.setTimestamp(System.currentTimeMillis());
-			n.setDescription("Creazione Evento");
+				List<String> users = new ArrayList<String>();
+				users.add(user.getId().toString());
 
-			communicatorConnector.sendAppNotification(n, appName, users, token);
+				Notification n = new Notification();
+				n.setTitle(evento.getTitolo());
+				n.setUser(user.getId().toString());
+				n.setTimestamp(System.currentTimeMillis());
+				n.setDescription("Creazione Evento");
 
-			return eventoRepository.save(evento);
+				communicatorConnector.sendAppNotification(n, appName, users,
+						token);
+
+				return eventoRepository.save(evento);
+			} else
+				return null;
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -133,7 +141,7 @@ public class EventiController extends SCController {
 	/*
 	 * Ritorna tutti gli eventi per corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/eventi/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/evento/me")
 	public @ResponseBody
 	List<Evento> getEventoByMe(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
@@ -187,6 +195,21 @@ public class EventiController extends SCController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
+	}
+
+	@PostConstruct
+	private void initEvento() {
+
+		List<Corso> esse3 = corsoRepository.findAll();
+		for (Corso index : esse3) {
+			for (int i = 0; i < 2; i++) {
+				Evento x = new Evento();
+				x.setCorso(index);
+				x.setTitolo("Lezione " + i);
+				eventoRepository.save(x);
+			}
+		}
+
 	}
 
 }

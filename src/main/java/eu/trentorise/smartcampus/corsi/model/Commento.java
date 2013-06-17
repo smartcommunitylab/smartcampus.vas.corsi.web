@@ -1,6 +1,6 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import java.util.Date;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,27 +34,27 @@ public class Commento {
 
 	// data in cui e' stato scritto commento
 	@Column(name = "DATA_INSERIMENTO")
-	private Date data_inserimento;
+	private String data_inserimento;
 
 	// valutazione contenuto
 	@Column(name = "RATING_CONTENUTO")
-	private int rating_contenuto;
+	private Integer rating_contenuto;
 
 	// valutazione carico studio
 	@Column(name = "RATING_CARICO_STUDIO")
-	private int rating_carico_studio;
+	private Integer rating_carico_studio;
 
 	// valutazione lezioni
 	@Column(name = "RATING_LEZIONI")
-	private int rating_lezioni;
+	private Integer rating_lezioni;
 
 	// valutazione materiali
 	@Column(name = "RATING_MATERIALI")
-	private int rating_materiali;
+	private Integer rating_materiali;
 
 	// valutazione esame
 	@Column(name = "RATING_ESAME")
-	private int rating_esame;
+	private Integer rating_esame;
 
 	public Commento() {
 	}
@@ -91,23 +91,23 @@ public class Commento {
 		this.testo = testo;
 	}
 
-	public Date getData_inserimento() {
+	public String getData_inserimento() {
 		return data_inserimento;
 	}
 
-	public void setData_inserimento(Date data_inserimento) {
+	public void setData_inserimento(String data_inserimento) {
 		this.data_inserimento = data_inserimento;
 	}
 
-	public int getRating_contenuto() {
+	public Integer getRating_contenuto() {
 		return rating_contenuto;
 	}
 
-	public void setRating_contenuto(int rating_contenuto) {
+	public void setRating_contenuto(Integer rating_contenuto) {
 		this.rating_contenuto = rating_contenuto;
 	}
 
-	public int getRating_carico_studio() {
+	public Integer getRating_carico_studio() {
 		return rating_carico_studio;
 	}
 
@@ -115,15 +115,15 @@ public class Commento {
 		this.rating_carico_studio = rating_carico_studio;
 	}
 
-	public int getRating_lezioni() {
+	public Integer getRating_lezioni() {
 		return rating_lezioni;
 	}
 
-	public void setRating_lezioni(int rating_lezioni) {
+	public void setRating_lezioni(Integer rating_lezioni) {
 		this.rating_lezioni = rating_lezioni;
 	}
 
-	public int getRating_materiali() {
+	public Integer getRating_materiali() {
 		return rating_materiali;
 	}
 
@@ -131,11 +131,11 @@ public class Commento {
 		this.rating_materiali = rating_materiali;
 	}
 
-	public int getRating_esame() {
+	public Integer getRating_esame() {
 		return rating_esame;
 	}
 
-	public void setRating_esame(int rating_esame) {
+	public void setRating_esame(Integer rating_esame) {
 		this.rating_esame = rating_esame;
 	}
 

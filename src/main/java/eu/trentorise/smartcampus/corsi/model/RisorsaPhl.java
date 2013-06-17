@@ -1,7 +1,5 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 
@@ -46,5 +44,4 @@ public class RisorsaPhl extends Risorsa
 	{
 		this.isDirectory = isDirectory;
 	}
-	
 }
