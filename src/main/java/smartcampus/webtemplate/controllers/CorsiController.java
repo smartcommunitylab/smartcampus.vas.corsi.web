@@ -64,7 +64,7 @@ public class CorsiController extends SCController {
 	/*
 	 * Ritorna tutti i corsi in versione lite
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/all")
 	public @ResponseBody
 	List<Corso> getCorsiCompletiAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
@@ -87,7 +87,7 @@ public class CorsiController extends SCController {
 	/*
 	 * Ritorna i dati completi di un corso dato l'id
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/{id_corso}")
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/{id_corso}")
 	public @ResponseBody
 	Corso getCorsoByID(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -111,7 +111,7 @@ public class CorsiController extends SCController {
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/me")
 	public @ResponseBody
 	Collection<Corso> getCorsoByMe(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)

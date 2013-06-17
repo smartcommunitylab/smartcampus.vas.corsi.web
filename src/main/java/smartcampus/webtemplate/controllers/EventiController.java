@@ -67,7 +67,7 @@ public class EventiController extends SCController {
 	/*
 	 * Ritorna tutti gli eventi per corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/eventi/{idcorso}")
+	@RequestMapping(method = RequestMethod.GET, value = "/evento/{idcorso}")
 	public @ResponseBody
 	List<Evento> getEventoByCorso(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -94,7 +94,7 @@ public class EventiController extends SCController {
 	/*
 	 * Riceve evento e lo salva nel db
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/eventi")
+	@RequestMapping(method = RequestMethod.POST, value = "/evento")
 	public @ResponseBody
 	Evento saveEvento(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @RequestBody Evento evento)
@@ -134,7 +134,7 @@ public class EventiController extends SCController {
 	/*
 	 * Ritorna tutti gli eventi per corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/eventi/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/evento/me")
 	public @ResponseBody
 	List<Evento> getEventoByMe(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)

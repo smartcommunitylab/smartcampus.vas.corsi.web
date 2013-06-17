@@ -1,5 +1,6 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-public class RisorsaPhl extends Risorsa {
+public class RisorsaMoodle extends Risorsa {
 
+	
 }
