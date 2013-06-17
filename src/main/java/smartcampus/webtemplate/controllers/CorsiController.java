@@ -161,7 +161,7 @@ public class CorsiController extends SCController {
 	/*
 	 * getCorsoByDipartimento
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/dipartimento/{id_dipartimento}")
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/dipartimento/{id_dipartimento}")
 	public @ResponseBody
 	Collection<Corso> getCorsoByDipartimento(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
