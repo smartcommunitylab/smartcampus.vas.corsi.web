@@ -25,9 +25,6 @@ public class Dipartimento extends BasicEntity {
 	@Column(name = "NOME")
 	private String nome;
 
-	@OneToMany(targetEntity=CorsoLaurea.class, mappedBy="dipartimento")
-	private Collection<CorsoLaurea> corsi;
-
 	public long getId() {
 		return id;
 	}
@@ -44,19 +41,9 @@ public class Dipartimento extends BasicEntity {
 		this.nome = nome;
 	}
 
-	public Collection<CorsoLaurea> getCorsi() {
-		return corsi;
-	}
-
-	public void setCorsi(Collection<CorsoLaurea> corsi) {
-		this.corsi = corsi;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
 	
 	
 }
