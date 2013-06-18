@@ -114,7 +114,7 @@ public class EventiController extends SCController {
 				User user = retrieveUser(request);
 
 				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-						serverAddress);// , appName);
+						serverAddress, appName);
 
 				List<String> users = new ArrayList<String>();
 				users.add(user.getId().toString());
@@ -133,6 +133,37 @@ public class EventiController extends SCController {
 				return null;
 
 		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+
+	/*
+	 * Riceve notifiche e lo salva nel db
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/notification/all")
+	public @ResponseBody
+	List<Notification> getNotifications(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session)
+
+	throws IOException {
+		try {
+			
+
+		
+				String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+		
+
+				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+						serverAddress, appName);
+
+				
+				return communicatorConnector.getNotifications(0L, 0, 0, token);
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
