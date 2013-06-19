@@ -10,5 +10,5 @@ import eu.trentorise.smartcampus.corsi.model.Corso;
 @Repository
 public interface CorsoRepository extends JpaRepository<Corso, Long> {
 	List<Corso> findCorsoByDipartimentoId(Long id_dipartimento);
-
+	List<Corso> findCorsoByCorsoLaureaId(Long id_corsoLaurea);
 }

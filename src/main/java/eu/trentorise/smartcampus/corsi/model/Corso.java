@@ -12,7 +12,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "Corso.findCorsoByDipartimentoId", query = "select c from Corso c where c.id_dipartimento = ?1") })
+@NamedQueries({ @NamedQuery(name = "Corso.findCorsoByDipartimentoId", query = "select c from Corso c where c.id_dipartimento = ?1"),
+				@NamedQuery(name = "Corso.findCorsoByCorsoLaureaId", query = "select c from Corso c where c.id_corsoLaurea = ?1") })
 public class Corso extends CorsoLite {
 
 	/**
@@ -27,6 +28,10 @@ public class Corso extends CorsoLite {
 	// data di inizio del corso
 	@Column(name = "Dipartimento_id")
 	private long id_dipartimento;
+	
+	// data di inizio del corso
+	@Column(name = "CorsoLaurea_id")
+	private long id_corsoLaurea;
 
 	// data di fine del corso
 	@Column(name = "DATA_FINE")
@@ -77,6 +82,14 @@ public class Corso extends CorsoLite {
 
 	public void setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
+	}
+	
+	public void setId_corsoLaurea(long id_corsoLaurea) {
+		this.id_corsoLaurea = id_corsoLaurea;
+	}
+	
+	public long getId_corsoLaurea() {
+		return id_corsoLaurea;
 	}
 
 	public float getValutazione_media() {
