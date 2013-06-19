@@ -185,7 +185,7 @@ public class CorsiController extends SCController {
 	/*
 	 * getCorsoByCorsoLaurea
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corso/dipartimento/corsolaurea/{id_corsoLaurea}")
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/corsolaurea/{id_corsoLaurea}")
 	public @ResponseBody
 	Collection<Corso> getCorsoByCorsoLaurea(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -193,7 +193,7 @@ public class CorsiController extends SCController {
 
 	throws IOException {
 		try {
-			logger.info("/corsi/dipartimento/corsolaurea/{id_corsoLaurea}");
+			logger.info("/corsi/corsolaurea/{id_corsoLaurea}");
 			if (id_corsoLaurea == null)
 				return null;
 
