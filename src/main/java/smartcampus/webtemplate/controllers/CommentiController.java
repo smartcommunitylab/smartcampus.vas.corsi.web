@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 
@@ -92,8 +93,11 @@ public class CommentiController extends SCController {
 	private void initCommenti() {
 
 		List<Corso> esse3 = corsoRepository.findAll();
-
+		int i = 1;
 		for (Corso c : esse3) {
+			Studente studente = new Studente();
+			studente.setNome("NomeStudente"+i);
+			studente.setId(i);
 			Commento commento = new Commento();
 			commento.setCorso(c);
 			commento.setRating_carico_studio(4);
@@ -101,8 +105,9 @@ public class CommentiController extends SCController {
 			commento.setRating_esame(5);
 			commento.setRating_lezioni(4);
 			commento.setRating_materiali(3);
+			commento.setId_studente(studente);
 			commento.setTesto("Corso inutile.");
-
+			i++;
 			commentiRepository.save(commento);
 		}
 

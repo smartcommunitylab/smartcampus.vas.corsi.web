@@ -1,6 +1,7 @@
 package eu.trentorise.smartcampus.corsi.model;
 
 import java.sql.Time;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,7 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "Evento.findEventoByCorso", query = "select c from Evento c where c.corso = ?1") })
-public class Evento extends BasicEntity{
+public class Evento extends BasicEntity {
 	/**
 	 * 
 	 */
@@ -46,6 +47,10 @@ public class Evento extends BasicEntity{
 	// the room where the place takes places
 	@Column(name = "ROOM")
 	private String room;
+
+	// the room where the place takes places
+	@Column(name = "DATA")
+	private Date data;
 
 	// the description of the event
 	@Lob
@@ -163,6 +168,16 @@ public class Evento extends BasicEntity{
 
 	public void setAvailability(boolean availability) {
 		this.availability = availability;
+	}
+	
+	
+	
+	public Date getData() {
+		return data;
+	}
+	
+	public void setData(Date data) {
+		this.data = data;
 	}
 
 }

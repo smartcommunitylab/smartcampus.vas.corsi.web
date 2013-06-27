@@ -1,7 +1,9 @@
 package smartcampus.webtemplate.controllers;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -179,7 +181,7 @@ public class EventiController extends SCController {
 
 	throws IOException {
 		try {
-			logger.info("/eventi/me");
+			logger.info("/evento/me");
 
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			User utente = retrieveUser(request);
@@ -228,6 +230,7 @@ public class EventiController extends SCController {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@PostConstruct
 	private void initEvento() {
 
@@ -236,7 +239,13 @@ public class EventiController extends SCController {
 			for (int i = 0; i < 2; i++) {
 				Evento x = new Evento();
 				x.setCorso(index);
-				x.setTitolo("Lezione " + i);
+				x.setTitolo("Lezione " + index.getNome());
+				x.setDescrizione("Lezione teorica di "+ "index.getNome()");
+				x.setRoom("A20"+i);
+				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
+				x.setData(new Date("2013/06/28"));
+				x.setStart(new Time(8, 30, 00));
+				x.setStop(new Time(10, 30, 00));
 				eventoRepository.save(x);
 			}
 		}

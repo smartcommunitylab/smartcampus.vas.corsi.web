@@ -118,15 +118,13 @@ public class CorsiController extends SCController {
 
 	throws IOException {
 		try {
-			logger.info("/corsi/me");
-
+			logger.info("/corso/me");
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			User utente = retrieveUser(request);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			// test
-
 			Studente studente = studenteRepository.findStudenteByUserId(utente
 					.getId());
 			if (studente == null) {
@@ -144,10 +142,10 @@ public class CorsiController extends SCController {
 
 				// Set corso follwed by studente
 				studente.setCorsi(corsiEsse3);
-
+				studente = studenteRepository.save(studente);
 			}
 
-			studente = studenteRepository.save(studente);
+		
 
 			return studente.getCorsi();
 
@@ -157,6 +155,13 @@ public class CorsiController extends SCController {
 		}
 		return null;
 	}
+	
+	
+	
+	
+	
+	
+	
 
 	/*
 	 * getCorsoByDipartimento
@@ -210,8 +215,71 @@ public class CorsiController extends SCController {
 	private void initCorsi() {
 		Corso c = new Corso();
 
+		c.setNome("Programmazione 1");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+
+		c = new Corso();
+
+		c.setNome("Analisi matematica 1");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+
+		c = new Corso();
+
+		c.setNome("Matematica discreta 1");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		
+		c = new Corso();
+
+		c.setNome("Programmazione 2");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		
+		c = new Corso();
+
+		c.setNome("Programmazione funzionale");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+
 		int i = 0;
-		for (i = 0; i < 4; i++) {
+		for (i = 2; i < 4; i++) {
+
+			c = new Corso();
+
 			c.setNome("Fisica dei materiali");
 			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
@@ -246,7 +314,7 @@ public class CorsiController extends SCController {
 			c.setId_corsoLaurea(i);
 
 			corsoRepository.save(c);
-			
+
 			c = new Corso();
 
 			c.setNome("Fisica dei materiali 5");

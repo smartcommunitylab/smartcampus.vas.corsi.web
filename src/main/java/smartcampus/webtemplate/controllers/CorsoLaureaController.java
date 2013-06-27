@@ -138,6 +138,7 @@ public class CorsoLaureaController extends SCController {
 			corsoL = new CorsoLaurea();
 			corsoL.setDipartimento(d);
 			corsoL.setNome("Ingegneria elettronica e delle telecomunicazioni");
+			
 			corsoLaureaRepository.save(corsoL);
 			
 			
