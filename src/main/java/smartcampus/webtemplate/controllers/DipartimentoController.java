@@ -35,22 +35,7 @@ public class DipartimentoController extends SCController {
 	
 	private static final Logger logger = Logger
 			.getLogger(CorsiController.class);
-	@Autowired
-	private AcService acService;
-
-	/*
-	 * the base url of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${services.server}")
-	private String serverAddress;
-
-	/*
-	 * the base appName of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${webapp.name}")
-	private String appName;
+	
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;

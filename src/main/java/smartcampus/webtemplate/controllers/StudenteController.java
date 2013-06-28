@@ -18,11 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.ac.provider.model.User;
 import eu.trentorise.smartcampus.controllers.SCController;
-import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
@@ -36,30 +34,16 @@ public class StudenteController extends SCController {
 	private static final Logger logger = Logger
 			.getLogger(CommentiController.class);
 
-	@Autowired
-	private AcService acService;
-
-	/*
-	 * the base url of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${services.server}")
-	private String serverAddress;
-
-	/*
-	 * the base appName of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${webapp.name}")
-	private String appName;
-
+	
 	@Autowired
 	private StudenteRepository studenteRepository;
 
 	@Autowired
 	private CorsoRepository corsoRepository;
 
-	
+	@Autowired
+	@Value("${profile.address}")
+	private String profileaddress;
 	
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
@@ -76,7 +60,7 @@ public class StudenteController extends SCController {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			User utente = retrieveUser(request);
 			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
+					profileaddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(utente
@@ -128,7 +112,7 @@ public class StudenteController extends SCController {
 
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
+					profileaddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			User utente = retrieveUser(request);
 

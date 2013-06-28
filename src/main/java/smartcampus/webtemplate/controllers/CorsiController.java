@@ -42,8 +42,8 @@ public class CorsiController extends SCController {
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */
 	@Autowired
-	@Value("${services.server}")
-	private String serverAddress;
+	@Value("${profile.address}")
+	private String profileaddress;
 
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
@@ -122,7 +122,7 @@ public class CorsiController extends SCController {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			User utente = retrieveUser(request);
 			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
+					profileaddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(utente

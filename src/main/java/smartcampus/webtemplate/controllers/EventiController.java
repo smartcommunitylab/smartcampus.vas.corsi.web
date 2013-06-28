@@ -47,8 +47,13 @@ public class EventiController extends SCController {
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */
 	@Autowired
-	@Value("${services.server}")
-	private String serverAddress;
+	@Value("${profile.address}")
+	private String profileaddress;
+	
+	@Autowired
+	@Value("${communicator.address}")
+	private String communicatoraddress;
+
 
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
@@ -116,7 +121,7 @@ public class EventiController extends SCController {
 				User user = retrieveUser(request);
 
 				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-						serverAddress, appName);
+						communicatoraddress, appName);
 
 				List<String> users = new ArrayList<String>();
 				users.add(user.getId().toString());
@@ -158,7 +163,7 @@ public class EventiController extends SCController {
 		
 
 				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-						serverAddress, appName);
+						communicatoraddress, appName);
 
 				
 				return communicatorConnector.getNotifications(0L, 0, 0, token);
@@ -186,7 +191,7 @@ public class EventiController extends SCController {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			User utente = retrieveUser(request);
 			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
+					profileaddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			// test
 

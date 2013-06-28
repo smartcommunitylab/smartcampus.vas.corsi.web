@@ -23,6 +23,7 @@ import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
+import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 
 @Controller("commentiController")
 public class CommentiController extends SCController {
@@ -35,6 +36,9 @@ public class CommentiController extends SCController {
 
 	@Autowired
 	private CorsoRepository corsoRepository;
+	
+	@Autowired
+	private StudenteRepository studenteRepository;
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
@@ -98,6 +102,8 @@ public class CommentiController extends SCController {
 			Studente studente = new Studente();
 			studente.setNome("NomeStudente"+i);
 			studente.setId(i);
+			studente=studenteRepository.save(studente);
+			
 			Commento commento = new Commento();
 			commento.setCorso(c);
 			commento.setRating_carico_studio(4);

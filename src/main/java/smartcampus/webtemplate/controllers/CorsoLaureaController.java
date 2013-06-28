@@ -11,23 +11,17 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.controllers.SCController;
-import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
-import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
-import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
-import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 
 @Controller("corsoLaureaController")
 public class CorsoLaureaController extends SCController {
@@ -35,22 +29,6 @@ public class CorsoLaureaController extends SCController {
 	
 	private static final Logger logger = Logger
 			.getLogger(CorsiController.class);
-	@Autowired
-	private AcService acService;
-
-	/*
-	 * the base url of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${services.server}")
-	private String serverAddress;
-
-	/*
-	 * the base appName of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${webapp.name}")
-	private String appName;
 
 	@Autowired
 	private CorsoLaureaRepository corsoLaureaRepository;
