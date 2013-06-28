@@ -148,12 +148,15 @@ public class StudenteController extends SCController {
 	@PostConstruct
 	private void initStudenti() {
 
-		List<Corso> esse3 = corsoRepository.findAll();
+		long c = 1;
+		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId(c);
+		
 		
 		for (int i=0; i<200; i++) {
 			Studente studente = new Studente();
 			studente.setNome("NomeStudente"+i);
 			studente.setCognome("CognomeStudente"+i);
+			studente.setCorsi(esse3);
 			studenteRepository.save(studente);
 		}
 

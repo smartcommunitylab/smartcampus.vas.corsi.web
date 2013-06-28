@@ -112,7 +112,7 @@ public class CommentiController extends SCController {
 				commento.setRating_lezioni(4);
 				commento.setRating_materiali(3);
 				commento.setId_studente(s);
-				commento.setTesto("Corso inutile.");
+				commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
 				
 				commentiRepository.save(commento);
 			}

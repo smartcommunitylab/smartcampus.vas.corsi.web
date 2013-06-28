@@ -3,6 +3,7 @@ package smartcampus.webtemplate.controllers;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -188,16 +189,18 @@ public class EventiController extends SCController {
 		try {
 			logger.info("/evento/me");
 
+			
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			User utente = retrieveUser(request);
 			ProfileConnector profileConnector = new ProfileConnector(
 					profileaddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			// test
-
 			Studente studente = studenteRepository.findStudenteByUserId(utente
 					.getId());
-			if (studente == null) {
+			
+
+			/*if (studente == null) {
 				studente = new Studente();
 				studente.setNome(profile.getName());
 				studente = studenteRepository.save(studente);
@@ -206,14 +209,15 @@ public class EventiController extends SCController {
 				// Creare associazione su frequenze
 
 				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
+				//List<Corso> corsiEsse3 = corsoRepository.findAll();
 
+				Collection<Corso> corsiEsse3 = (Collection<Corso>) studente.getCorsi();
 				// TEST
 
 				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
+				//studente.setCorsi(corsiEsse3);
 
-			}
+			}*/
 
 
 			List<Evento> eventiListByCorso = new ArrayList<Evento>();
