@@ -23,6 +23,7 @@ import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
+import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 
 @Controller("commentiController")
 public class CommentiController extends SCController {
@@ -35,6 +36,9 @@ public class CommentiController extends SCController {
 
 	@Autowired
 	private CorsoRepository corsoRepository;
+
+	@Autowired
+	private StudenteRepository studenteRepository;
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
@@ -93,22 +97,26 @@ public class CommentiController extends SCController {
 	private void initCommenti() {
 
 		List<Corso> esse3 = corsoRepository.findAll();
-		int i = 1;
+		List<Studente> studenti = studenteRepository.findAll();
+		int i = 0;
 		for (Corso c : esse3) {
-			Studente studente = new Studente();
-			studente.setNome("NomeStudente"+i);
-			studente.setId(i);
-			Commento commento = new Commento();
-			commento.setCorso(c);
-			commento.setRating_carico_studio(4);
-			commento.setRating_contenuto(3);
-			commento.setRating_esame(5);
-			commento.setRating_lezioni(4);
-			commento.setRating_materiali(3);
-			commento.setId_studente(studente);
-			commento.setTesto("Corso inutile.");
+
+			for (Studente s : studenti) {
+
+				Commento commento = new Commento();
+				commento.setCorso(c);
+				commento.setRating_carico_studio(4);
+				commento.setRating_contenuto(3);
+				commento.setRating_esame(5);
+				commento.setRating_lezioni(4);
+				commento.setRating_materiali(3);
+				commento.setId_studente(s);
+				commento.setTesto("Corso inutile.");
+				
+				commentiRepository.save(commento);
+			}
 			i++;
-			commentiRepository.save(commento);
+			
 		}
 
 	}
