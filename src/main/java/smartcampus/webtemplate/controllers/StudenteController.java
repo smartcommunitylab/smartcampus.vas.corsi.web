@@ -32,7 +32,7 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 public class StudenteController extends SCController {
 
 	private static final Logger logger = Logger
-			.getLogger(CommentiController.class);
+			.getLogger(StudenteController.class);
 
 	
 	@Autowired
@@ -150,12 +150,13 @@ public class StudenteController extends SCController {
 
 		List<Corso> esse3 = corsoRepository.findAll();
 		
-		for (int i=0; i<10; i++) {
+		for (int i=0; i<200; i++) {
 			Studente studente = new Studente();
 			studente.setNome("NomeStudente"+i);
 			studente.setCognome("CognomeStudente"+i);
 			studenteRepository.save(studente);
 		}
+
 
 	}
 
