@@ -89,8 +89,9 @@ public class EventiController extends SCController {
 				return null;
 
 			Corso corso = corsoRepository.findOne(Long.valueOf(idcorso));
-
+			
 			return eventoRepository.findEventoByCorso(corso);
+			
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -242,44 +243,44 @@ public class EventiController extends SCController {
 	@PostConstruct
 	private void initEvento() {
 
-		List<Corso> esse3 = corsoRepository.findAll();
-		for (Corso index : esse3) {
-			for (int i = 0; i < 2; i++) {
-				Evento x = new Evento();
-				x.setCorso(index);
-				x.setTitolo(index.getNome());
-				x.setDescrizione("Lezione teorica di "+ index.getNome());
-				x.setRoom("A20"+i);
-				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date("2013/06/2"+String.valueOf(i+1)));
-				x.setStart(new Time(8, 30, 00));
-				x.setStop(new Time(10, 30, 00));
-				eventoRepository.save(x);
-				
-				x = new Evento();
-				x.setCorso(index);
-				x.setTitolo(index.getNome());
-				x.setDescrizione("Appello d'esame di "+ index.getNome());
-				x.setRoom("A10"+i);
-				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date(("2013/07/0"+String.valueOf(i+1)).toString()));
-				x.setStart(new Time(10, 30, 0));
-				x.setStop(new Time(12, 30, 0));
-				eventoRepository.save(x);
-				
-				
-				x = new Evento();
-				x.setCorso(index);
-				x.setTitolo(index.getNome());
-				x.setDescrizione("Lezione di laboratorio di "+ index.getNome());
-				x.setRoom("A10"+i);
-				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date(("2013/07/0"+String.valueOf(i+1)).toString()));
-				x.setStart(new Time(14, 0, 0));
-				x.setStop(new Time(16, 0, 0));
-				eventoRepository.save(x);
-			}
-		}
+//		List<Corso> esse3 = corsoRepository.findAll();
+//		for (Corso index : esse3) {
+//			for (int i = 0; i < 2; i++) {
+//				Evento x = new Evento();
+//				x.setCorso(index);
+//				x.setTitolo(index.getNome());
+//				x.setDescrizione("Lezione teorica di "+ index.getNome());
+//				x.setRoom("A20"+i);
+//				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
+//				x.setData(new Date("2013/06/2"+String.valueOf(i+1)));
+//				x.setStart(new Time(8, 30, 00));
+//				x.setStop(new Time(10, 30, 00));
+//				eventoRepository.save(x);
+//				
+//				x = new Evento();
+//				x.setCorso(index);
+//				x.setTitolo(index.getNome());
+//				x.setDescrizione("Appello d'esame di "+ index.getNome());
+//				x.setRoom("A10"+i);
+//				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
+//				x.setData(new Date(("2013/07/0"+String.valueOf(i+1)).toString()));
+//				x.setStart(new Time(10, 30, 0));
+//				x.setStop(new Time(12, 30, 0));
+//				eventoRepository.save(x);
+//				
+//				
+//				x = new Evento();
+//				x.setCorso(index);
+//				x.setTitolo(index.getNome());
+//				x.setDescrizione("Lezione di laboratorio di "+ index.getNome());
+//				x.setRoom("A10"+i);
+//				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
+//				x.setData(new Date(("2013/07/0"+String.valueOf(i+1)).toString()));
+//				x.setStart(new Time(14, 0, 0));
+//				x.setStop(new Time(16, 0, 0));
+//				eventoRepository.save(x);
+//			}
+//		}
 
 	}
 

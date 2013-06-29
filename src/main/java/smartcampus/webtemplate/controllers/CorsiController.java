@@ -213,262 +213,262 @@ public class CorsiController extends SCController {
 
 	@PostConstruct
 	private void initCorsi() {
-		Corso c = new Corso();
-
-		c.setNome("Programmazione 1");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Analisi matematica 1");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Matematica discreta 1");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		
-		c = new Corso();
-
-		c.setNome("Programmazione 2");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		
-		c = new Corso();
-
-		c.setNome("Programmazione funzionale");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		
-		c = new Corso();
-
-		c.setNome("Architettura degli elaboratori");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		c = new Corso();
-
-		c.setNome("Matematica discreta 2");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		
-		c = new Corso();
-
-		c.setNome("Probabilità e statistica");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		c = new Corso();
-
-		c.setNome("Ingegneria del software");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		c = new Corso();
-
-		c.setNome("Basi di dati");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		
-		c = new Corso();
-
-		c.setNome("Sistemi operativi");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		
-		c = new Corso();
-
-		c.setNome("Reti di calcolatori");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		
-		c = new Corso();
-
-		c.setNome("Algoritmi e strutture dati");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		
-		c = new Corso();
-
-		c.setNome("Programmazione per sistemi mobili e tablet");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-		
-		int i = 0;
-		int j=0;
-		for (i = 2; i < 4; i++) {
-
-			c = new Corso();
-
-			c.setNome("Corso"+j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Corso"+j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Corso"+j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Corso"+j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Analisi matematica 1");
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Corso"+j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-
-			corsoRepository.save(c);
-		}
-		// TEST
-
+//		Corso c = new Corso();
+//
+//		c.setNome("Programmazione 1");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//
+//		c = new Corso();
+//
+//		c.setNome("Analisi matematica 1");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//
+//		c = new Corso();
+//
+//		c.setNome("Matematica discreta 1");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		
+//		c = new Corso();
+//
+//		c.setNome("Programmazione 2");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		
+//		c = new Corso();
+//
+//		c.setNome("Programmazione funzionale");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		
+//		c = new Corso();
+//
+//		c.setNome("Architettura degli elaboratori");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		c = new Corso();
+//
+//		c.setNome("Matematica discreta 2");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		
+//		c = new Corso();
+//
+//		c.setNome("Probabilità e statistica");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		c = new Corso();
+//
+//		c.setNome("Ingegneria del software");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		c = new Corso();
+//
+//		c.setNome("Basi di dati");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//
+//		
+//		c = new Corso();
+//
+//		c.setNome("Sistemi operativi");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		
+//		c = new Corso();
+//
+//		c.setNome("Reti di calcolatori");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		
+//		c = new Corso();
+//
+//		c.setNome("Algoritmi e strutture dati");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		
+//		c = new Corso();
+//
+//		c.setNome("Programmazione per sistemi mobili e tablet");
+//		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//				+ "dolore eu fugiat nulla pariatur.");
+//		c.setValutazione_media(4);
+//		c.setId_dipartimento(1);
+//		c.setId_corsoLaurea(1);
+//		corsoRepository.save(c);
+//		
+//		int i = 0;
+//		int j=0;
+//		for (i = 2; i < 4; i++) {
+//
+//			c = new Corso();
+//
+//			c.setNome("Corso"+j++);
+//			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//					+ "dolore eu fugiat nulla pariatur.");
+//			c.setValutazione_media(4);
+//			c.setId_dipartimento(i);
+//			c.setId_corsoLaurea(i);
+//			corsoRepository.save(c);
+//
+//			c = new Corso();
+//
+//			c.setNome("Corso"+j++);
+//			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//					+ "dolore eu fugiat nulla pariatur.");
+//			c.setValutazione_media(4);
+//			c.setId_dipartimento(i);
+//			c.setId_corsoLaurea(i);
+//			corsoRepository.save(c);
+//
+//			c = new Corso();
+//
+//			c.setNome("Corso"+j++);
+//			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//					+ "dolore eu fugiat nulla pariatur.");
+//			c.setValutazione_media(4);
+//			c.setId_dipartimento(i);
+//			c.setId_corsoLaurea(i);
+//
+//			corsoRepository.save(c);
+//
+//			c = new Corso();
+//
+//			c.setNome("Corso"+j++);
+//			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//					+ "dolore eu fugiat nulla pariatur.");
+//			c.setValutazione_media(4);
+//			c.setId_dipartimento(i);
+//			c.setId_corsoLaurea(i);
+//			corsoRepository.save(c);
+//
+//			c = new Corso();
+//
+//			c.setNome("Analisi matematica 1");
+//			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//					+ "dolore eu fugiat nulla pariatur.");
+//			c.setValutazione_media(4);
+//			c.setId_dipartimento(i);
+//			c.setId_corsoLaurea(i);
+//			corsoRepository.save(c);
+//
+//			c = new Corso();
+//
+//			c.setNome("Corso"+j++);
+//			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+//					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+//					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+//					+ "dolore eu fugiat nulla pariatur.");
+//			c.setValutazione_media(4);
+//			c.setId_dipartimento(i);
+//			c.setId_corsoLaurea(i);
+//
+//			corsoRepository.save(c);
+//		}
+//		// TEST
+//
 	}
 
 }

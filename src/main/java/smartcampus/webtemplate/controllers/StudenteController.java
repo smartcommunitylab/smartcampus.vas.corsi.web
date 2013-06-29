@@ -34,7 +34,6 @@ public class StudenteController extends SCController {
 	private static final Logger logger = Logger
 			.getLogger(StudenteController.class);
 
-	
 	@Autowired
 	private StudenteRepository studenteRepository;
 
@@ -44,14 +43,15 @@ public class StudenteController extends SCController {
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
-	
+
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/studente/me/{id_studente}")
 	public @ResponseBody
 	Collection<Corso> getStudenteByMe(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("id_studente") Long id_studente)
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_studente") Long id_studente)
 
 	throws IOException {
 		try {
@@ -93,10 +93,7 @@ public class StudenteController extends SCController {
 		}
 		return null;
 	}
-	
-	
-	
-	
+
 	/*
 	 * Ritorna tutti i corsi in versione lite
 	 */
@@ -143,23 +140,32 @@ public class StudenteController extends SCController {
 		}
 		return null;
 	}
-	
-	
+
 	@PostConstruct
 	private void initStudenti() {
 
-		long c = 1;
-		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId(c);
-		
-		
-		for (int i=0; i<200; i++) {
-			Studente studente = new Studente();
-			studente.setNome("NomeStudente"+i);
-			studente.setCognome("CognomeStudente"+i);
-			studente.setCorsi(esse3);
-			studenteRepository.save(studente);
-		}
-
+//		long c = 1;
+//		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId(c);
+//
+//		if (esse3 == null) {
+//			List<Corso> s3 = corsoRepository.findAll();
+//			for (int i = 0; i < 200; i++) {
+//				Studente studente = new Studente();
+//				studente.setNome("NomeStudente" + i);
+//				studente.setCognome("CognomeStudente" + i);
+//				studente.setCorsi(s3);
+//				studenteRepository.save(studente);
+//			}
+//
+//		} else {
+//			for (int i = 0; i < 200; i++) {
+//				Studente studente = new Studente();
+//				studente.setNome("NomeStudente" + i);
+//				studente.setCognome("CognomeStudente" + i);
+//				studente.setCorsi(esse3);
+//				studenteRepository.save(studente);
+//			}
+//		}
 
 	}
 

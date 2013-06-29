@@ -95,30 +95,30 @@ public class DipartimentoController extends SCController {
 		
 		
 		///////// dipartimento 1
-		Dipartimento d = new Dipartimento();
-
-		d.setNome("Ingegneria e scienza dell informazione");
-		
-		dipartimentoRepository.save(d);
-		
-		
-		
-		///////// dipartimento 2
-		
-		d = new Dipartimento();
-
-		d.setNome("Psicologia e scienze cognitive");
-		
-		dipartimentoRepository.save(d);
-		
-		
-		///////// dipartimento 3
-		
-		d = new Dipartimento();
-
-		d.setNome("Fisica");
-		
-		dipartimentoRepository.save(d);
+//		Dipartimento d = new Dipartimento();
+//
+//		d.setNome("Ingegneria e scienza dell informazione");
+//		
+//		dipartimentoRepository.save(d);
+//		
+//		
+//		
+//		///////// dipartimento 2
+//		
+//		d = new Dipartimento();
+//
+//		d.setNome("Psicologia e scienze cognitive");
+//		
+//		dipartimentoRepository.save(d);
+//		
+//		
+//		///////// dipartimento 3
+//		
+//		d = new Dipartimento();
+//
+//		d.setNome("Fisica");
+//		
+//		dipartimentoRepository.save(d);
 		
 		
 		

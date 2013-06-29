@@ -96,31 +96,31 @@ public class CorsoLaureaController extends SCController {
 	@PostConstruct
 	private void initCorsi() {
 		
-		List<Dipartimento> dip = new ArrayList();
-		
-		dip = dipartimentoRepository.findAll();
-		
-		
-		for(Dipartimento d : dip){
-			
-			CorsoLaurea corsoL = new CorsoLaurea();
-			corsoL.setDipartimento(d);
-			corsoL.setNome("Informatica");
-			corsoLaureaRepository.save(corsoL);
-			
-			corsoL = new CorsoLaurea();
-			corsoL.setDipartimento(d);
-			corsoL.setNome("Ingegneria dell informazione");
-			corsoLaureaRepository.save(corsoL);
-			
-			corsoL = new CorsoLaurea();
-			corsoL.setDipartimento(d);
-			corsoL.setNome("Ingegneria elettronica e delle telecomunicazioni");
-			
-			corsoLaureaRepository.save(corsoL);
-			
-			
-		}
+//		List<Dipartimento> dip = new ArrayList();
+//		
+//		dip = dipartimentoRepository.findAll();
+//		
+//		
+//		for(Dipartimento d : dip){
+//			
+//			CorsoLaurea corsoL = new CorsoLaurea();
+//			corsoL.setDipartimento(d);
+//			corsoL.setNome("Informatica");
+//			corsoLaureaRepository.save(corsoL);
+//			
+//			corsoL = new CorsoLaurea();
+//			corsoL.setDipartimento(d);
+//			corsoL.setNome("Ingegneria dell informazione");
+//			corsoLaureaRepository.save(corsoL);
+//			
+//			corsoL = new CorsoLaurea();
+//			corsoL.setDipartimento(d);
+//			corsoL.setNome("Ingegneria elettronica e delle telecomunicazioni");
+//			
+//			corsoLaureaRepository.save(corsoL);
+//			
+//			
+//		}
 		
 
 		// TEST
