@@ -8,10 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQuery(name = "Commento.getCommentoByCorso", query = "select c from Commento c where c.corso = ?1")
+@NamedQueries({@NamedQuery(name = "Commento.getCommentoByCorso", query = "select c from Commento c where c.corso = ?1"),
+@NamedQuery(name = "Commento.getCommentoByStudente", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2")})
 public class Commento {
 	// id del commento
 	@Id

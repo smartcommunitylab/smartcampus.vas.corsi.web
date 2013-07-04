@@ -84,6 +84,35 @@ public class CommentiController extends SCController {
 		}
 		return null;
 	}
+	
+	
+	
+	/*
+	 * Ritorna tutte le recensioni dato l'id di un corso
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/commento/{id_corso}/{id_studente}")
+	public @ResponseBody
+	Commento getCommentoByStudenteId(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @PathVariable("id_corso") Long id_corso,
+			@PathVariable("id_studente") Long id_studente)
+
+	throws IOException {
+		try {
+			logger.info("/commenti/{id_corso}/{id_studente}");
+			if (id_studente == null)
+				return null;
+
+			return commentiRepository.getCommentoByStudente(studenteRepository
+					.findOne(id_studente), corsoRepository.findOne(id_corso));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
@@ -113,6 +142,11 @@ public class CommentiController extends SCController {
 
 	}
 
+	
+	
+	
+	
+	
 	@PostConstruct
 	private void initCommenti() {
 
