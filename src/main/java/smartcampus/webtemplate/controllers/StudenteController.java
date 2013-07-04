@@ -141,31 +141,31 @@ public class StudenteController extends SCController {
 		return null;
 	}
 
-	@PostConstruct
+//	@PostConstruct
 	private void initStudenti() {
 
-//		long c = 1;
-//		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId(c);
-//
-//		if (esse3 == null) {
-//			List<Corso> s3 = corsoRepository.findAll();
-//			for (int i = 0; i < 200; i++) {
-//				Studente studente = new Studente();
-//				studente.setNome("NomeStudente" + i);
-//				studente.setCognome("CognomeStudente" + i);
-//				studente.setCorsi(s3);
-//				studenteRepository.save(studente);
-//			}
-//
-//		} else {
-//			for (int i = 0; i < 200; i++) {
-//				Studente studente = new Studente();
-//				studente.setNome("NomeStudente" + i);
-//				studente.setCognome("CognomeStudente" + i);
-//				studente.setCorsi(esse3);
-//				studenteRepository.save(studente);
-//			}
-//		}
+		long c = 1;
+		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId(c);
+
+		if (esse3 == null) {
+			List<Corso> s3 = corsoRepository.findAll();
+			for (int i = 0; i < 200; i++) {
+				Studente studente = new Studente();
+				studente.setNome("NomeStudente" + i);
+				studente.setCognome("CognomeStudente" + i);
+				studente.setCorsi(s3);
+				studenteRepository.save(studente);
+			}
+
+		} else {
+			for (int i = 0; i < 200; i++) {
+				Studente studente = new Studente();
+				studente.setNome("NomeStudente" + i);
+				studente.setCognome("CognomeStudente" + i);
+				studente.setCorsi(esse3);
+				studenteRepository.save(studente);
+			}
+		}
 
 	}
 

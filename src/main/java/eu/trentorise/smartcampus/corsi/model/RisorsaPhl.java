@@ -8,7 +8,9 @@ public class RisorsaPhl extends Risorsa
 	private String name;
 	private boolean isDirectory;
 	private String url;
-		
+	private String mime;
+	
+	
 	@JsonProperty("name")
 	public String getName()
 	{
@@ -43,5 +45,17 @@ public class RisorsaPhl extends Risorsa
 	public void setDirectory(boolean isDirectory)
 	{
 		this.isDirectory = isDirectory;
+	}
+
+	@JsonProperty("mime")
+	public String getMime()
+	{
+		return mime;
+	}
+
+	@JsonProperty("mime")
+	public void setMime(String mime)
+	{
+		this.mime = mime;
 	}
 }
