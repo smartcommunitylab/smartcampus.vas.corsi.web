@@ -197,12 +197,20 @@ public class EventiController extends SCController {
 					profileaddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			// test
+			
+			
+			
+			
+			
 			Studente studente = studenteRepository.findStudenteByUserId(utente
 					.getId());
 			
-
-			/*if (studente == null) {
+			
+			
+			if (studente == null) {
 				studente = new Studente();
+				studente.setId(utente
+						.getId());
 				studente.setNome(profile.getName());
 				studente = studenteRepository.save(studente);
 
@@ -210,16 +218,17 @@ public class EventiController extends SCController {
 				// Creare associazione su frequenze
 
 				// TEST
-				//List<Corso> corsiEsse3 = corsoRepository.findAll();
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
 
-				Collection<Corso> corsiEsse3 = (Collection<Corso>) studente.getCorsi();
 				// TEST
 
 				// Set corso follwed by studente
-				//studente.setCorsi(corsiEsse3);
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+			}
+			
 
-			}*/
-
+		
 
 			List<Evento> eventiListByCorso = new ArrayList<Evento>();
 

@@ -141,7 +141,7 @@ public class StudenteController extends SCController {
 		return null;
 	}
 
-//	@PostConstruct
+	//@PostConstruct
 	private void initStudenti() {
 
 		long c = 1;
@@ -149,7 +149,7 @@ public class StudenteController extends SCController {
 
 		if (esse3 == null) {
 			List<Corso> s3 = corsoRepository.findAll();
-			for (int i = 0; i < 200; i++) {
+			for (int i = 0; i < 50; i++) {
 				Studente studente = new Studente();
 				studente.setNome("NomeStudente" + i);
 				studente.setCognome("CognomeStudente" + i);
@@ -158,7 +158,7 @@ public class StudenteController extends SCController {
 			}
 
 		} else {
-			for (int i = 0; i < 200; i++) {
+			for (int i = 0; i < 50; i++) {
 				Studente studente = new Studente();
 				studente.setNome("NomeStudente" + i);
 				studente.setCognome("CognomeStudente" + i);

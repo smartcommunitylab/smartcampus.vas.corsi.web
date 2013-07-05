@@ -129,6 +129,8 @@ public class CorsiController extends SCController {
 					.getId());
 			if (studente == null) {
 				studente = new Studente();
+				studente.setId(utente
+						.getId());
 				studente.setNome(profile.getName());
 				studente = studenteRepository.save(studente);
 
