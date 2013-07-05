@@ -23,7 +23,6 @@ public class Studente extends BasicEntity {
 	private static final long serialVersionUID = 8681710690984309605L;
 
 	@Id
-	@GeneratedValue
 	private long id;
 
 	@Column(name = "NOME")

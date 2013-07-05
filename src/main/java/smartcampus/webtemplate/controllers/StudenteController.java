@@ -151,6 +151,7 @@ public class StudenteController extends SCController {
 			List<Corso> s3 = corsoRepository.findAll();
 			for (int i = 0; i < 50; i++) {
 				Studente studente = new Studente();
+				studente.setId(i);
 				studente.setNome("NomeStudente" + i);
 				studente.setCognome("CognomeStudente" + i);
 				studente.setCorsi(s3);

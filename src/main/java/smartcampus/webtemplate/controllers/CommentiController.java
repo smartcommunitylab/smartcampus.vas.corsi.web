@@ -463,6 +463,7 @@ public class CommentiController extends SCController {
 
 			for (int i1 = 0; i1 < 20; i1++) {
 				Studente studente = new Studente();
+				studente.setId((long) i1);
 				studente.setNome("NomeStudente" + i1);
 				studente.setCognome("CognomeStudente" + i1);
 				studente.setCorsi(esse3);
