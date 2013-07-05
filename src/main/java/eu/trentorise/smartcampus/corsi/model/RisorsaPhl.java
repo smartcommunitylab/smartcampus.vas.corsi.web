@@ -6,11 +6,13 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class RisorsaPhl extends Risorsa 
 {
 	private String name;
-	private boolean isDirectory;
 	private String url;
 	private String mime;
-	
-	
+	private String modified;
+	private int level;
+	private String parent;
+
+
 	@JsonProperty("name")
 	public String getName()
 	{
@@ -35,18 +37,6 @@ public class RisorsaPhl extends Risorsa
 		this.url = url;
 	}
 
-	@JsonProperty("isDirectory")
-	public boolean isDirectory()
-	{
-		return isDirectory;
-	}
-
-	@JsonProperty("isDirectory")
-	public void setDirectory(boolean isDirectory)
-	{
-		this.isDirectory = isDirectory;
-	}
-
 	@JsonProperty("mime")
 	public String getMime()
 	{
@@ -57,5 +47,35 @@ public class RisorsaPhl extends Risorsa
 	public void setMime(String mime)
 	{
 		this.mime = mime;
+	}
+
+	@JsonProperty("modified")
+	public String getModified() {
+		return modified;
+	}
+
+	@JsonProperty("modified")
+	public void setModified(String modified) {
+		this.modified = modified;
+	}
+	
+	@JsonProperty("level")
+	public int getLevel() {
+		return level;
+	}
+
+	@JsonProperty("level")
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	@JsonProperty("parent")
+	public String getParent() {
+		return parent;
+	}
+
+	@JsonProperty("parent")
+	public void setParent(String parent) {
+		this.parent = parent;
 	}
 }
