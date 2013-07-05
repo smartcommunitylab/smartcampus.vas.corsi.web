@@ -130,8 +130,20 @@ public class CommentiController extends SCController {
 			// TODO control valid field
 			if (commento == null)
 				return false;
-
-			return commentiRepository.save(commento) != null;
+			
+			Commento commentoDaModificare = commentiRepository.getCommentoByStudente(studenteRepository
+					.findOne(commento.getId_studente().getId()), corsoRepository.findOne(commento.getCorso().getId()));
+			
+			if (commentoDaModificare == null){
+				return commentiRepository.save(commento) != null;
+			}else{
+				
+				commentiRepository.delete(commentoDaModificare);
+				
+				return commentiRepository.save(commento) != null;
+				
+			}
+			
 
 		} catch (Exception e) {
 
@@ -471,11 +483,11 @@ public class CommentiController extends SCController {
 
 				Commento commento = new Commento();
 				commento.setCorso(co);
-				commento.setRating_carico_studio(4);
-				commento.setRating_contenuto(3);
-				commento.setRating_esame(5);
-				commento.setRating_lezioni(4);
-				commento.setRating_materiali(3);
+				commento.setRating_carico_studio((float) 4);
+				commento.setRating_contenuto((float) 3);
+				commento.setRating_esame((float) 5);
+				commento.setRating_lezioni((float) 4);
+				commento.setRating_materiali((float) 3);
 				commento.setId_studente(s);
 				commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
 

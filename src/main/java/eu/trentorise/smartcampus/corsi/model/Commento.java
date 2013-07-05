@@ -40,23 +40,23 @@ public class Commento {
 
 	// valutazione contenuto
 	@Column(name = "RATING_CONTENUTO")
-	private Integer rating_contenuto;
+	private Float rating_contenuto;
 
 	// valutazione carico studio
 	@Column(name = "RATING_CARICO_STUDIO")
-	private Integer rating_carico_studio;
+	private Float rating_carico_studio;
 
 	// valutazione lezioni
 	@Column(name = "RATING_LEZIONI")
-	private Integer rating_lezioni;
+	private Float rating_lezioni;
 
 	// valutazione materiali
 	@Column(name = "RATING_MATERIALI")
-	private Integer rating_materiali;
+	private Float rating_materiali;
 
 	// valutazione esame
 	@Column(name = "RATING_ESAME")
-	private Integer rating_esame;
+	private Float rating_esame;
 
 	public Commento() {
 	}
@@ -101,43 +101,43 @@ public class Commento {
 		this.data_inserimento = data_inserimento;
 	}
 
-	public Integer getRating_contenuto() {
+	public Float getRating_contenuto() {
 		return rating_contenuto;
 	}
 
-	public void setRating_contenuto(Integer rating_contenuto) {
+	public void setRating_contenuto(Float rating_contenuto) {
 		this.rating_contenuto = rating_contenuto;
 	}
 
-	public Integer getRating_carico_studio() {
+	public Float getRating_carico_studio() {
 		return rating_carico_studio;
 	}
 
-	public void setRating_carico_studio(int rating_carico_studio) {
+	public void setRating_carico_studio(Float rating_carico_studio) {
 		this.rating_carico_studio = rating_carico_studio;
 	}
 
-	public Integer getRating_lezioni() {
+	public Float getRating_lezioni() {
 		return rating_lezioni;
 	}
 
-	public void setRating_lezioni(Integer rating_lezioni) {
+	public void setRating_lezioni(Float rating_lezioni) {
 		this.rating_lezioni = rating_lezioni;
 	}
 
-	public Integer getRating_materiali() {
+	public Float getRating_materiali() {
 		return rating_materiali;
 	}
 
-	public void setRating_materiali(int rating_materiali) {
+	public void setRating_materiali(Float rating_materiali) {
 		this.rating_materiali = rating_materiali;
 	}
 
-	public Integer getRating_esame() {
+	public Float getRating_esame() {
 		return rating_esame;
 	}
 
-	public void setRating_esame(Integer rating_esame) {
+	public void setRating_esame(Float rating_esame) {
 		this.rating_esame = rating_esame;
 	}
 
