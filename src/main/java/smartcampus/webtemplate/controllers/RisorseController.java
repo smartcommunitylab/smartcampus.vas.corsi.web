@@ -47,14 +47,15 @@ public class RisorseController extends SCController {
 
 	throws IOException {
 		try {
+			
 			logger.info("/risorsa/{idcorso}");
 			String json = "";
 			Risorse erre = new Risorse();
 
 			if (corsoRepository.findOne(Long.valueOf(idcorso)) != null) {
 				WebClient client = WebClient.create(phlUrl);
-				json = client.path("getFiles/" + idcorso)
-						.accept(MediaType.TEXT_PLAIN).get(String.class);
+				client.path("getFiles/" + idcorso).accept(MediaType.TEXT_PLAIN);
+				json = client.get(String.class);
 				erre = erre.convert(json);
 			}
 

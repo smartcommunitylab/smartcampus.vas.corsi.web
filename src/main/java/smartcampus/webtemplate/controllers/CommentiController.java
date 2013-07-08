@@ -477,10 +477,10 @@ public class CommentiController extends SCController {
 		
 		
 		esse3 = corsoRepository.findAll();
-		List<Studente> studenti = studenteRepository.findAll();
+		Studente stud = studenteRepository.findOne((long) 1);
 
 		for (Corso co : esse3) {
-			for (Studente s : studenti) {
+			
 
 				Commento commento = new Commento();
 				commento.setCorso(co);
@@ -489,11 +489,10 @@ public class CommentiController extends SCController {
 				commento.setRating_esame((float) 5);
 				commento.setRating_lezioni((float) 4);
 				commento.setRating_materiali((float) 3);
-				commento.setId_studente(s);
+				commento.setId_studente(stud);
 				commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
-
 				commentiRepository.save(commento);
-			}
+			
 
 		}
 		
