@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
@@ -34,8 +35,10 @@ public class Studente extends BasicEntity {
 	@Column(name = "CORSO_LAUREA")
 	private String corso_laurea;
 
-	@Column(name = "DIPARTIMENTO")
-	private String dipartimento;
+	//@Column(name = "DIPARTIMENTO")
+	@ManyToOne
+	@JoinColumn(name = "ID_DIPARTIMENTO")
+	private Dipartimento dipartimento;
 
 	@Column(name = "ANNO_CORSO")
 	private String anno_corso;
@@ -98,11 +101,11 @@ public class Studente extends BasicEntity {
 		this.corso_laurea = corso_laurea;
 	}
 
-	public String getDipartimento() {
+	public Dipartimento getDipartimento() {
 		return dipartimento;
 	}
 
-	public void setDipartimento(String dipartimento) {
+	public void setDipartimento(Dipartimento dipartimento) {
 		this.dipartimento = dipartimento;
 	}
 

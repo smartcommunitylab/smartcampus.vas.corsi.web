@@ -460,13 +460,15 @@ public class CommentiController extends SCController {
 		
 		
 		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId((long) 1);
-
+		Dipartimento dipar = dipartimentoRepository.findOne((long) 1);
+		
 			for (int i1 = 0; i1 < 20; i1++) {
 				Studente studente = new Studente();
 				studente.setId((long) i1);
 				studente.setNome("NomeStudente" + i1);
 				studente.setCognome("CognomeStudente" + i1);
 				studente.setCorsi(esse3);
+				studente.setDipartimento(dipar);
 				studenteRepository.save(studente);
 			
 
