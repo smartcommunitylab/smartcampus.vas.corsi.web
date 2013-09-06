@@ -1,9 +1,10 @@
 package smartcampus.webtemplate.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,13 +22,17 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.ac.provider.model.User;
 import eu.trentorise.smartcampus.controllers.SCController;
-import eu.trentorise.smartcampus.corsi.model.CorsiLite;
+import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
+import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
+import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("corsiController")
 public class CorsiController extends SCController {
-	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
+
 	private static final Logger logger = Logger
 			.getLogger(CorsiController.class);
 	@Autowired
@@ -37,8 +42,8 @@ public class CorsiController extends SCController {
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */
 	@Autowired
-	@Value("${services.server}")
-	private String serverAddress;
+	@Value("${profile.address}")
+	private String profileaddress;
 
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
@@ -47,199 +52,425 @@ public class CorsiController extends SCController {
 	@Value("${webapp.name}")
 	private String appName;
 
+	@Autowired
+	private CorsoRepository corsoRepository;
+
+	@Autowired
+	private StudenteRepository studenteRepository;
+
+	@Autowired
+	private EventoRepository eventoRepository;
+
 	/*
 	 * Ritorna tutti i corsi in versione lite
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/all")
 	public @ResponseBody
-	List<CorsiLite> getCorsiAll(HttpServletRequest request,
+	List<Corso> getCorsiCompletiAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
 
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
+			List<Corso> getCor = corsoRepository.findAll();
 
-			CorsiLite c = new CorsiLite();
-			c.setId(1);
-			c.setName("Fisica dei materiali");
-			list.add(c);
+			return getCor;
 
-			c = new CorsiLite();
-			c.setId(1);
-			c.setName("Analisi matematica 2");
-			list.add(c);
-
-			c = new CorsiLite();
-			c.setId(1);
-			c.setName("Lettere 1");
-			list.add(c);
-
-			return list;
 		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
 	}
 
 	/*
-	 * Ritorna tutti i corsi della facoltï¿½ in versione lite
+	 * Ritorna i dati completi di un corso dato l'id
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/facolta")
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/{id_corso}")
 	public @ResponseBody
-	List<CorsiLite> getCorsiFacolta(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-
-	throws IOException {
-		try {
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
-
-			CorsiLite c = new CorsiLite();
-			c.setId(1);
-			c.setName("Analisi matematica 3");
-			list.add(c);
-
-			c = new CorsiLite();
-			c.setId(1);
-			c.setName("Chimica 2");
-			list.add(c);
-
-			c = new CorsiLite();
-			c.setId(1);
-			c.setName("Fisica 2");
-			list.add(c);
-
-			return list;
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
-	/*
-	 * Ritorna tutti i corsi dal libretto dell'utente in versione lite
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/frequentati")
-	public @ResponseBody
-	List<CorsiLite> getCorsiLibrettoUtente(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-
-	throws IOException {
-		try {
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-
-			User us = retrieveUser(request);
-
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
-
-			CorsiLite c = new CorsiLite();
-			c.setId(1);
-			c.setName("Analisi matematica 1");
-			list.add(c);
-
-			c = new CorsiLite();
-			c.setId(1);
-			c.setName("Matematica Discreta 1");
-			list.add(c);
-
-			c = new CorsiLite();
-			c.setId(1);
-			c.setName("Programmazione 2");
-			list.add(c);
-
-			return list;
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
-	/*
-	 * Ritorna il corso dato l'id
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/{id}")
-	public @ResponseBody
-	List<CorsiLite> getCorsoByID(HttpServletRequest request,
+	Corso getCorsoByID(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("id") String id)
+			@PathVariable("id_corso") Long id_corso)
 
 	throws IOException {
 		try {
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			logger.info("/corsi/{id_corso}");
 
-			ArrayList<CorsiLite> list = new ArrayList<CorsiLite>();
-
-			String id_corso = request.getParameter("id");
-
-			CorsiLite c = new CorsiLite();
-			c.setId(1);
-			c.setName("id vale " + id);
-			list.add(c);
-
-			return list;
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-	
-	
-	
-	/*
-	 *   Ritorna una lista di ciao "number" volte solo se il profilo è autenticato
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/prova/{number}")
-	public @ResponseBody
-	
-	ArrayList<String> getCiao(HttpServletRequest request, HttpServletResponse response, HttpSession session, @PathVariable("number") String number)
-	
-	throws IOException
-	{
-		
-		ArrayList<String> lista;
-		
-		try
-		{
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-						
-			if(profile!=null){
-				lista = new ArrayList<String>();
-				String num = request.getParameter("number");
-				int numInt = Integer.valueOf(num);
-				
-				
-				for(int i=0;i<numInt;i++){
-					lista.add("ciao");
-				}
-			}else{
+			if (id_corso == null)
 				return null;
-			}
-			
-			
-			return lista;
-		}
-		catch (Exception e)
-		{
+
+			return corsoRepository.findOne(id_corso);
+		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
 	}
+
+	/*
+	 * Ritorna tutte le recensioni dato l'id di un corso
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/me")
+	public @ResponseBody
+	Collection<Corso> getCorsoByMe(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			logger.info("/corso/me");
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			User utente = retrieveUser(request);
+			ProfileConnector profileConnector = new ProfileConnector(
+					profileaddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			// test
+			Studente studente = studenteRepository.findStudenteByUserId(utente
+					.getId());
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(utente
+						.getId());
+				studente.setNome(profile.getName());
+				studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				// TEST
+
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+			}
+
+		
+
+			return studente.getCorsi();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
+	
+	
+
+	/*
+	 * getCorsoByDipartimento
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/dipartimento/{id_dipartimento}")
+	public @ResponseBody
+	Collection<Corso> getCorsoByDipartimento(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_dipartimento") Long id_dipartimento)
+
+	throws IOException {
+		try {
+			logger.info("/corsi/dipartimento/{id_dipartimento}");
+			if (id_dipartimento == null)
+				return null;
+
+			return corsoRepository.findCorsoByDipartimentoId(id_dipartimento);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	/*
+	 * getCorsoByCorsoLaurea
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/corsolaurea/{id_corsoLaurea}")
+	public @ResponseBody
+	Collection<Corso> getCorsoByCorsoLaurea(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_corsoLaurea") Long id_corsoLaurea)
+
+	throws IOException {
+		try {
+			logger.info("/corsi/corsolaurea/{id_corsoLaurea}");
+			if (id_corsoLaurea == null)
+				return null;
+
+			return corsoRepository.findCorsoByCorsoLaureaId(id_corsoLaurea);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+//	@PostConstruct
+	private void initCorsi() {
+		Corso c = new Corso();
+
+		c.setNome("Programmazione 1");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+
+		c = new Corso();
+
+		c.setNome("Analisi matematica 1");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+
+		c = new Corso();
+
+		c.setNome("Matematica discreta 1");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		
+		c = new Corso();
+
+		c.setNome("Programmazione 2");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		
+		c = new Corso();
+
+		c.setNome("Programmazione funzionale");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		
+		c = new Corso();
+
+		c.setNome("Architettura degli elaboratori");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		c = new Corso();
+
+		c.setNome("Matematica discreta 2");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		
+		c = new Corso();
+
+		c.setNome("Probabilitï¿½ e statistica");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		c = new Corso();
+
+		c.setNome("Ingegneria del software");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		c = new Corso();
+
+		c.setNome("Basi di dati");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+
+		
+		c = new Corso();
+
+		c.setNome("Sistemi operativi");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		
+		c = new Corso();
+
+		c.setNome("Reti di calcolatori");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		
+		c = new Corso();
+
+		c.setNome("Algoritmi e strutture dati");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		
+		c = new Corso();
+
+		c.setNome("Programmazione per sistemi mobili e tablet");
+		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+				+ "dolore eu fugiat nulla pariatur.");
+		c.setValutazione_media(4);
+		c.setId_dipartimento(1);
+		c.setId_corsoLaurea(1);
+		corsoRepository.save(c);
+		
+		int i = 0;
+		int j=0;
+		for (i = 2; i < 4; i++) {
+
+			c = new Corso();
+
+			c.setNome("Corso"+j++);
+			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+					+ "dolore eu fugiat nulla pariatur.");
+			c.setValutazione_media(4);
+			c.setId_dipartimento(i);
+			c.setId_corsoLaurea(i);
+			corsoRepository.save(c);
+
+			c = new Corso();
+
+			c.setNome("Corso"+j++);
+			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+					+ "dolore eu fugiat nulla pariatur.");
+			c.setValutazione_media(4);
+			c.setId_dipartimento(i);
+			c.setId_corsoLaurea(i);
+			corsoRepository.save(c);
+
+			c = new Corso();
+
+			c.setNome("Corso"+j++);
+			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+					+ "dolore eu fugiat nulla pariatur.");
+			c.setValutazione_media(4);
+			c.setId_dipartimento(i);
+			c.setId_corsoLaurea(i);
+
+			corsoRepository.save(c);
+
+			c = new Corso();
+
+			c.setNome("Corso"+j++);
+			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+					+ "dolore eu fugiat nulla pariatur.");
+			c.setValutazione_media(4);
+			c.setId_dipartimento(i);
+			c.setId_corsoLaurea(i);
+			corsoRepository.save(c);
+
+			c = new Corso();
+
+			c.setNome("Analisi matematica 1");
+			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+					+ "dolore eu fugiat nulla pariatur.");
+			c.setValutazione_media(4);
+			c.setId_dipartimento(i);
+			c.setId_corsoLaurea(i);
+			corsoRepository.save(c);
+
+			c = new Corso();
+
+			c.setNome("Corso"+j++);
+			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
+					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
+					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
+					+ "dolore eu fugiat nulla pariatur.");
+			c.setValutazione_media(4);
+			c.setId_dipartimento(i);
+			c.setId_corsoLaurea(i);
+
+			corsoRepository.save(c);
+		}
+		// TEST
+
+	}
+
 }

@@ -40,21 +40,6 @@
 	</bean>
 	
 	
-	<!-- DB SECTION CORSI -->
-
-	<mongo:mongo host="${db.host}" port="${db.port}" />
-
-	<!-- Cloudfoundry uses mongo db-factory to generate a mongo database to 
-		bind with deployed service -->
-	<mongo:db-factory id="factory" dbname="${db.name}"
-		mongo-ref="mongo" />
-
-	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<!-- <constructor-arg ref="mongo" /> -->
-		<!-- <constructor-arg name="databaseName" value="${db.name}" /> -->
-		<constructor-arg name="mongoDbFactory" ref="factory" />
-	</bean>
-	
-	
+	<import resource="datalayer.xml"/>
 	
 </beans>
