@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
@@ -35,7 +34,7 @@ import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 
 @Controller("commentiController")
-public class CommentiController extends SCController {
+public class CommentiController {
 
 	private static final Logger logger = Logger
 			.getLogger(CommentiController.class);
@@ -51,19 +50,17 @@ public class CommentiController extends SCController {
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
-	
+
 	@Autowired
 	private CorsoLaureaRepository corsoLaureaRepository;
-	
+
 	@Autowired
 	private EventoRepository eventoRepository;
-	
-	
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/commento/{id_corso}")
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/{id_corso}/commento/all")
 	public @ResponseBody
 	List<Commento> getCommentoByCorsoId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -71,7 +68,7 @@ public class CommentiController extends SCController {
 
 	throws IOException {
 		try {
-			logger.info("/commenti/{id_corso}");
+			logger.info("/corso/{id_corso}/commento/all");
 			if (id_corso == null)
 				return null;
 
@@ -84,16 +81,15 @@ public class CommentiController extends SCController {
 		}
 		return null;
 	}
-	
-	
-	
+
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/commento/{id_corso}/{id_studente}")
 	public @ResponseBody
 	Commento getCommentoByStudenteId(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("id_corso") Long id_corso,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_corso") Long id_corso,
 			@PathVariable("id_studente") Long id_studente)
 
 	throws IOException {
@@ -102,8 +98,9 @@ public class CommentiController extends SCController {
 			if (id_studente == null)
 				return null;
 
-			return commentiRepository.getCommentoByStudente(studenteRepository
-					.findOne(id_studente), corsoRepository.findOne(id_corso));
+			return commentiRepository.getCommentoByStudente(
+					studenteRepository.findOne(id_studente),
+					corsoRepository.findOne(id_corso));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,8 +108,6 @@ public class CommentiController extends SCController {
 		}
 		return null;
 	}
-	
-	
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
@@ -130,20 +125,21 @@ public class CommentiController extends SCController {
 			// TODO control valid field
 			if (commento == null)
 				return false;
-			
-			Commento commentoDaModificare = commentiRepository.getCommentoByStudente(studenteRepository
-					.findOne(commento.getId_studente().getId()), corsoRepository.findOne(commento.getCorso().getId()));
-			
-			if (commentoDaModificare == null){
+
+			Commento commentoDaModificare = commentiRepository
+					.getCommentoByStudente(studenteRepository.findOne(commento
+							.getId_studente().getId()), corsoRepository
+							.findOne(commento.getCorso().getId()));
+
+			if (commentoDaModificare == null) {
 				return commentiRepository.save(commento) != null;
-			}else{
-				
+			} else {
+
 				commentiRepository.delete(commentoDaModificare);
-				
+
 				return commentiRepository.save(commento) != null;
-				
+
 			}
-			
 
 		} catch (Exception e) {
 
@@ -154,11 +150,6 @@ public class CommentiController extends SCController {
 
 	}
 
-	
-	
-	
-	
-	
 	@PostConstruct
 	private void initCommenti() {
 
@@ -169,7 +160,7 @@ public class CommentiController extends SCController {
 
 		dipartimentoRepository.save(d);
 
-		/////// dipartimento 2
+		// ///// dipartimento 2
 
 		d = new Dipartimento();
 
@@ -177,7 +168,7 @@ public class CommentiController extends SCController {
 
 		dipartimentoRepository.save(d);
 
-		/////// dipartimento 3
+		// ///// dipartimento 3
 
 		d = new Dipartimento();
 
@@ -224,8 +215,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(1);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Algoritmi e Strutture Dati");
@@ -238,7 +228,6 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(2);
 		corsoRepository.save(c);
-		
 
 		c = new Corso();
 
@@ -253,7 +242,6 @@ public class CommentiController extends SCController {
 		c.setId(3);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Analisi Matematica 2");
@@ -266,8 +254,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(4);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Architettura Degli Elaboratori");
@@ -280,8 +267,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(5);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Architettura Degli Elaboratori");
@@ -295,7 +281,6 @@ public class CommentiController extends SCController {
 		c.setId(5);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Basi Di Dati");
@@ -308,8 +293,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(10);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Basi Di Dati");
@@ -322,8 +306,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(2);
 		c.setId(10);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Calcolo Delle Probabilità e Statistica");
@@ -336,8 +319,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(26);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Communication Systems");
@@ -350,7 +332,6 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(6);
 		corsoRepository.save(c);
-		
 
 		c = new Corso();
 
@@ -364,8 +345,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(8);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Controlli Automatici");
@@ -378,7 +358,6 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(9);
 		corsoRepository.save(c);
-		
 
 		c = new Corso();
 
@@ -392,7 +371,6 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(2);
 		c.setId(11);
 		corsoRepository.save(c);
-		
 
 		c = new Corso();
 
@@ -406,7 +384,6 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(2);
 		c.setId(11);
 		corsoRepository.save(c);
-		
 
 		c = new Corso();
 
@@ -421,7 +398,6 @@ public class CommentiController extends SCController {
 		c.setId(12);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Elettronica Per L'Automazione Aziendale");
@@ -435,7 +411,6 @@ public class CommentiController extends SCController {
 		c.setId(13);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Elettronica Per L'Innovazione Del Prodotto");
@@ -449,7 +424,6 @@ public class CommentiController extends SCController {
 		c.setId(14);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Elettronica Robotica");
@@ -463,7 +437,6 @@ public class CommentiController extends SCController {
 		c.setId(35);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("English A2");
@@ -477,7 +450,6 @@ public class CommentiController extends SCController {
 		c.setId(15);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("English A2");
@@ -491,7 +463,6 @@ public class CommentiController extends SCController {
 		c.setId(15);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("English A2");
@@ -505,7 +476,6 @@ public class CommentiController extends SCController {
 		c.setId(15);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("English C1");
@@ -519,7 +489,6 @@ public class CommentiController extends SCController {
 		c.setId(16);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("English C1");
@@ -533,7 +502,6 @@ public class CommentiController extends SCController {
 		c.setId(16);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("English C1");
@@ -547,7 +515,6 @@ public class CommentiController extends SCController {
 		c.setId(16);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Fisica");
@@ -560,7 +527,6 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(17);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Fisica Ing.");
@@ -574,7 +540,6 @@ public class CommentiController extends SCController {
 		c.setId(18);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Fisica Ing.");
@@ -587,8 +552,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(18);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Geometria e Algebra Lineare");
@@ -601,8 +565,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(2);
 		c.setId(19);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Geometria e Algebra Lineare");
@@ -615,7 +578,6 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(19);
 		corsoRepository.save(c);
-
 
 		c = new Corso();
 
@@ -630,7 +592,6 @@ public class CommentiController extends SCController {
 		c.setId(20);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Human Computer Interaction");
@@ -644,7 +605,6 @@ public class CommentiController extends SCController {
 		c.setId(21);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Ingegneria Del Software");
@@ -658,7 +618,6 @@ public class CommentiController extends SCController {
 		c.setId(22);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Ingegneria Del Software");
@@ -672,7 +631,6 @@ public class CommentiController extends SCController {
 		c.setId(22);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Linguaggi Formali e Compilatori");
@@ -685,8 +643,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(7);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Matematica Discreta 1");
@@ -700,7 +657,6 @@ public class CommentiController extends SCController {
 		c.setId(23);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Matematica Discreta 2");
@@ -713,8 +669,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(24);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione 1");
@@ -727,8 +682,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(27);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione 2");
@@ -741,8 +695,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(28);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione Ad Oggetti");
@@ -755,8 +708,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(2);
 		c.setId(29);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione Ad Oggetti");
@@ -769,8 +721,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(29);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione Funzionale");
@@ -783,8 +734,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(30);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione Per Il Web");
@@ -797,8 +747,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(31);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione Sistemi Elettrici");
@@ -811,8 +760,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(32);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione Sistemi Mobili e Tablet");
@@ -825,8 +773,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(40);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione Sistemi Mobili e Tablet");
@@ -839,8 +786,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(2);
 		c.setId(40);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Propagazione Reti Sistemi Comunicativi");
@@ -853,8 +799,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(33);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Reti Di Calcolatori");
@@ -867,8 +812,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(48);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Semantica");
@@ -881,8 +825,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(36);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Sicurezza Dati");
@@ -896,7 +839,6 @@ public class CommentiController extends SCController {
 		c.setId(37);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Sistemi Di Telerilevamento");
@@ -909,8 +851,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(38);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Sistemi Informativi");
@@ -923,8 +864,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(39);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Sistemi Informativi");
@@ -937,8 +877,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(2);
 		c.setId(39);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Sistemi Operativi 1");
@@ -951,8 +890,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(41);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Sistemi Operativi 2");
@@ -965,8 +903,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(1);
 		c.setId(42);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Strumentazione Di Misura");
@@ -979,8 +916,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(43);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Tecniche Di Diagnostica Biomedicale");
@@ -993,8 +929,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(44);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Tecniche Propagazione Reti e Wireless");
@@ -1007,8 +942,7 @@ public class CommentiController extends SCController {
 		c.setId_corsoLaurea(3);
 		c.setId(45);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Wired Systems And Devices");
@@ -1022,87 +956,72 @@ public class CommentiController extends SCController {
 		c.setId(46);
 		corsoRepository.save(c);
 
-		
-		
-		
 		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId((long) 1);
 		Dipartimento dipar = dipartimentoRepository.findOne((long) 1);
-		
-			for (int i1 = 0; i1 < 20; i1++) {
-				Studente studente = new Studente();
-				studente.setId((long) i1);
-				studente.setNome("NomeStudente" + i1);
-				studente.setCognome("CognomeStudente" + i1);
-				studente.setCorsi(esse3);
-				studente.setDipartimento(dipar);
-				studenteRepository.save(studente);
-			
 
+		for (int i1 = 0; i1 < 20; i1++) {
+			Studente studente = new Studente();
+			studente.setId((long) i1);
+			studente.setNome("NomeStudente" + i1);
+			studente.setCognome("CognomeStudente" + i1);
+			studente.setCorsi(esse3);
+			studente.setDipartimento(dipar);
+			studenteRepository.save(studente);
 
 		}
-		
-		
-		
-		
+
 		esse3 = corsoRepository.findAll();
 		Studente stud = studenteRepository.findOne((long) 1);
 
 		for (Corso co : esse3) {
-			
 
-				Commento commento = new Commento();
-				commento.setCorso(co);
-				commento.setRating_carico_studio((float) 4);
-				commento.setRating_contenuto((float) 3);
-				commento.setRating_esame((float) 5);
-				commento.setRating_lezioni((float) 4);
-				commento.setRating_materiali((float) 3);
-				commento.setId_studente(stud);
-				commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
-				commentiRepository.save(commento);
-			
+			Commento commento = new Commento();
+			commento.setCorso(co);
+			commento.setRating_carico_studio((float) 4);
+			commento.setRating_contenuto((float) 3);
+			commento.setRating_esame((float) 5);
+			commento.setRating_lezioni((float) 4);
+			commento.setRating_materiali((float) 3);
+			commento.setId_studente(stud);
+			commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
+			commentiRepository.save(commento);
 
 		}
-		
-		
-		
-		
-		
-		
-		
+
 		esse3 = corsoRepository.findAll();
 		for (Corso index : esse3) {
 			for (int i1 = 0; i1 < 2; i1++) {
 				Evento x = new Evento();
 				x.setCorso(index);
 				x.setTitolo(index.getNome());
-				x.setDescrizione("Lezione teorica di "+ index.getNome());
-				x.setRoom("A20"+i1);
+				x.setDescrizione("Lezione teorica di " + index.getNome());
+				x.setRoom("A20" + i1);
 				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date("2013/06/2"+String.valueOf(i1+1)));
+				x.setData(new Date("2013/06/2" + String.valueOf(i1 + 1)));
 				x.setStart(new Time(8, 30, 00));
 				x.setStop(new Time(10, 30, 00));
 				eventoRepository.save(x);
-				
+
 				x = new Evento();
 				x.setCorso(index);
 				x.setTitolo(index.getNome());
-				x.setDescrizione("Appello d'esame di "+ index.getNome());
-				x.setRoom("A10"+i1);
+				x.setDescrizione("Appello d'esame di " + index.getNome());
+				x.setRoom("A10" + i1);
 				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date(("2013/07/0"+String.valueOf(i1+1)).toString()));
+				x.setData(new Date(("2013/07/0" + String.valueOf(i1 + 1))
+						.toString()));
 				x.setStart(new Time(10, 30, 0));
 				x.setStop(new Time(12, 30, 0));
 				eventoRepository.save(x);
-				
-				
+
 				x = new Evento();
 				x.setCorso(index);
 				x.setTitolo(index.getNome());
-				x.setDescrizione("Lezione di laboratorio di "+ index.getNome());
-				x.setRoom("A10"+i1);
+				x.setDescrizione("Lezione di laboratorio di " + index.getNome());
+				x.setRoom("A10" + i1);
 				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date(("2013/07/0"+String.valueOf(i1+1)).toString()));
+				x.setData(new Date(("2013/07/0" + String.valueOf(i1 + 1))
+						.toString()));
 				x.setStart(new Time(14, 0, 0));
 				x.setStop(new Time(16, 0, 0));
 				eventoRepository.save(x);

@@ -13,5 +13,6 @@ import eu.trentorise.smartcampus.corsi.model.Studente;
 public interface CommentiRepository extends JpaRepository<Commento, Long> {
 
 	List<Commento> getCommentoByCorso(Corso corso);
+
 	Commento getCommentoByStudente(Studente studente, Corso corso);
 }

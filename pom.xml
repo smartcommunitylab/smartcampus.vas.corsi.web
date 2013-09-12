@@ -101,46 +101,47 @@
 		<!-- Smartcampus libs -->
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>profileservice.client</artifactId>
+			<artifactId>aac.client</artifactId>
 			<version>1.0</version>
 			<type>jar</type>
 		</dependency>
 
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>profileservice.client</artifactId>
+			<version>2.0</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>filestorage.client</artifactId>
+			<version>2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>mobilityservice.client</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>journeyplanner.client</artifactId>
+			<artifactId>territoryservice.client</artifactId>
 			<version>1.0</version>
-		</dependency>	
-		
-		<dependency>
-			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>discovertrento.client</artifactId>
-			<version>1.0</version>
-		</dependency>		
-		
+		</dependency>
+
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>communicator.client</artifactId>
-			<version>1.1</version>
-		</dependency>	
-		
+			<version>2.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>socialservice.client</artifactId>
-			<version>1.0</version>
-		</dependency>	
-		
-		<dependency>
-			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>smartcampus.vas.commons</artifactId>
-			<version>1.1</version>
-		</dependency>		
+			<version>2.0</version>
+		</dependency>
 		
 		<!-- DB -->
 			<dependency>

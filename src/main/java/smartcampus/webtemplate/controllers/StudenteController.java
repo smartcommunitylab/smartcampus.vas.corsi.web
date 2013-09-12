@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,24 +11,22 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
-import eu.trentorise.smartcampus.ac.provider.model.User;
-import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
-import eu.trentorise.smartcampus.profileservice.ProfileConnector;
+import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("studenteController")
-public class StudenteController extends SCController {
+public class StudenteController {
 
 	private static final Logger logger = Logger
 			.getLogger(StudenteController.class);
@@ -57,14 +54,14 @@ public class StudenteController extends SCController {
 		try {
 			logger.info("/studente/me/id_studente");
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			User utente = retrieveUser(request);
-			ProfileConnector profileConnector = new ProfileConnector(
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
 					profileaddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			// test
-			Studente studente = studenteRepository.findStudenteByUserId(utente
-					.getId());
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+
 			if (studente == null) {
 				studente = new Studente();
 				studente.setNome(profile.getName());
@@ -107,14 +104,13 @@ public class StudenteController extends SCController {
 
 			logger.info("/studente/me");
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
 					profileaddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			User utente = retrieveUser(request);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 
-			Studente studente = studenteRepository.findStudenteByUserId(utente
-					.getId());
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			if (studente == null) {
 				studente = new Studente();
 				studente.setNome(profile.getName());
@@ -140,11 +136,8 @@ public class StudenteController extends SCController {
 		}
 		return null;
 	}
-	
 
-	
-
-	//@PostConstruct
+	// @PostConstruct
 	private void initStudenti() {
 
 		long c = 1;
@@ -173,4 +166,8 @@ public class StudenteController extends SCController {
 
 	}
 
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+	}
 }

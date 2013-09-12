@@ -1,7 +1,5 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,8 +10,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQueries({@NamedQuery(name = "Commento.getCommentoByCorso", query = "select c from Commento c where c.corso = ?1"),
-@NamedQuery(name = "Commento.getCommentoByStudente", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2")})
+@NamedQueries({
+		@NamedQuery(name = "Commento.getCommentoByCorso", query = "select c from Commento c where c.corso = ?1"),
+		@NamedQuery(name = "Commento.getCommentoByStudente", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })
 public class Commento {
 	// id del commento
 	@Id

@@ -1,46 +1,31 @@
 package smartcampus.webtemplate.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.AcService;
-import eu.trentorise.smartcampus.controllers.SCController;
-import eu.trentorise.smartcampus.corsi.model.Corso;
-import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
-import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
-import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
-import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 
 @Controller("dipartmentoController")
-public class DipartimentoController extends SCController {
+public class DipartimentoController {
 
-	
 	private static final Logger logger = Logger
 			.getLogger(CorsiController.class);
-	
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
-
-	
 
 	/*
 	 * Ritorna tutti i dipartimenti
@@ -52,8 +37,8 @@ public class DipartimentoController extends SCController {
 
 	throws IOException {
 		try {
-			
-			List<Dipartimento> getDip=dipartimentoRepository.findAll();
+
+			List<Dipartimento> getDip = dipartimentoRepository.findAll();
 
 			return getDip;
 
@@ -71,12 +56,14 @@ public class DipartimentoController extends SCController {
 	@RequestMapping(method = RequestMethod.GET, value = "/dipartimento/{id_dipartimento}")
 	public @ResponseBody
 	Dipartimento getDipartimentoAll(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("id_dipartimento") Long id_dipartimento )
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_dipartimento") Long id_dipartimento)
 
 	throws IOException {
 		try {
-			
-			Dipartimento getDip=dipartimentoRepository.findOne(id_dipartimento);
+
+			Dipartimento getDip = dipartimentoRepository
+					.findOne(id_dipartimento);
 
 			return getDip;
 
@@ -87,44 +74,35 @@ public class DipartimentoController extends SCController {
 		}
 		return null;
 	}
-	
-	
-	
-//	@PostConstruct
+
+	// @PostConstruct
 	private void initCorsi() {
-		
-		
-		///////// dipartimento 1
+
+		// /////// dipartimento 1
 		Dipartimento d = new Dipartimento();
 
 		d.setNome("Ingegneria e scienza dell informazione");
-		
+
 		dipartimentoRepository.save(d);
-		
-		
-		
-		///////// dipartimento 2
-		
+
+		// /////// dipartimento 2
+
 		d = new Dipartimento();
 
 		d.setNome("Psicologia e scienze cognitive");
-		
+
 		dipartimentoRepository.save(d);
-		
-		
-		///////// dipartimento 3
-		
+
+		// /////// dipartimento 3
+
 		d = new Dipartimento();
 
 		d.setNome("Fisica");
-		
+
 		dipartimentoRepository.save(d);
-		
-		
-		
 
 		// TEST
 
 	}
-	
+
 }

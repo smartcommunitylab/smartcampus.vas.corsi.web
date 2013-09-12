@@ -5,7 +5,6 @@ import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -35,7 +34,7 @@ public class Studente extends BasicEntity {
 	@Column(name = "CORSO_LAUREA")
 	private String corso_laurea;
 
-	//@Column(name = "DIPARTIMENTO")
+	// @Column(name = "DIPARTIMENTO")
 	@ManyToOne
 	@JoinColumn(name = "ID_DIPARTIMENTO")
 	private Dipartimento dipartimento;
@@ -49,7 +48,7 @@ public class Studente extends BasicEntity {
 	@Column(name = "USER_SC_ID")
 	private long userSCId;
 
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Frequenze", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "CORSO_ID"))
 	private Collection<Corso> corsi;
 

@@ -1,17 +1,9 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import java.util.Collection;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-
 
 @Entity
 public class Dipartimento extends BasicEntity {
@@ -44,6 +36,5 @@ public class Dipartimento extends BasicEntity {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
+
 }

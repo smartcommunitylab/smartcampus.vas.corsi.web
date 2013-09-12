@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Risorse;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 
 @Controller("risorsaController")
-public class RisorseController extends SCController {
+public class RisorseController {
 	private static final Logger logger = Logger
 			.getLogger(RisorseController.class);
 
@@ -47,7 +46,7 @@ public class RisorseController extends SCController {
 
 	throws IOException {
 		try {
-			
+
 			logger.info("/risorsa/{idcorso}");
 			String json = "";
 			Risorse erre = new Risorse();

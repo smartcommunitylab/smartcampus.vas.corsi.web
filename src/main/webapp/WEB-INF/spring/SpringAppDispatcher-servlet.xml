@@ -27,19 +27,6 @@
 	<context:property-placeholder location="classpath:corsi.properties"/>
 
 	
-<!-- 		<mongo:mongo host="${smartcampus.vas.web.mongo.host}" port="${smartcampus.vas.web.mongo.port}" /> -->
-
-<!-- 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate"> -->
-<!-- 		<constructor-arg ref="mongo" /> -->
-<!-- 		<constructor-arg name="databaseName" -->
-<!-- 			value="${smartcampus.vas.web.mongo.db}" /> -->
-<!-- 	</bean> -->
-
-	<bean id="acClient" class="eu.trentorise.smartcampus.ac.provider.filters.AcClient">
-		<property name="endpointUrl" value="https://vas-dev.smartcampuslab.it/acService"/>
-	</bean>
-	
-	
 	<import resource="datalayer.xml"/>
 	
 </beans>

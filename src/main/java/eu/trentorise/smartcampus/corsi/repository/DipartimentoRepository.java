@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 
 @Repository
-public interface DipartimentoRepository extends JpaRepository<Dipartimento, Long> {
+public interface DipartimentoRepository extends
+		JpaRepository<Dipartimento, Long> {
 
 }

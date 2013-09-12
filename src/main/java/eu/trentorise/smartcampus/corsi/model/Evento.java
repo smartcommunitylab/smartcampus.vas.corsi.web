@@ -169,13 +169,11 @@ public class Evento extends BasicEntity {
 	public void setAvailability(boolean availability) {
 		this.availability = availability;
 	}
-	
-	
-	
+
 	public Date getData() {
 		return data;
 	}
-	
+
 	public void setData(Date data) {
 		this.data = data;
 	}

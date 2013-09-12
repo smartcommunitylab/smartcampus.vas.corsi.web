@@ -3,11 +3,9 @@ package smartcampus.webtemplate.controllers;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -15,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,27 +21,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.AcService;
-import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
-import eu.trentorise.smartcampus.ac.provider.model.User;
 import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
-import eu.trentorise.smartcampus.controllers.SCController;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
-import eu.trentorise.smartcampus.profileservice.ProfileConnector;
+import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("eventiController")
-public class EventiController extends SCController {
+public class EventiController {
 	private static final Logger logger = Logger
 			.getLogger(EventiController.class);
-	@Autowired
-	private AcService acService;
 
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
@@ -50,11 +43,10 @@ public class EventiController extends SCController {
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
-	
+
 	@Autowired
 	@Value("${communicator.address}")
 	private String communicatoraddress;
-
 
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
@@ -89,9 +81,9 @@ public class EventiController extends SCController {
 				return null;
 
 			Corso corso = corsoRepository.findOne(Long.valueOf(idcorso));
-			
+
 			return eventoRepository.findEventoByCorso(corso);
-			
+
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -110,27 +102,28 @@ public class EventiController extends SCController {
 
 	throws IOException {
 		try {
-			
 
 			// User Request create event
 			// creati a notification and send to Communicator
 
-			
 			// TODO controlli se campi validi
 			if (evento != null && evento.getTitolo() != "") {
 
-				String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-				User user = retrieveUser(request);
+				String token = getToken(request);
+				BasicProfileService service = new BasicProfileService(
+						profileaddress);
+				BasicProfile profile = service.getBasicProfile(token);
+				Long userId = Long.valueOf(profile.getUserId());
 
 				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
 						communicatoraddress, appName);
 
 				List<String> users = new ArrayList<String>();
-				users.add(user.getId().toString());
+				users.add(userId.toString());
 
 				Notification n = new Notification();
 				n.setTitle(evento.getTitolo());
-				n.setUser(user.getId().toString());
+				n.setUser(userId.toString());
 				n.setTimestamp(System.currentTimeMillis());
 				n.setDescription("Creazione Evento");
 
@@ -142,37 +135,6 @@ public class EventiController extends SCController {
 				return null;
 
 		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-
-	/*
-	 * Riceve notifiche e lo salva nel db
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/notification/all")
-	public @ResponseBody
-	List<Notification> getNotifications(HttpServletRequest request, HttpServletResponse response,
-			HttpSession session)
-
-	throws IOException {
-		try {
-			
-
-		
-				String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-		
-
-				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-						communicatoraddress, appName);
-
-				
-				return communicatorConnector.getNotifications(0L, 0, 0, token);
-			
-
-		} catch (Exception e) {
-			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -190,27 +152,17 @@ public class EventiController extends SCController {
 		try {
 			logger.info("/evento/me");
 
-			
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			User utente = retrieveUser(request);
-			ProfileConnector profileConnector = new ProfileConnector(
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
 					profileaddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			// test
-			
-			
-			
-			
-			
-			Studente studente = studenteRepository.findStudenteByUserId(utente
-					.getId());
-			
-			
-			
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+
 			if (studente == null) {
 				studente = new Studente();
-				studente.setId(utente
-						.getId());
+				studente.setId(userId);
 				studente.setNome(profile.getName());
 				studente = studenteRepository.save(studente);
 
@@ -226,9 +178,6 @@ public class EventiController extends SCController {
 				studente.setCorsi(corsiEsse3);
 				studente = studenteRepository.save(studente);
 			}
-			
-
-		
 
 			List<Evento> eventiListByCorso = new ArrayList<Evento>();
 
@@ -249,7 +198,7 @@ public class EventiController extends SCController {
 	}
 
 	@SuppressWarnings("deprecation")
-//	@PostConstruct
+	// @PostConstruct
 	private void initEvento() {
 
 		List<Corso> esse3 = corsoRepository.findAll();
@@ -258,39 +207,45 @@ public class EventiController extends SCController {
 				Evento x = new Evento();
 				x.setCorso(index);
 				x.setTitolo(index.getNome());
-				x.setDescrizione("Lezione teorica di "+ index.getNome());
-				x.setRoom("A20"+i);
+				x.setDescrizione("Lezione teorica di " + index.getNome());
+				x.setRoom("A20" + i);
 				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date("2013/06/2"+String.valueOf(i+1)));
+				x.setData(new Date("2013/06/2" + String.valueOf(i + 1)));
 				x.setStart(new Time(8, 30, 00));
 				x.setStop(new Time(10, 30, 00));
 				eventoRepository.save(x);
-				
+
 				x = new Evento();
 				x.setCorso(index);
 				x.setTitolo(index.getNome());
-				x.setDescrizione("Appello d'esame di "+ index.getNome());
-				x.setRoom("A10"+i);
+				x.setDescrizione("Appello d'esame di " + index.getNome());
+				x.setRoom("A10" + i);
 				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date(("2013/07/0"+String.valueOf(i+1)).toString()));
+				x.setData(new Date(("2013/07/0" + String.valueOf(i + 1))
+						.toString()));
 				x.setStart(new Time(10, 30, 0));
 				x.setStop(new Time(12, 30, 0));
 				eventoRepository.save(x);
-				
-				
+
 				x = new Evento();
 				x.setCorso(index);
 				x.setTitolo(index.getNome());
-				x.setDescrizione("Lezione di laboratorio di "+ index.getNome());
-				x.setRoom("A10"+i);
+				x.setDescrizione("Lezione di laboratorio di " + index.getNome());
+				x.setRoom("A10" + i);
 				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date(("2013/07/0"+String.valueOf(i+1)).toString()));
+				x.setData(new Date(("2013/07/0" + String.valueOf(i + 1))
+						.toString()));
 				x.setStart(new Time(14, 0, 0));
 				x.setStop(new Time(16, 0, 0));
 				eventoRepository.save(x);
 			}
 		}
 
+	}
+
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
 	}
 
 }

@@ -2,9 +2,7 @@ package eu.trentorise.smartcampus.corsi.model;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-
-public class RisorsaPhl extends Risorsa 
-{
+public class RisorsaPhl extends Risorsa {
 	private String name;
 	private String url;
 	private String mime;
@@ -12,40 +10,33 @@ public class RisorsaPhl extends Risorsa
 	private int level;
 	private String parent;
 
-
 	@JsonProperty("name")
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
-	
+
 	@JsonProperty("name")
-	public void setName(String name)
-	{
-		this.name = name; 
+	public void setName(String name) {
+		this.name = name;
 	}
-	
+
 	@JsonProperty("url")
-	public String getUrl()
-	{
+	public String getUrl() {
 		return url;
 	}
 
 	@JsonProperty("url")
-	public void setUrl(String url)
-	{
+	public void setUrl(String url) {
 		this.url = url;
 	}
 
 	@JsonProperty("mime")
-	public String getMime()
-	{
+	public String getMime() {
 		return mime;
 	}
 
 	@JsonProperty("mime")
-	public void setMime(String mime)
-	{
+	public void setMime(String mime) {
 		this.mime = mime;
 	}
 
@@ -58,7 +49,7 @@ public class RisorsaPhl extends Risorsa
 	public void setModified(String modified) {
 		this.modified = modified;
 	}
-	
+
 	@JsonProperty("level")
 	public int getLevel() {
 		return level;

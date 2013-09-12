@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,32 +11,28 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.AcService;
-import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
-import eu.trentorise.smartcampus.ac.provider.model.User;
-import eu.trentorise.smartcampus.controllers.SCController;
+import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
-import eu.trentorise.smartcampus.profileservice.ProfileConnector;
+import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("corsiController")
-public class CorsiController extends SCController {
+public class CorsiController {
 
 	private static final Logger logger = Logger
 			.getLogger(CorsiController.class);
-	@Autowired
-	private AcService acService;
-
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */
@@ -60,6 +55,9 @@ public class CorsiController extends SCController {
 
 	@Autowired
 	private EventoRepository eventoRepository;
+
+	@Autowired
+	private CommentiRepository commentiRepository;
 
 	/*
 	 * Ritorna tutti i corsi in versione lite
@@ -100,12 +98,46 @@ public class CorsiController extends SCController {
 			if (id_corso == null)
 				return null;
 
-			return corsoRepository.findOne(id_corso);
+			return calcRating(corsoRepository.findOne(id_corso));
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
+	}
+
+	private Corso calcRating(Corso findOne) {
+
+		if (findOne == null)
+			return findOne;
+		List<Commento> listCom = commentiRepository.getCommentoByCorso(findOne);
+		float Rating_carico_studio = 0;
+		float Rating_contenuto = 0;
+		float Rating_esame = 0;
+		float Rating_lezioni = 0;
+		float Rating_materiali = 0;
+		int len = listCom.size();
+
+		for (Commento index : listCom) {
+			Rating_carico_studio += index.getRating_carico_studio();
+			Rating_contenuto += index.getRating_contenuto();
+			Rating_esame += index.getRating_esame();
+			Rating_lezioni += index.getRating_lezioni();
+			Rating_materiali += index.getRating_materiali();
+		}
+
+		findOne.setRating_carico_studio(Rating_carico_studio / len);
+		findOne.setRating_contenuto(Rating_contenuto / len);
+		findOne.setRating_esame(Rating_esame / len);
+		findOne.setRating_lezioni(Rating_lezioni / len);
+		findOne.setRating_materiali(Rating_materiali / len);
+
+		return findOne;
+	}
+
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
 	}
 
 	/*
@@ -119,18 +151,18 @@ public class CorsiController extends SCController {
 	throws IOException {
 		try {
 			logger.info("/corso/me");
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			User utente = retrieveUser(request);
-			ProfileConnector profileConnector = new ProfileConnector(
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
 					profileaddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
 			// test
-			Studente studente = studenteRepository.findStudenteByUserId(utente
-					.getId());
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			if (studente == null) {
 				studente = new Studente();
-				studente.setId(utente
-						.getId());
+				studente.setId(userId);
 				studente.setNome(profile.getName());
 				studente = studenteRepository.save(studente);
 
@@ -147,8 +179,6 @@ public class CorsiController extends SCController {
 				studente = studenteRepository.save(studente);
 			}
 
-		
-
 			return studente.getCorsi();
 
 		} catch (Exception e) {
@@ -157,13 +187,6 @@ public class CorsiController extends SCController {
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
-	
-	
 
 	/*
 	 * getCorsoByDipartimento
@@ -213,7 +236,7 @@ public class CorsiController extends SCController {
 		return null;
 	}
 
-//	@PostConstruct
+	// @PostConstruct
 	private void initCorsi() {
 		Corso c = new Corso();
 
@@ -250,8 +273,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione 2");
@@ -263,8 +285,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione funzionale");
@@ -276,8 +297,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Architettura degli elaboratori");
@@ -289,7 +309,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
+
 		c = new Corso();
 
 		c.setNome("Matematica discreta 2");
@@ -301,8 +321,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Probabilit� e statistica");
@@ -314,7 +333,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
+
 		c = new Corso();
 
 		c.setNome("Ingegneria del software");
@@ -326,7 +345,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
+
 		c = new Corso();
 
 		c.setNome("Basi di dati");
@@ -339,7 +358,6 @@ public class CorsiController extends SCController {
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
 
-		
 		c = new Corso();
 
 		c.setNome("Sistemi operativi");
@@ -351,8 +369,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Reti di calcolatori");
@@ -364,8 +381,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Algoritmi e strutture dati");
@@ -377,8 +393,7 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
-		
+
 		c = new Corso();
 
 		c.setNome("Programmazione per sistemi mobili e tablet");
@@ -390,14 +405,14 @@ public class CorsiController extends SCController {
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		corsoRepository.save(c);
-		
+
 		int i = 0;
-		int j=0;
+		int j = 0;
 		for (i = 2; i < 4; i++) {
 
 			c = new Corso();
 
-			c.setNome("Corso"+j++);
+			c.setNome("Corso" + j++);
 			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
@@ -409,7 +424,7 @@ public class CorsiController extends SCController {
 
 			c = new Corso();
 
-			c.setNome("Corso"+j++);
+			c.setNome("Corso" + j++);
 			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
@@ -421,7 +436,7 @@ public class CorsiController extends SCController {
 
 			c = new Corso();
 
-			c.setNome("Corso"+j++);
+			c.setNome("Corso" + j++);
 			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
@@ -434,7 +449,7 @@ public class CorsiController extends SCController {
 
 			c = new Corso();
 
-			c.setNome("Corso"+j++);
+			c.setNome("Corso" + j++);
 			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
@@ -458,7 +473,7 @@ public class CorsiController extends SCController {
 
 			c = new Corso();
 
-			c.setNome("Corso"+j++);
+			c.setNome("Corso" + j++);
 			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "

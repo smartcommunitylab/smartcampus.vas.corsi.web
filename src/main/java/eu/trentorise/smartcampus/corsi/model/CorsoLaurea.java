@@ -1,9 +1,5 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,10 +10,9 @@ import javax.persistence.NamedQuery;
 
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
-
 @Entity
 @NamedQuery(name = "CorsoLaurea.getCorsiLaureaByDipartimento", query = "select cl from CorsoLaurea cl where cl.dipartimento = ?1")
-public class CorsoLaurea extends BasicProfile{
+public class CorsoLaurea extends BasicProfile {
 
 	private static final long serialVersionUID = 8681730600984301605L;
 
@@ -27,7 +22,7 @@ public class CorsoLaurea extends BasicProfile{
 
 	@Column(name = "NOME")
 	private String nome;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "DIPARTIMENTO_ID")
 	private Dipartimento dipartimento;
@@ -59,8 +54,5 @@ public class CorsoLaurea extends BasicProfile{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
-	
-	
-	
+
 }

@@ -40,34 +40,24 @@
 		<sec:custom-filter position="PRE_AUTH_FILTER" ref="authTokenFilter" />
 		 <sec:intercept-url pattern="/**" access="isFullyAuthenticated()" />
 	</sec:http>
-	
-	<!-- 
-		<sec:http entry-point-ref="forbEntryPoint" use-expressions="true" create-session="stateless">
-		<sec:custom-filter position="PRE_AUTH_FILTER" ref="authTokenFilter" />
-		<sec:intercept-url pattern="/login**" access="permitAll()" />
-        <sec:intercept-url pattern="/js/**" access="permitAll()" />
-        <sec:intercept-url pattern="/css/**" access="permitAll()" />
-        <sec:intercept-url pattern="/lib/**" access="permitAll()" />
-        <sec:intercept-url pattern="/search/**" access="permitAll()" />
-		<sec:intercept-url pattern="/**" access="isFullyAuthenticated()" />
-		<sec:anonymous enabled="true" />
-	</sec:http>
-	
-	 -->
 
 	<bean id="forbEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint">
 	</bean>
 
-	<bean id="authTokenFilter" class="eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter">
-		<property name="authenticationManager" ref="authenticationManager" />
-	</bean>
+	<bean id="authTokenFilter" class="eu.trentorise.smartcampus.aac.conf.OAuthTokenFilter">
+	    <property name="authenticationManager" ref="authenticationManager"/>
+	</bean>    
 
 	<sec:authentication-manager alias="authenticationManager">
 		<sec:authentication-provider ref="preauthAuthProvider" />
 	</sec:authentication-manager>
 
-	<bean id="preauthAuthProvider" class="eu.trentorise.smartcampus.ac.provider.filters.SpringAcProvider">
-		<constructor-arg value="https://vas-dev.smartcampuslab.it/acService" />
+	<bean id="preauthAuthProvider" class="eu.trentorise.smartcampus.aac.conf.OAuthAuthenticationProvider">
+<!-- 	  <property name="tokenStore" ref="tokenStore"/>   
+    <property name="aacURL" value="https://vas-dev.smartcampuslab.it/aac"/>  
+     <property name="scope" value="smartcampus.profile.basicprofile.me"/>  -->
 	</bean>
 		
+	<bean id="tokenStore" class="eu.trentorise.smartcampus.aac.conf.impl.InMemoryTokenStore"/> 
+	
 </beans>

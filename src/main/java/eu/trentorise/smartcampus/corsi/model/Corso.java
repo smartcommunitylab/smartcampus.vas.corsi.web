@@ -1,19 +1,18 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Transient;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "Corso.findCorsoByDipartimentoId", query = "select c from Corso c where c.id_dipartimento = ?1"),
-				@NamedQuery(name = "Corso.findCorsoByCorsoLaureaId", query = "select c from Corso c where c.id_corsoLaurea = ?1") })
+@NamedQueries({
+		@NamedQuery(name = "Corso.findCorsoByDipartimentoId", query = "select c from Corso c where c.id_dipartimento = ?1"),
+		@NamedQuery(name = "Corso.findCorsoByCorsoLaureaId", query = "select c from Corso c where c.id_corsoLaurea = ?1") })
 public class Corso extends CorsoLite {
 
 	/**
@@ -28,7 +27,7 @@ public class Corso extends CorsoLite {
 	// data di inizio del corso
 	@Column(name = "Dipartimento_id")
 	private long id_dipartimento;
-	
+
 	// data di inizio del corso
 	@Column(name = "CorsoLaurea_id")
 	private long id_corsoLaurea;
@@ -50,11 +49,71 @@ public class Corso extends CorsoLite {
 	@Column(name = "SEGUITO")
 	private boolean seguito;
 
+	// valutazione contenuto
+	@Transient
+	private Float rating_contenuto;
+
+	// valutazione carico studio
+	@Transient
+	private Float rating_carico_studio;
+
+	// valutazione lezioni
+	@Transient
+	private Float rating_lezioni;
+
+	// valutazione materiali
+	@Transient
+	private Float rating_materiali;
+
+	// valutazione esame
+	@Transient
+	private Float rating_esame;
+
 	// lista di note
 	// private List<Note> note;
 
-	//@ManyToMany(mappedBy = "corsi",fetch=FetchType.EAGER)
-	//private Collection<Studente> studentiFrequentanti;
+	// @ManyToMany(mappedBy = "corsi",fetch=FetchType.EAGER)
+	// private Collection<Studente> studentiFrequentanti;
+
+	public Float getRating_contenuto() {
+		return rating_contenuto;
+	}
+
+	public void setRating_contenuto(Float rating_contenuto) {
+		this.rating_contenuto = rating_contenuto;
+	}
+
+	public Float getRating_carico_studio() {
+		return rating_carico_studio;
+	}
+
+	public void setRating_carico_studio(Float rating_carico_studio) {
+		this.rating_carico_studio = rating_carico_studio;
+	}
+
+	public Float getRating_lezioni() {
+		return rating_lezioni;
+	}
+
+	public void setRating_lezioni(Float rating_lezioni) {
+		this.rating_lezioni = rating_lezioni;
+	}
+
+	public Float getRating_materiali() {
+		return rating_materiali;
+	}
+
+	public void setRating_materiali(Float rating_materiali) {
+		this.rating_materiali = rating_materiali;
+	}
+
+	public Float getRating_esame() {
+		return rating_esame;
+	}
+
+	public void setRating_esame(Float rating_esame) {
+		this.rating_esame = rating_esame;
+	}
 
 	public Corso() {
 
@@ -83,11 +142,11 @@ public class Corso extends CorsoLite {
 	public void setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
 	}
-	
+
 	public void setId_corsoLaurea(long id_corsoLaurea) {
 		this.id_corsoLaurea = id_corsoLaurea;
 	}
-	
+
 	public long getId_corsoLaurea() {
 		return id_corsoLaurea;
 	}
@@ -116,13 +175,13 @@ public class Corso extends CorsoLite {
 		this.id_dipartimento = id_dipartimento;
 	}
 
-//	public Collection<Studente> getStudentiFrequentanti() {
-//		return studentiFrequentanti;
-//	}
-//
-//	public void setStudentiFrequentanti(
-//			Collection<Studente> studentiFrequentanti) {
-//		this.studentiFrequentanti = studentiFrequentanti;
-//	}
+	// public Collection<Studente> getStudentiFrequentanti() {
+	// return studentiFrequentanti;
+	// }
+	//
+	// public void setStudentiFrequentanti(
+	// Collection<Studente> studentiFrequentanti) {
+	// this.studentiFrequentanti = studentiFrequentanti;
+	// }
 
 }
