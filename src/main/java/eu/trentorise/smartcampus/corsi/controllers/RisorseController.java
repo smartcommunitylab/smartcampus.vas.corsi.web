@@ -1,4 +1,4 @@
-package smartcampus.webtemplate.controllers;
+package eu.trentorise.smartcampus.corsi.controllers;
 
 import java.io.IOException;
 

@@ -22,7 +22,7 @@
 	<mvc:annotation-driven/>
 
 	<!-- Scan controllers in this package -->
-	<context:component-scan base-package="smartcampus.webtemplate.controllers"/>
+	<context:component-scan base-package="eu.trentorise.smartcampus.corsi.controllers"/>
 
 	<context:property-placeholder location="classpath:corsi.properties"/>
 
