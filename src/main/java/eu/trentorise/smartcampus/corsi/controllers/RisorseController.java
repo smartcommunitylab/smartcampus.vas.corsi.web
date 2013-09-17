@@ -5,9 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.core.MediaType;
 
-import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,9 +50,9 @@ public class RisorseController {
 			Risorse erre = new Risorse();
 
 			if (corsoRepository.findOne(Long.valueOf(idcorso)) != null) {
-				WebClient client = WebClient.create(phlUrl);
-				client.path("getFiles/" + idcorso).accept(MediaType.TEXT_PLAIN);
-				json = client.get(String.class);
+			//	WebClient client = WebClient.create(phlUrl);
+			//	client.path("getFiles/" + idcorso).accept(MediaType.TEXT_PLAIN);
+			//	json = client.get(String.class);
 				erre = erre.convert(json);
 			}
 

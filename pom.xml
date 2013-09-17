@@ -16,27 +16,7 @@
 
 	<dependencies>
 
-		<dependency>
-			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>ac-service-provider-api</artifactId>
-			<version>${ac-service-provider-api}</version>
-			<type>jar</type>
-		</dependency>
-		
-		<dependency>
-			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>syncstorage.web</artifactId>
-			<version>1.1</version>
-		</dependency>
-		
-
-		<!-- this -->
-		<dependency>
-			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>ac-service-provider-filter</artifactId>
-			<version>${ac-service-provider-filter}</version>
-			<type>jar</type>
-		</dependency>
+	
 
 		<!-- Spring security -->
 		<dependency>
@@ -143,6 +123,12 @@
 			<version>2.0</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+	<artifactId>smartcampus.client.commons</artifactId>
+	<version>2.0</version>
+		</dependency>
+	
 		<!-- DB -->
 			<dependency>
 			<groupId>mysql</groupId>
@@ -195,8 +181,7 @@
             <artifactId>jstl</artifactId>
             <version>1.2</version>
         </dependency>
-        
-   
+      
             
             
 <dependency>
