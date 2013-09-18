@@ -1,6 +1,7 @@
 package eu.trentorise.smartcampus.corsi.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
@@ -190,7 +192,71 @@ public class CorsiController {
 	
 	
 	
+	/*
+	 * Ritorna tutti i corsi che lo studente ha superato, quindi che può votare
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/superati/me")
+	public @ResponseBody
+	Collection<CorsoLite> getCorsiSuperatiByMe(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			logger.info("/corso/superati/me");
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			// test
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				// TEST
+
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+			}
+			
+			Studente stud = studenteRepository.save(studente);
+			stud.setCorsiSuperati(assignCorsi(stud));
+
+			return stud.getCorsiSuperati();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
 	
+	
+	private List<CorsoLite> assignCorsi(Studente stud) {
+		// TODO Auto-generated method stub
+		
+		String[] listS = stud.getIdsCorsiSuperati().split(",");
+		
+		List<CorsoLite> reurList=new ArrayList<CorsoLite>();
+		for(String s: listS){
+			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
+		}
+		
+		
+		return reurList;
+	}
 	
 
 	/*
