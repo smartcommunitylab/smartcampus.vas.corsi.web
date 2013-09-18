@@ -979,7 +979,7 @@ public class CommentiController {
 				z++;
 			}
 			
-			studente.setCorsiSuperati(supera);
+			studente.setIdsCorsiSuperati(supera);
 			
 			
 			studenteRepository.save(studente);

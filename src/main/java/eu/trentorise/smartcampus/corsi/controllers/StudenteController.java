@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -130,13 +131,30 @@ public class StudenteController {
 				studente.setCorsi(corsiEsse3);
 
 			}
-			return studenteRepository.save(studente);
+			
+			Studente stud = studenteRepository.save(studente);
+			stud.setCorsiSuperati(assignCorsi(stud));
+			return stud;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
+	}
+
+	private List<CorsoLite> assignCorsi(Studente stud) {
+		// TODO Auto-generated method stub
+		
+		String[] listS = stud.getIdsCorsiSuperati().split(",");
+		
+		List<CorsoLite> reurList=new ArrayList<CorsoLite>();
+		for(String s: listS){
+			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
+		}
+		
+		
+		return reurList;
 	}
 
 	// @PostConstruct
@@ -165,7 +183,7 @@ public class StudenteController {
 					}
 				}
 				
-				studente.setCorsiSuperati(supera);
+				studente.setIdsCorsiSuperati(supera);
 				
 				studenteRepository.save(studente);
 			}
@@ -188,7 +206,7 @@ public class StudenteController {
 					}
 				}
 				
-				studente.setCorsiSuperati(supera);
+				studente.setIdsCorsiSuperati(supera);
 				
 				studenteRepository.save(studente);
 			}

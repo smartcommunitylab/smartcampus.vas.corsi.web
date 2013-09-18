@@ -1,6 +1,7 @@
 package eu.trentorise.smartcampus.corsi.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-
-import org.codehaus.jackson.annotate.JsonSubTypes.Type;
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.Transient;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "Studente.findStudenteByUserId", query = "select c from Studente c where c.id = ?1") })
@@ -57,7 +55,11 @@ public class Studente extends BasicEntity {
 	private Collection<Corso> corsi;
 
 	@Column(name = "ESAMI_SUPERATI")
-	private String corsiSuperati;
+	private String idsCorsiSuperati;
+	
+	
+	@Transient
+	private List<CorsoLite> corsiSuperati;
 
 	public Collection<Corso> getCorsi() {
 		return corsi;
@@ -131,12 +133,24 @@ public class Studente extends BasicEntity {
 		this.email = email;
 	}
 
-	public String getCorsiSuperati() {
+	public String getIdsCorsiSuperati() {
+		return idsCorsiSuperati;
+	}
+
+	public void setIdsCorsiSuperati(String idsCorsiSuperati) {
+		this.idsCorsiSuperati = idsCorsiSuperati;
+	}
+
+	public List<CorsoLite> getCorsiSuperati() {
 		return corsiSuperati;
 	}
 
-	public void setCorsiSuperati(String corsiSuperati) {
+	public void setCorsiSuperati(List<CorsoLite> corsiSuperati) {
 		this.corsiSuperati = corsiSuperati;
 	}
+
+	
+	
+	
 
 }
