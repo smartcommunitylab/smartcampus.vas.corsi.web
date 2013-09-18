@@ -966,6 +966,22 @@ public class CommentiController {
 			studente.setCognome("CognomeStudente" + i1);
 			studente.setCorsi(esse3);
 			studente.setDipartimento(dipar);
+			
+			String supera = null;
+			int z=0;
+			supera = new String();
+			
+			for(Corso cors : esse3){
+				
+				if(z % 2 == 0){
+					supera = supera.concat(String.valueOf(cors.getId()).concat(","));
+				}
+				z++;
+			}
+			
+			studente.setCorsiSuperati(supera);
+			
+			
 			studenteRepository.save(studente);
 
 		}

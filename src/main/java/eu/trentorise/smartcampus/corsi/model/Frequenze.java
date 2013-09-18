@@ -17,10 +17,10 @@ public class Frequenze {
 	@JoinColumn(name = "STUDENTE_ID")
 	private Studente studente;
 
-	// testo del commento
 	@ManyToOne
 	@JoinColumn(name = "CORSO_ID")
-	private Corso corso;
+	private Corso corso;	
+	
 
 	public long getId() {
 		return id;

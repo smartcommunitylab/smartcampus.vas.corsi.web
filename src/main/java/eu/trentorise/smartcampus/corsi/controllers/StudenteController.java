@@ -1,6 +1,7 @@
 package eu.trentorise.smartcampus.corsi.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
@@ -151,6 +153,20 @@ public class StudenteController {
 				studente.setNome("NomeStudente" + i);
 				studente.setCognome("CognomeStudente" + i);
 				studente.setCorsi(s3);
+				
+				String supera = null;
+				int z=0;
+				
+				for(Corso cors : s3){
+					supera = new String();
+					if(z % 2 == 0){
+						supera = supera.concat(String.valueOf(cors.getId()).concat(","));
+						z++;
+					}
+				}
+				
+				studente.setCorsiSuperati(supera);
+				
 				studenteRepository.save(studente);
 			}
 
@@ -160,6 +176,20 @@ public class StudenteController {
 				studente.setNome("NomeStudente" + i);
 				studente.setCognome("CognomeStudente" + i);
 				studente.setCorsi(esse3);
+				
+				String supera = null;
+				int z=0;
+				
+				for(Corso cors : esse3){
+					supera = new String();
+					if(z % 2 == 0){
+						supera = supera.concat(String.valueOf(cors.getId()).concat(","));
+						z++;
+					}
+				}
+				
+				studente.setCorsiSuperati(supera);
+				
 				studenteRepository.save(studente);
 			}
 		}

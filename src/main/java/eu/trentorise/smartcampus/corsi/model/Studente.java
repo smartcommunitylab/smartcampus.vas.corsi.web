@@ -13,6 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
+import org.codehaus.jackson.annotate.JsonSubTypes.Type;
+import org.hibernate.annotations.CollectionId;
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 @NamedQueries({ @NamedQuery(name = "Studente.findStudenteByUserId", query = "select c from Studente c where c.id = ?1") })
 public class Studente extends BasicEntity {
@@ -51,6 +55,9 @@ public class Studente extends BasicEntity {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Frequenze", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "CORSO_ID"))
 	private Collection<Corso> corsi;
+
+	@Column(name = "ESAMI_SUPERATI")
+	private String corsiSuperati;
 
 	public Collection<Corso> getCorsi() {
 		return corsi;
@@ -122,6 +129,14 @@ public class Studente extends BasicEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getCorsiSuperati() {
+		return corsiSuperati;
+	}
+
+	public void setCorsiSuperati(String corsiSuperati) {
+		this.corsiSuperati = corsiSuperati;
 	}
 
 }
