@@ -51,6 +51,10 @@ public class Studente extends BasicEntity {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Frequenze", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "CORSO_ID"))
 	private Collection<Corso> corsi;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "Gruppi", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "GDS_ID"))
+	private Collection<GruppoDiStudio> gds;
 
 	public Collection<Corso> getCorsi() {
 		return corsi;
@@ -123,5 +127,15 @@ public class Studente extends BasicEntity {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public Collection<GruppoDiStudio> getGds() {
+		return gds;
+	}
+
+	public void setGds(Collection<GruppoDiStudio> gds) {
+		this.gds = gds;
+	}
+	
+	
 
 }

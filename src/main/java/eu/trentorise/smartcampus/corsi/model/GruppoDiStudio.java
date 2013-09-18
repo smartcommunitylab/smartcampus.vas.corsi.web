@@ -6,11 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-
+@NamedQuery(name = "GruppoDiStudio.findGdsBycourseId(id_course)", query = "select gds from GruppoDiStudio gds where gds.getCorso = ?1")
 public class GruppoDiStudio {
 	// id del gruppo
 	@Id
