@@ -9,9 +9,6 @@ import javax.persistence.Id;
 
 public class Message extends ChatObj{
 	// id del gruppo
-	@Id
-	@GeneratedValue
-	private int id;
 
 	// Nome del gruppo
 	@Column(name = "TESTO")

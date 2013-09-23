@@ -1,5 +1,7 @@
 package eu.trentorise.smartcampus.corsi.model;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,17 +12,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
-@NamedQuery(name = "AttivitaDiStudio.findAttByIdGds(id_gruppidistudio)", query = "select a from AttivitaDiStudio a where a.getGruppo = ?1")
+@NamedQuery(name = "AttivitaDiStudio.findAttByIdGds(id_gruppidistudio)", query = "select a from AttivitaDiStudio a where a.gruppo = ?1")
 public class AttivitaDiStudio extends Evento {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	// id attività
-	@Id
-	@GeneratedValue
-	private int id;
 
 	// corso di riferimento
 	@ManyToOne
@@ -34,11 +31,11 @@ public class AttivitaDiStudio extends Evento {
 
 	@OneToMany
 	@JoinColumn(name = "ALLEGATO_ID")
-	private Allegato allegato;
+	private Collection<Allegato> allegato;
 
 	@OneToMany
 	@JoinColumn(name = "SERVIZIO_ID")
-	private Servizio servizio;
+	private Collection<Servizio> servizio;
 
 	// topic
 	@Column(name = "Topic")
@@ -47,13 +44,6 @@ public class AttivitaDiStudio extends Evento {
 	public AttivitaDiStudio() {
 	}
 
-	public Allegato getAllegato() {
-		return allegato;
-	}
-
-	public void setAllegato(Allegato allegato) {
-		this.allegato = allegato;
-	}
 
 	public String getTopic() {
 		return topic;
@@ -71,13 +61,27 @@ public class AttivitaDiStudio extends Evento {
 		this.corso = corso;
 	}
 
-	public Servizio getServizio() {
+
+	public Collection<Allegato> getAllegato() {
+		return allegato;
+	}
+
+
+	public void setAllegato(Collection<Allegato> allegato) {
+		this.allegato = allegato;
+	}
+
+
+	public Collection<Servizio> getServizio() {
 		return servizio;
 	}
 
-	public void setServizio(Servizio servizio) {
+
+	public void setServizio(Collection<Servizio> servizio) {
 		this.servizio = servizio;
 	}
+
+
 
 	public GruppoDiStudio getGruppo() {
 		return gruppo;

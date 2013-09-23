@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQuery(name = "GruppoDiStudio.findGdsBycourseId(id_course)", query = "select gds from GruppoDiStudio gds where gds.getCorso = ?1")
+@NamedQuery(name = "GruppoDiStudio.findGdsBycourseId(id_course)", query = "select gds from GruppoDiStudio gds where gds.corso = ?1")
 public class GruppoDiStudio {
 	// id del gruppo
 	@Id

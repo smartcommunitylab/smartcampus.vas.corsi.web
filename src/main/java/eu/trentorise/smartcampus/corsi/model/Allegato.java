@@ -8,10 +8,6 @@ import javax.persistence.Id;
 @Entity
 
 public class Allegato extends ChatObj{
-	// id del gruppo
-	@Id
-	@GeneratedValue
-	private int id;
 
 	// Nome del gruppo
 	@Column(name = "URI")
