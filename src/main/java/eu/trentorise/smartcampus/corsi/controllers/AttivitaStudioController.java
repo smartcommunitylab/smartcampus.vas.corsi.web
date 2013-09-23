@@ -27,7 +27,7 @@ import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
-@Controller("gruppiStudioController")
+@Controller("attivitaStudioController")
 public class AttivitaStudioController {
 
 	private static final Logger logger = Logger

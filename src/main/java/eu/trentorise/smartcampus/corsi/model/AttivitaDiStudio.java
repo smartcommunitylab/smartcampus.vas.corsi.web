@@ -25,17 +25,17 @@ public class AttivitaDiStudio extends Evento {
 	private Corso corso;
 
 	// gds di riferimento
-	@ManyToOne
-	@JoinColumn(name = "GDS_ID")
-	private GruppoDiStudio gruppo;
+	//@ManyToOne
+	//@JoinColumn(name = "GDS_ID")
+	//private GruppoDiStudio gruppo;
 
-	@OneToMany
-	@JoinColumn(name = "ALLEGATO_ID")
-	private Collection<Allegato> allegato;
+	//@OneToMany
+	//@JoinColumn(name = "ALLEGATO_ID")
+	//private Collection<Allegato> allegato;
 
-	@OneToMany
-	@JoinColumn(name = "SERVIZIO_ID")
-	private Collection<Servizio> servizio;
+	//@OneToMany
+	///@JoinColumn(name = "SERVIZIO_ID")
+	//private Collection<Servizio> servizio;
 
 	// topic
 	@Column(name = "Topic")
@@ -62,34 +62,34 @@ public class AttivitaDiStudio extends Evento {
 	}
 
 
-	public Collection<Allegato> getAllegato() {
-		return allegato;
-	}
+//	public Collection<Allegato> getAllegato() {
+//		return allegato;
+//	}
+//
+//
+//	public void setAllegato(Collection<Allegato> allegato) {
+//		this.allegato = allegato;
+//	}
+//
+//
+//	public Collection<Servizio> getServizio() {
+//		return servizio;
+//	}
+//
+//
+//	public void setServizio(Collection<Servizio> servizio) {
+//		this.servizio = servizio;
+//	}
+//
 
 
-	public void setAllegato(Collection<Allegato> allegato) {
-		this.allegato = allegato;
-	}
-
-
-	public Collection<Servizio> getServizio() {
-		return servizio;
-	}
-
-
-	public void setServizio(Collection<Servizio> servizio) {
-		this.servizio = servizio;
-	}
-
-
-
-	public GruppoDiStudio getGruppo() {
-		return gruppo;
-	}
-
-	public void setGruppo(GruppoDiStudio gruppo) {
-		this.gruppo = gruppo;
-	}
-
-	
+//	public GruppoDiStudio getGruppo() {
+//		return gruppo;
+//	}
+//
+//	public void setGruppo(GruppoDiStudio gruppo) {
+//		this.gruppo = gruppo;
+//	}
+//
+//	
 }
