@@ -60,6 +60,11 @@ public class Studente extends BasicEntity {
 	
 	@Transient
 	private List<CorsoLite> corsiSuperati;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "Gruppi", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "GDS_ID"))
+	private Collection<GruppoDiStudio> gds;
+
 
 	public Collection<Corso> getCorsi() {
 		return corsi;
@@ -149,7 +154,14 @@ public class Studente extends BasicEntity {
 		this.corsiSuperati = corsiSuperati;
 	}
 
-	
+
+	public Collection<GruppoDiStudio> getGds() {
+		return gds;
+	}
+
+	public void setGds(Collection<GruppoDiStudio> gds) {
+		this.gds = gds;
+	}
 	
 	
 
