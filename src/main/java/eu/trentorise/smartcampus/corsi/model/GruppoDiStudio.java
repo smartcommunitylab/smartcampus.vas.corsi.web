@@ -2,9 +2,9 @@ package eu.trentorise.smartcampus.corsi.model;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -30,9 +30,13 @@ public class GruppoDiStudio {
 	@JoinColumn(name = "CORSO_ID")
 	private Corso corso;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "GruppiStudioAttivita", joinColumns = @JoinColumn(name = "GRUPPODISTUDIO_ID"), inverseJoinColumns = @JoinColumn(name = "ATTIVITADISTUDIO_ID"))
 	private Collection<AttivitaDiStudio> attivitaStudio;
+
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "GruppiStudioStudenti", joinColumns = @JoinColumn(name = "GRUPPODISTUDIO_ID"), inverseJoinColumns = @JoinColumn(name = "STUDENTE_ID"))
+	private Collection<Studente> studentiGruppo;
 	
 	public GruppoDiStudio() {
 	}

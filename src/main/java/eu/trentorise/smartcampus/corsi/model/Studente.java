@@ -57,14 +57,31 @@ public class Studente extends BasicEntity {
 	@Column(name = "ESAMI_SUPERATI")
 	private String idsCorsiSuperati;
 	
-	
 	@Transient
 	private List<CorsoLite> corsiSuperati;
 	
-//	@ManyToMany(fetch = FetchType.EAGER)
-//	@JoinTable(name = "Gruppi", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "GDS_ID"))
-//	private Collection<GruppoDiStudio> gds;
+	@Column(name = "GRUPPI_DI_STUDIO")
+	private String idsGruppiDiStudio;
+	
+	@Transient
+	private List<GruppoDiStudio> gruppiDiStudio;
 
+
+	public String getIdsGruppiDiStudio() {
+		return idsGruppiDiStudio;
+	}
+
+	public void setIdsGruppiDiStudio(String idsGruppiDiStudio) {
+		this.idsGruppiDiStudio = idsGruppiDiStudio;
+	}
+
+	public List<GruppoDiStudio> getGruppiDiStudio() {
+		return gruppiDiStudio;
+	}
+
+	public void setGruppiDiStudio(List<GruppoDiStudio> gruppiDiStudio) {
+		this.gruppiDiStudio = gruppiDiStudio;
+	}
 
 	public Collection<Corso> getCorsi() {
 		return corsi;

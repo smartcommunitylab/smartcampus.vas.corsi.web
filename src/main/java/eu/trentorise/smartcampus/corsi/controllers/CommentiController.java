@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
+import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
@@ -960,13 +962,14 @@ public class CommentiController {
 		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId((long) 1);
 		Dipartimento dipar = dipartimentoRepository.findOne((long) 1);
 
-		for (int i1 = 0; i1 < 20; i1++) {
+		for (int i1 = 0; i1 < 10; i1++) {
 			Studente studente = new Studente();
 			studente.setId((long) i1);
 			studente.setNome("NomeStudente" + i1);
 			studente.setCognome("CognomeStudente" + i1);
 			studente.setCorsi(esse3);
 			studente.setDipartimento(dipar);
+
 			
 			String supera = null;
 			int z=0;
@@ -974,14 +977,30 @@ public class CommentiController {
 			
 			for(Corso cors : esse3){
 				
+				
+				GruppoDiStudio gruppoDiSt = new GruppoDiStudio();
+				gruppoDiSt.setCorso(cors);
+				gruppoDiSt.setNome("Mio gruppo"+i1+" di "+cors.getNome());	
+				
 				if(z % 2 == 0){
 					supera = supera.concat(String.valueOf(cors.getId()).concat(","));
 				}
 				z++;
 			}
 			
-			studente.setIdsCorsiSuperati(supera);
 			
+			String gruppiDiStIds = new String();
+			
+			z=0;
+			for(Corso cors : esse3){
+				if(z % 2 == 0){
+					gruppiDiStIds = gruppiDiStIds.concat(String.valueOf(cors.getId()).concat(","));
+				}
+				z++;
+			}
+			
+			studente.setIdsCorsiSuperati(supera);
+			studente.setIdsGruppiDiStudio(gruppiDiStIds);
 			
 			studenteRepository.save(studente);
 
@@ -1042,6 +1061,17 @@ public class CommentiController {
 				x.setStart(new Time(14, 0, 0));
 				x.setStop(new Time(16, 0, 0));
 				eventoRepository.save(x);
+				
+				AttivitaDiStudio attivita = new AttivitaDiStudio();
+				attivita.setCorso(index);
+				attivita.setTitolo(index.getNome());
+				attivita.setDescrizione("Meeting del progetto di " + index.getNome());
+				attivita.setRoom("A21" + i1);
+				attivita.setEvent_location("Polo Tecnologico Ferrari, Povo");
+				attivita.setData(new Date(("2013/09/0" + String.valueOf(i1 + 1))
+						.toString()));
+				attivita.setStart(new Time(15, 0, 0));
+				attivita.setStop(new Time(17, 0, 0));
 			}
 		}
 		
