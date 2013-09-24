@@ -1,10 +1,13 @@
 package eu.trentorise.smartcampus.corsi.model;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
@@ -72,8 +75,8 @@ public class Corso extends CorsoLite {
 	// lista di note
 	// private List<Note> note;
 
-	// @ManyToMany(mappedBy = "corsi",fetch=FetchType.EAGER)
-	// private Collection<Studente> studentiFrequentanti;
+//	@ManyToMany(mappedBy = "corsi",fetch=FetchType.EAGER)
+//	private Collection<Studente> studentiFrequentanti;
 
 	public Float getRating_contenuto() {
 		return rating_contenuto;

@@ -9,5 +9,11 @@
  		<class>eu.trentorise.smartcampus.corsi.model.Evento</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Frequenze</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Studente</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.Allegato</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.Message</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.Dipartimento</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.GruppoDiStudio</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.Servizio</class>
 	</persistence-unit>
 </persistence>

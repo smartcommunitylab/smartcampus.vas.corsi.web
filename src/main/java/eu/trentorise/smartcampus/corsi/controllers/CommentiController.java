@@ -150,6 +150,7 @@ public class CommentiController {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@PostConstruct
 	private void initCommenti() {
 
@@ -1043,6 +1044,10 @@ public class CommentiController {
 				eventoRepository.save(x);
 			}
 		}
+		
+		
+		
+		
 
 	}
 

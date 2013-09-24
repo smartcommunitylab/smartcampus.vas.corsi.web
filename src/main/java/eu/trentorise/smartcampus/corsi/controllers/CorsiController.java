@@ -48,6 +48,7 @@ public class CorsiController {
 	@Autowired
 	@Value("${webapp.name}")
 	private String appName;
+	
 
 	@Autowired
 	private CorsoRepository corsoRepository;

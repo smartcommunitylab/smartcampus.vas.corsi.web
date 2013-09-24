@@ -1,10 +1,15 @@
 package eu.trentorise.smartcampus.corsi.model;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 
@@ -14,18 +19,21 @@ public class GruppoDiStudio {
 	// id del gruppo
 	@Id
 	@GeneratedValue
-	private int id;
+	private long id;
+	
+	// Nome del gruppo
+	@Column(name = "NOME")
+	private String nome;
 
 	// corso di riferimento
 	@ManyToOne
 	@JoinColumn(name = "CORSO_ID")
 	private Corso corso;
 
-	// Nome del gruppo
-	@Column(name = "NOME")
-	private String nome;
-
-
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "GruppiStudioAttivita", joinColumns = @JoinColumn(name = "GRUPPODISTUDIO_ID"), inverseJoinColumns = @JoinColumn(name = "ATTIVITADISTUDIO_ID"))
+	private Collection<AttivitaDiStudio> attivitaStudio;
+	
 	public GruppoDiStudio() {
 	}
 

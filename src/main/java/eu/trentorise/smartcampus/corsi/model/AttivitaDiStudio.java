@@ -19,23 +19,18 @@ public class AttivitaDiStudio extends Evento {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	// corso di riferimento
-	@ManyToOne
-	@JoinColumn(name = "CORSO_ID")
-	private Corso corso;
-
 	// gds di riferimento
-	//@ManyToOne
-	//@JoinColumn(name = "GDS_ID")
-	//private GruppoDiStudio gruppo;
+	@ManyToOne
+	@JoinColumn(name = "GRUPPODISTUDIO_ID")
+	private GruppoDiStudio gruppo;
 
-	//@OneToMany
-	//@JoinColumn(name = "ALLEGATO_ID")
-	//private Collection<Allegato> allegato;
+//	@OneToMany
+//	@JoinColumn(name = "ALLEGATO_ID")
+//	private Collection<Allegato> allegato;
 
-	//@OneToMany
-	///@JoinColumn(name = "SERVIZIO_ID")
-	//private Collection<Servizio> servizio;
+//	@OneToMany
+//	@JoinColumn(name = "SERVIZIO_ID")
+//	private Collection<Servizio> servizio;
 
 	// topic
 	@Column(name = "Topic")
@@ -53,12 +48,14 @@ public class AttivitaDiStudio extends Evento {
 		this.topic = topic;
 	}
 
-	public Corso getCorso() {
-		return corso;
+
+	public GruppoDiStudio getGruppo() {
+		return gruppo;
 	}
 
-	public void setCorso(Corso corso) {
-		this.corso = corso;
+
+	public void setGruppo(GruppoDiStudio gruppo) {
+		this.gruppo = gruppo;
 	}
 
 
@@ -70,8 +67,8 @@ public class AttivitaDiStudio extends Evento {
 //	public void setAllegato(Collection<Allegato> allegato) {
 //		this.allegato = allegato;
 //	}
-//
-//
+
+
 //	public Collection<Servizio> getServizio() {
 //		return servizio;
 //	}
@@ -80,16 +77,7 @@ public class AttivitaDiStudio extends Evento {
 //	public void setServizio(Collection<Servizio> servizio) {
 //		this.servizio = servizio;
 //	}
-//
 
 
-//	public GruppoDiStudio getGruppo() {
-//		return gruppo;
-//	}
-//
-//	public void setGruppo(GruppoDiStudio gruppo) {
-//		this.gruppo = gruppo;
-//	}
-//
-//	
+
 }

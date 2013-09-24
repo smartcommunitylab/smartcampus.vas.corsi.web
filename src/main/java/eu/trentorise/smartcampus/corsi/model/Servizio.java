@@ -11,7 +11,7 @@ public class Servizio {
 	// id del commento
 	@Id
 	@GeneratedValue
-	private int id;
+	private long id;
 
 	// testo del commento
 	@Column(name = "TIPO")

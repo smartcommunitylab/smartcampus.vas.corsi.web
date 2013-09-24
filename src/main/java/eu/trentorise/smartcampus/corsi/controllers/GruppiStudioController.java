@@ -59,52 +59,52 @@ public class GruppiStudioController {
 	@Autowired
 	private StudenteRepository studenteRepository;
 
-	/*
-	 * Ritorna tutti i corsi in versione lite
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/all")
-	public @ResponseBody
-	List<GruppoDiStudio> getgruppidistudioAll(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-
-	throws IOException {
-		try {
-
-			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository.findAll();
-
-			return getgruppidistudio;
-
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
-	/*
-	 * Ritorna i dati completi di un gruppo dato l'id
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_gruppidistudio}")
-	public @ResponseBody
-	GruppoDiStudio getgruppidistudioByID(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_gruppidistudio") Long id_gruppidistudio)
-
-	throws IOException {
-		try {
-			logger.info("/gruppidistudio/{id_gruppidistudio}");
-
-			if (id_gruppidistudio == null)
-				return null;
-
-			return  gruppidistudioRepository.findOne(id_gruppidistudio);
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
+//	/*
+//	 * Ritorna tutti i corsi in versione lite
+//	 */
+//	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/all")
+//	public @ResponseBody
+//	List<GruppoDiStudio> getgruppidistudioAll(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session)
+//
+//	throws IOException {
+//		try {
+//
+//			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository.findAll();
+//
+//			return getgruppidistudio;
+//
+//		} catch (Exception e) {
+//			logger.error(e.getMessage());
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
+//
+//	/*
+//	 * Ritorna i dati completi di un gruppo dato l'id
+//	 */
+//	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_gruppidistudio}")
+//	public @ResponseBody
+//	GruppoDiStudio getgruppidistudioByID(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session,
+//			@PathVariable("id_gruppidistudio") Long id_gruppidistudio)
+//
+//	throws IOException {
+//		try {
+//			logger.info("/gruppidistudio/{id_gruppidistudio}");
+//
+//			if (id_gruppidistudio == null)
+//				return null;
+//
+//			return  gruppidistudioRepository.findOne(id_gruppidistudio);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
 
 
 	private String getToken(HttpServletRequest request) {
@@ -114,116 +114,116 @@ public class GruppiStudioController {
 	/*
 	 * Ritorna i gruppi di un corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_course}")
-	public @ResponseBody
-	List<GruppoDiStudio> getgruppidistudioByIDCourse(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_course") Long id_course)
-
-	throws IOException {
-		try {
-			logger.info("/gruppidistudio/{id_course}");
-
-			if (id_course == null)
-				return null;
-
-			return  gruppidistudioRepository.findGdsBycourseId(id_course);
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
+//	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_course}")
+//	public @ResponseBody
+//	List<GruppoDiStudio> getgruppidistudioByIDCourse(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session,
+//			@PathVariable("id_course") Long id_course)
+//
+//	throws IOException {
+//		try {
+//			logger.info("/gruppidistudio/{id_course}");
+//
+//			if (id_course == null)
+//				return null;
+//
+//			return  gruppidistudioRepository.findGdsBycourseId(id_course);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
 
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/me")
-	public @ResponseBody
-	Collection<GruppoDiStudio> getgruppidistudioByMe(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-
-	throws IOException {
-		try {
-			logger.info("/gruppidistudio/me");
-
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
-
-			// test
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente = studenteRepository.save(studente);
-
-				// TODO Filtrare
-
-				// TEST
-				List<GruppoDiStudio> mygruppidistudio = gruppidistudioRepository.findAll();
-
-				// TEST
-
-				// Set corso follwed by studente
-				studente.setGds(mygruppidistudio);
-				studente = studenteRepository.save(studente);
-			}
-
-			return studente.getGds();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
+//	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/me")
+//	public @ResponseBody
+//	Collection<GruppoDiStudio> getgruppidistudioByMe(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session)
+//
+//	throws IOException {
+//		try {
+//			logger.info("/gruppidistudio/me");
+//
+//			String token = getToken(request);
+//			BasicProfileService service = new BasicProfileService(
+//					profileaddress);
+//			BasicProfile profile = service.getBasicProfile(token);
+//			Long userId = Long.valueOf(profile.getUserId());
+//
+//			// test
+//			Studente studente = studenteRepository.findStudenteByUserId(userId);
+//			if (studente == null) {
+//				studente = new Studente();
+//				studente.setId(userId);
+//				studente.setNome(profile.getName());
+//				studente = studenteRepository.save(studente);
+//
+//				// TODO Filtrare
+//
+//				// TEST
+//				List<GruppoDiStudio> mygruppidistudio = gruppidistudioRepository.findAll();
+//
+//				// TEST
+//
+//				// Set corso follwed by studente
+//				studente.setGds(mygruppidistudio);
+//				studente = studenteRepository.save(studente);
+//			}
+//
+//			return studente.getGds();
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/addgruppodistudio")
-	public @ResponseBody
-	GruppoDiStudio saveGds(HttpServletRequest request, HttpServletResponse response,
-			HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
-
-	throws IOException {
-		try {
-
-			// User Request create event
-			// creati a notification and send to Communicator
-
-			// TODO controlli se campi validi
-			if (gruppodistudio != null && gruppodistudio.getNome() != "") {
-
-				String token = getToken(request);
-				BasicProfileService service = new BasicProfileService(
-						profileaddress);
-				BasicProfile profile = service.getBasicProfile(token);
-				Long userId = Long.valueOf(profile.getUserId());
-
-				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-						communicatoraddress, appName);
-
-				List<String> users = new ArrayList<String>();
-				users.add(userId.toString());
-
-				Notification n = new Notification();
-				n.setTitle(gruppodistudio.getNome());
-				n.setUser(userId.toString());
-				n.setTimestamp(System.currentTimeMillis());
-				n.setDescription("Creazione Evento");
-
-				communicatorConnector.sendAppNotification(n, appName, users,
-						token);
-
-				return gruppidistudioRepository.save(gruppodistudio);
-			} else
-				return null;
-
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
+//	@RequestMapping(method = RequestMethod.POST, value = "/addgruppodistudio")
+//	public @ResponseBody
+//	GruppoDiStudio AddGds(HttpServletRequest request, HttpServletResponse response,
+//			HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
+//
+//	throws IOException {
+//		try {
+//
+//			// User Request create event
+//			// creati a notification and send to Communicator
+//
+//			// TODO controlli se campi validi
+//			if (gruppodistudio != null && gruppodistudio.getNome() != "") {
+//
+//				String token = getToken(request);
+//				BasicProfileService service = new BasicProfileService(
+//						profileaddress);
+//				BasicProfile profile = service.getBasicProfile(token);
+//				Long userId = Long.valueOf(profile.getUserId());
+//
+//				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+//						communicatoraddress, appName);
+//
+//				List<String> users = new ArrayList<String>();
+//				users.add(userId.toString());
+//
+//				Notification n = new Notification();
+//				n.setTitle(gruppodistudio.getNome());
+//				n.setUser(userId.toString());
+//				n.setTimestamp(System.currentTimeMillis());
+//				n.setDescription("Creazione Evento");
+//
+//				communicatorConnector.sendAppNotification(n, appName, users,
+//						token);
+//
+//				return gruppidistudioRepository.save(gruppodistudio);
+//			} else
+//				return null;
+//
+//		} catch (Exception e) {
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
 
 	
 }

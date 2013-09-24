@@ -13,7 +13,7 @@ public class ChatObj {
 	// id del gruppo
 	@Id
 	@GeneratedValue
-	private int id;
+	private long id;
 
 	// Nome del gruppo
 	@Column(name = "AUTHOR")
