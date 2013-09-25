@@ -352,7 +352,50 @@ public class CorsiController {
 			
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			
-			boolean isSuperato = false;
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
+				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				String supera = null;
+				int z = 0;
+				supera = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					z++;
+				}
+
+				// TEST
+
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+
+			}
+			
+			////////////////////////////////////////////////////////////////////////////////////////////////
+			studente = studenteRepository.save(studente);
+			
+			
+			Boolean isSuperato = new Boolean(false);
 			
 			List<CorsoLite> corsiSuperati = assignCorsi(studente);
 
