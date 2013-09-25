@@ -15,13 +15,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
+import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
+import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
@@ -43,13 +47,16 @@ public class CorsiController {
 	@Value("${profile.address}")
 	private String profileaddress;
 
+	@Autowired
+	@Value("${communicator.address}")
+	private String communicatoraddress;
+
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
 	 */
 	@Autowired
 	@Value("${webapp.name}")
 	private String appName;
-	
 
 	@Autowired
 	private CorsoRepository corsoRepository;
@@ -191,9 +198,7 @@ public class CorsiController {
 		}
 		return null;
 	}
-	
-	
-	
+
 	/*
 	 * Ritorna tutti i corsi che lo studente ha superato, quindi che può votare
 	 */
@@ -205,13 +210,13 @@ public class CorsiController {
 	throws IOException {
 		try {
 			logger.info("/corso/superati/me");
-			
+
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-			
+
 			List<CorsoLite> corsiSuperati;
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
@@ -221,8 +226,8 @@ public class CorsiController {
 				studente.setNome(profile.getName());
 				studente.setCognome(profile.getSurname());
 				studente = studenteRepository.save(studente);
-				
-				//studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
 
 				// TODO caricare corsi da esse3
 				// Creare associazione su frequenze
@@ -231,31 +236,31 @@ public class CorsiController {
 				List<Corso> corsiEsse3 = corsoRepository.findAll();
 
 				String supera = null;
-				int z=0;
+				int z = 0;
 				supera = new String();
-				
-				for(Corso cors : corsiEsse3){
 
-					if(z % 2 == 0){
-						supera = supera.concat(String.valueOf(cors.getId()).concat(","));
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
 					}
 					z++;
 				}
-				
-				
+
 				// TEST
 
 				// Set corso follwed by studente
 				studente.setCorsi(corsiEsse3);
 				studente = studenteRepository.save(studente);
-				
+
 				// Set corsi superati
 				studente.setIdsCorsiSuperati(supera);
-				
+
 			}
-				
+
 			studente = studenteRepository.save(studente);
-			
+
 			return assignCorsi(studente);
 
 		} catch (Exception e) {
@@ -264,22 +269,19 @@ public class CorsiController {
 		}
 		return null;
 	}
-	
-	
+
 	private List<CorsoLite> assignCorsi(Studente stud) {
 		// TODO Auto-generated method stub
-		
+
 		String[] listS = stud.getIdsCorsiSuperati().split(",");
-		
-		List<CorsoLite> reurList=new ArrayList<CorsoLite>();
-		for(String s: listS){
+
+		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
+		for (String s : listS) {
 			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
 		}
-		
-		
+
 		return reurList;
 	}
-	
 
 	/*
 	 * getCorsoByDipartimento
@@ -327,6 +329,79 @@ public class CorsiController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
+	}
+
+	/*
+	 * getCorsoByCorsoLaurea
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/superati/{id_corso}")
+	public @ResponseBody
+	Boolean isMyCourseSuperato(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_corso") Long id_corso)
+
+	throws IOException {
+		try {
+			logger.info("/corso/superati/" + id_corso.toString());
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+			
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			
+			boolean isSuperato = false;
+			
+			List<CorsoLite> corsiSuperati = assignCorsi(studente);
+
+			for(CorsoLite corso: corsiSuperati){
+				if(corso.getId() == id_corso)
+					isSuperato = true;
+			}
+
+			return isSuperato;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	/*
+	 * Riceve corso e lo salva come corso che seguo
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/corso/seguo")
+	//
+	public @ResponseBody
+	boolean saveCommento(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@RequestBody Corso corso)
+
+	throws IOException {
+		try {
+			logger.info("/commento");
+			// TODO control valid field
+			if (corso == null)
+				return false;
+
+			Corso corsoDaSeguire = corsoRepository.findOne(corso.getId());
+
+			if (corsoDaSeguire != null) {
+				corsoRepository.delete(corsoDaSeguire);
+				return corsoRepository.save(corsoDaSeguire) != null;
+
+			} else
+				return false;
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return false;
+		}
+
 	}
 
 	// @PostConstruct

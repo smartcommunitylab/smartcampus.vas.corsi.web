@@ -49,8 +49,11 @@ public class Corso extends CorsoLite {
 	private float valutazione_media;
 
 	// seguo o non seguo il corso
-	@Column(name = "SEGUITO")
-	private boolean seguito;
+	@Column(name = "IS_INTERESSE")
+	private boolean is_interesse;
+	
+	@Column(name = "IS_LIBRETTO")
+	private boolean is_libretto;
 
 	// valutazione contenuto
 	@Transient
@@ -162,12 +165,12 @@ public class Corso extends CorsoLite {
 		this.valutazione_media = valutazione_media;
 	}
 
-	public boolean isSeguito() {
-		return seguito;
+	public boolean isInteresse() {
+		return is_interesse;
 	}
 
-	public void setSeguito(boolean seguito) {
-		this.seguito = seguito;
+	public void SetInteresse(boolean is_interesse) {
+		this.is_interesse = is_interesse;
 	}
 
 	public long getId_dipartimento() {
