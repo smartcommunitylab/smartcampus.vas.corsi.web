@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +36,8 @@ import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
+import eu.trentorise.smartcampus.profileservice.BasicProfileService;
+import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("commentiController")
 public class CommentiController {
@@ -41,6 +45,12 @@ public class CommentiController {
 	private static final Logger logger = Logger
 			.getLogger(CommentiController.class);
 
+	
+	
+	@Autowired
+	@Value("${profile.address}")
+	private String profileaddress;
+	
 	@Autowired
 	private CommentiRepository commentiRepository;
 
@@ -68,14 +78,47 @@ public class CommentiController {
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("id_corso") Long id_corso)
 
+			
+			
 	throws IOException {
 		try {
+			
+			List<Commento> commenti;
+			
 			logger.info("/corso/{id_corso}/commento/all");
 			if (id_corso == null)
 				return null;
-
-			return commentiRepository.getCommentoByCorso(corsoRepository
+			commenti = commentiRepository.getCommentoByCorso(corsoRepository
 					.findOne(id_corso));
+			if(commenti.size() != 0){
+				return commenti;
+			}else{
+				Corso corso = corsoRepository.findOne(id_corso);
+				
+				String token = getToken(request);
+				BasicProfileService service = new BasicProfileService(
+						profileaddress);
+				BasicProfile profile = service.getBasicProfile(token);
+				Long userId = Long.valueOf(profile.getUserId());
+				Studente studente = studenteRepository.findOne(userId);
+				Commento commento = new Commento();
+				commento.setId_studente(studente);
+				commento.setCorso(corso);
+				commento.setId_studente(new Studente());
+				commento.setRating_carico_studio((float)-1);
+				commento.setRating_contenuto((float) -1);
+				commento.setRating_esame((float) -1);
+				commento.setRating_lezioni((float) -1);
+				commento.setRating_materiali((float) -1);
+				commento.setTesto(new String(""));
+				commento.setData_inserimento(null);
+				
+				commenti.add(commento);
+				
+				return commenti;
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			}
+				
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -83,6 +126,13 @@ public class CommentiController {
 		}
 		return null;
 	}
+	
+	
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+	}
+	
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
@@ -215,7 +265,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(1);
@@ -228,7 +278,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(2);
@@ -241,7 +291,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(3);
@@ -254,7 +304,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(4);
@@ -267,7 +317,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(5);
@@ -280,7 +330,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(5);
@@ -293,7 +343,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(10);
@@ -306,7 +356,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(10);
@@ -319,7 +369,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(26);
@@ -332,7 +382,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(6);
@@ -345,7 +395,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(8);
@@ -358,7 +408,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(9);
@@ -371,7 +421,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(11);
@@ -384,7 +434,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(11);
@@ -397,7 +447,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(12);
@@ -410,7 +460,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(13);
@@ -423,7 +473,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(14);
@@ -436,7 +486,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(35);
@@ -449,7 +499,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(15);
@@ -462,7 +512,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(15);
@@ -475,7 +525,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(15);
@@ -488,7 +538,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(16);
@@ -501,7 +551,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(16);
@@ -514,7 +564,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(16);
@@ -527,7 +577,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(17);
 		corsoRepository.save(c);
@@ -539,7 +589,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(18);
@@ -552,7 +602,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(18);
@@ -565,7 +615,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(19);
@@ -578,7 +628,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(19);
@@ -591,7 +641,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(20);
@@ -604,7 +654,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(21);
@@ -617,7 +667,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(22);
@@ -630,7 +680,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(22);
@@ -643,7 +693,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(7);
@@ -656,7 +706,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(23);
@@ -669,7 +719,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(24);
@@ -682,7 +732,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(27);
@@ -695,7 +745,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(28);
@@ -708,7 +758,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(29);
@@ -721,7 +771,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(29);
@@ -734,7 +784,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(30);
@@ -747,7 +797,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(31);
@@ -760,7 +810,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(32);
@@ -773,7 +823,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(40);
@@ -786,7 +836,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(40);
@@ -799,7 +849,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(33);
@@ -812,7 +862,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(48);
@@ -825,7 +875,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(36);
@@ -838,7 +888,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(37);
@@ -851,7 +901,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(38);
@@ -864,7 +914,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(39);
@@ -877,7 +927,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(2);
 		c.setId(39);
@@ -890,7 +940,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(41);
@@ -903,7 +953,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
 		c.setId(42);
@@ -916,7 +966,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(43);
@@ -929,7 +979,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(44);
@@ -942,7 +992,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(45);
@@ -955,7 +1005,7 @@ public class CommentiController {
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
 				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
 				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
+		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(3);
 		c.setId(46);
