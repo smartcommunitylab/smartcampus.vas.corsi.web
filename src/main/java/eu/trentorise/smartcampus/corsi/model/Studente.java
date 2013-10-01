@@ -60,6 +60,14 @@ public class Studente extends BasicEntity {
 	@Transient
 	private List<CorsoLite> corsiSuperati;
 	
+	
+//	@Column(name = "ESAMI_SUPERATI")
+//	private String idsCorsiInteresse;
+//	
+//	@Transient
+//	private List<CorsoLite> corsiInteresse;
+	
+	
 	@Column(name = "GRUPPI_DI_STUDIO")
 	private String idsGruppiDiStudio;
 	
@@ -170,6 +178,15 @@ public class Studente extends BasicEntity {
 	public void setCorsiSuperati(List<CorsoLite> corsiSuperati) {
 		this.corsiSuperati = corsiSuperati;
 	}
+
+	public void setIdsCorsiInteresse(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+//	public String getIdsCorsiInteresse() {
+//		return idsCorsiInteresse;
+//	}
 
 
 //	public Collection<GruppoDiStudio> getGds() {

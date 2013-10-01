@@ -128,11 +128,13 @@ public class CommentiController {
 			if (commento == null)
 				return false;
 
+			// cerco nel db se il commento dello studente per questo corso è già presente
 			Commento commentoDaModificare = commentiRepository
 					.getCommentoByStudente(studenteRepository.findOne(commento
 							.getId_studente().getId()), corsoRepository
 							.findOne(commento.getCorso().getId()));
-
+			
+			
 			if (commentoDaModificare == null) {
 				return commentiRepository.save(commento) != null;
 			} else {
@@ -962,7 +964,7 @@ public class CommentiController {
 		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId((long) 1);
 		Dipartimento dipar = dipartimentoRepository.findOne((long) 1);
 
-		for (int i1 = 0; i1 < 10; i1++) {
+		for (int i1 = 0; i1 < 3; i1++) {
 			Studente studente = new Studente();
 			studente.setId((long) i1);
 			studente.setNome("NomeStudente" + i1);
@@ -1000,6 +1002,7 @@ public class CommentiController {
 			}
 			
 			studente.setIdsCorsiSuperati(supera);
+			studente.setIdsCorsiInteresse("");
 			studente.setIdsGruppiDiStudio(gruppiDiStIds);
 			
 			studenteRepository.save(studente);
@@ -1011,6 +1014,7 @@ public class CommentiController {
 
 		for (Corso co : esse3) {
 
+			if(co.getId()!=1){
 			Commento commento = new Commento();
 			commento.setCorso(co);
 			commento.setRating_carico_studio((float) 4);
@@ -1021,6 +1025,7 @@ public class CommentiController {
 			commento.setId_studente(stud);
 			commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
 			commentiRepository.save(commento);
+			}
 
 		}
 

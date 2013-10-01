@@ -133,7 +133,7 @@ public class StudenteController {
 			}
 			
 			Studente stud = studenteRepository.save(studente);
-			stud.setCorsiSuperati(assignCorsi(stud));
+			//stud.setCorsiSuperati(assignCorsi(stud));
 			return stud;
 
 		} catch (Exception e) {
@@ -150,7 +150,7 @@ public class StudenteController {
 		
 		List<CorsoLite> reurList=new ArrayList<CorsoLite>();
 		for(String s: listS){
-			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
+			//reurList.add(corsoRepository.findOne(Long.valueOf(s)));
 		}
 		
 		

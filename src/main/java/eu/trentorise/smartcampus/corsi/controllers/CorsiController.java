@@ -71,7 +71,7 @@ public class CorsiController {
 	private CommentiRepository commentiRepository;
 
 	/*
-	 * Ritorna tutti i corsi in versione lite
+	 * Ritorna tutti i corsi
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/all")
 	public @ResponseBody
@@ -93,6 +93,7 @@ public class CorsiController {
 		return null;
 	}
 
+	
 	/*
 	 * Ritorna i dati completi di un corso dato l'id
 	 */
@@ -270,6 +271,8 @@ public class CorsiController {
 		return null;
 	}
 
+	
+	// metodo che dato lo studente setta la lista dei corsi superati dalla stringa degli ids
 	private List<CorsoLite> assignCorsi(Studente stud) {
 		// TODO Auto-generated method stub
 
@@ -282,6 +285,20 @@ public class CorsiController {
 
 		return reurList;
 	}
+	
+	// metodo che dato lo studente setta la lista dei corsi di interesse dalla stringa degli ids
+//	private List<CorsoLite> assignCorsiInteresse(Studente stud) {
+//		// TODO Auto-generated method stub
+//
+//		String[] listS = stud.getIdsCorsiInteresse().split(",");
+//
+//		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
+//		for (String s : listS) {
+//			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
+//		}
+//
+//		return reurList;
+//	}
 
 	/*
 	 * getCorsoByDipartimento
@@ -414,18 +431,29 @@ public class CorsiController {
 	}
 
 	/*
-	 * Riceve corso e lo salva come corso che seguo
+	 * Riceve oggetto Corso e lo salva come corso che seguo
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/corso/seguo")
 	//
 	public @ResponseBody
-	boolean saveCommento(HttpServletRequest request,
+	boolean setCorsoAsFollowUnflollow(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@RequestBody Corso corso)
 
 	throws IOException {
 		try {
-			logger.info("/commento");
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			List<CorsoLite> corsiSuperati;
+			// test
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			
+			logger.info("/corso/seguo");
 			// TODO control valid field
 			if (corso == null)
 				return false;
