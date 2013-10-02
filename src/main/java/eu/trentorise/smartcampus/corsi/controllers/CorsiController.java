@@ -110,7 +110,7 @@ public class CorsiController {
 			if (id_corso == null)
 				return null;
 
-			return calcRating(corsoRepository.findOne(id_corso));
+			return UpdateRatingCorso(corsoRepository.findOne(id_corso));
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -122,6 +122,8 @@ public class CorsiController {
 
 		if (findOne == null)
 			return findOne;
+		
+		// cerco la lista dei commenti
 		List<Commento> listCom = commentiRepository.getCommentoByCorso(findOne);
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
@@ -130,6 +132,7 @@ public class CorsiController {
 		float Rating_materiali = 0;
 		int len = listCom.size();
 
+		// sommo le valutazioni per ogni ambito
 		for (Commento index : listCom) {
 			Rating_carico_studio += index.getRating_carico_studio();
 			Rating_contenuto += index.getRating_contenuto();
@@ -138,14 +141,73 @@ public class CorsiController {
 			Rating_materiali += index.getRating_materiali();
 		}
 
+		// calcolo la media per ogni ambito
 		findOne.setRating_carico_studio(Rating_carico_studio / len);
 		findOne.setRating_contenuto(Rating_contenuto / len);
 		findOne.setRating_esame(Rating_esame / len);
 		findOne.setRating_lezioni(Rating_lezioni / len);
 		findOne.setRating_materiali(Rating_materiali / len);
+		
+		//calcolo la valutazione media generale del corso
+		float sommaValutazioni = findOne.getRating_carico_studio() + findOne.getRating_contenuto() + findOne.getRating_esame() + findOne.getRating_lezioni() + findOne.getRating_materiali();
+		
+		// setto la media delle valutazioni
+		findOne.setValutazione_media(sommaValutazioni / 5);
 
 		return findOne;
 	}
+	
+	
+	
+	// aggiorna le valutazioni del corso
+	private Corso UpdateRatingCorso(Corso corsoDaAggiornare) {
+
+		if (corsoDaAggiornare == null)
+			return null;
+		
+		// cerco la lista dei commenti
+		List<Commento> listCom = commentiRepository.getCommentoByCorso(corsoDaAggiornare);
+		float Rating_carico_studio = 0;
+		float Rating_contenuto = 0;
+		float Rating_esame = 0;
+		float Rating_lezioni = 0;
+		float Rating_materiali = 0;
+		int len = listCom.size();
+
+		// sommo le valutazioni per ogni ambito
+		for (Commento index : listCom) {
+			Rating_carico_studio += index.getRating_carico_studio();
+			Rating_contenuto += index.getRating_contenuto();
+			Rating_esame += index.getRating_esame();
+			Rating_lezioni += index.getRating_lezioni();
+			Rating_materiali += index.getRating_materiali();
+		}
+
+		// calcolo la media per ogni ambito
+		corsoDaAggiornare.setRating_carico_studio(Rating_carico_studio / len);
+		corsoDaAggiornare.setRating_contenuto(Rating_contenuto / len);
+		corsoDaAggiornare.setRating_esame(Rating_esame / len);
+		corsoDaAggiornare.setRating_lezioni(Rating_lezioni / len);
+		corsoDaAggiornare.setRating_materiali(Rating_materiali / len);
+		
+		//calcolo la valutazione media generale del corso
+		float sommaValutazioni = corsoDaAggiornare.getRating_carico_studio() + corsoDaAggiornare.getRating_contenuto() + corsoDaAggiornare.getRating_esame() + corsoDaAggiornare.getRating_lezioni() + corsoDaAggiornare.getRating_materiali();
+		
+		// setto la media delle valutazioni
+		corsoDaAggiornare.setValutazione_media(sommaValutazioni / 5);
+		
+		Corso corsoAggiornato = corsoRepository.saveAndFlush(corsoDaAggiornare);
+		
+		if(corsoAggiornato == null)
+			return null;
+		
+		if(corsoAggiornato.getId() != corsoDaAggiornare.getId())
+			return null;
+
+		return corsoAggiornato;
+	}
+	
+	
 
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()

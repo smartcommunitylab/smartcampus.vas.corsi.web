@@ -52,23 +52,23 @@ public class Corso extends CorsoLite {
 	private float valutazione_media;
 
 	// valutazione contenuto
-	@Transient
+	@Column(name = "RATING_CONTENUTO_MEDIO")
 	private Float rating_contenuto;
 
 	// valutazione carico studio
-	@Transient
+	@Column(name = "RATING_CARICO_STUDIO_MEDIO")
 	private Float rating_carico_studio;
 
 	// valutazione lezioni
-	@Transient
+	@Column(name = "RATING_LEZIONI_MEDIO")
 	private Float rating_lezioni;
 
 	// valutazione materiali
-	@Transient
+	@Column(name = "RATING_MATERIALI_MEDIO")
 	private Float rating_materiali;
 
 	// valutazione esame
-	@Transient
+	@Column(name = "RATING_ESAME_MEDIO")
 	private Float rating_esame;
 
 	public Date getData_inizio() {
