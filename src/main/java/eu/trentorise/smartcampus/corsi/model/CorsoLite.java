@@ -22,9 +22,9 @@ public class CorsoLite extends BasicEntity {
 	@Column(name = "NOME")
 	private String nome;
 
-	// nome del dipartimento
-	@Column(name = "FK_DIPARTIMENTO")
-	private long dipartimento;
+//	// nome del dipartimento
+//	@Column(name = "FK_DIPARTIMENTO")
+//	private long dipartimento;
 
 	public CorsoLite() {
 	}
@@ -35,14 +35,6 @@ public class CorsoLite extends BasicEntity {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public long getDipartimento() {
-		return dipartimento;
-	}
-
-	public void setDipartimento(long dipartimento) {
-		this.dipartimento = dipartimento;
 	}
 
 	public long getId() {

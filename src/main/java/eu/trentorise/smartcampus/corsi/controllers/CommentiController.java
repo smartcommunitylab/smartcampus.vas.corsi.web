@@ -45,12 +45,10 @@ public class CommentiController {
 	private static final Logger logger = Logger
 			.getLogger(CommentiController.class);
 
-	
-	
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
-	
+
 	@Autowired
 	private CommentiRepository commentiRepository;
 
@@ -69,14 +67,11 @@ public class CommentiController {
 	@Autowired
 	private EventoRepository eventoRepository;
 
-	
-	
-	
 	private Corso calcRating(Corso findOne) {
 
 		if (findOne == null)
 			return findOne;
-		
+
 		// cerco la lista dei commenti
 		List<Commento> listCom = commentiRepository.getCommentoByCorso(findOne);
 		float Rating_carico_studio = 0;
@@ -101,25 +96,27 @@ public class CommentiController {
 		findOne.setRating_esame(Rating_esame / len);
 		findOne.setRating_lezioni(Rating_lezioni / len);
 		findOne.setRating_materiali(Rating_materiali / len);
-		
-		//calcolo la valutazione media generale del corso
-		float sommaValutazioni = findOne.getRating_carico_studio() + findOne.getRating_contenuto() + findOne.getRating_esame() + findOne.getRating_lezioni() + findOne.getRating_materiali();
-		
+
+		// calcolo la valutazione media generale del corso
+		float sommaValutazioni = findOne.getRating_carico_studio()
+				+ findOne.getRating_contenuto() + findOne.getRating_esame()
+				+ findOne.getRating_lezioni() + findOne.getRating_materiali();
+
 		// setto la media delle valutazioni
 		findOne.setValutazione_media(sommaValutazioni / 5);
 
 		return findOne;
 	}
-	
-	
-	// aggiorno le 
+
+	// aggiorno le
 	private Corso UpdateRatingCorso(Corso corsoDaAggiornare) {
 
 		if (corsoDaAggiornare == null)
 			return null;
-		
+
 		// cerco la lista dei commenti
-		List<Commento> listCom = commentiRepository.getCommentoByCorso(corsoDaAggiornare);
+		List<Commento> listCom = commentiRepository
+				.getCommentoByCorso(corsoDaAggiornare);
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -137,34 +134,38 @@ public class CommentiController {
 		}
 
 		// calcolo la media per ogni ambito
-		
+
 		float sommaValutazioni = 0;
-		
-		if(len!=0){
-			corsoDaAggiornare.setRating_carico_studio(Rating_carico_studio / len);
+
+		if (len != 0) {
+			corsoDaAggiornare.setRating_carico_studio(Rating_carico_studio
+					/ len);
 			corsoDaAggiornare.setRating_contenuto(Rating_contenuto / len);
 			corsoDaAggiornare.setRating_esame(Rating_esame / len);
 			corsoDaAggiornare.setRating_lezioni(Rating_lezioni / len);
 			corsoDaAggiornare.setRating_materiali(Rating_materiali / len);
-			
-			//calcolo la valutazione media generale del corso
-			sommaValutazioni = corsoDaAggiornare.getRating_carico_studio() + corsoDaAggiornare.getRating_contenuto() + corsoDaAggiornare.getRating_esame() + corsoDaAggiornare.getRating_lezioni() + corsoDaAggiornare.getRating_materiali();
+
+			// calcolo la valutazione media generale del corso
+			sommaValutazioni = corsoDaAggiornare.getRating_carico_studio()
+					+ corsoDaAggiornare.getRating_contenuto()
+					+ corsoDaAggiornare.getRating_esame()
+					+ corsoDaAggiornare.getRating_lezioni()
+					+ corsoDaAggiornare.getRating_materiali();
 		}
 		// setto la media delle valutazioni
 		corsoDaAggiornare.setValutazione_media(sommaValutazioni / 5);
-		
+
 		Corso corsoAggiornato = corsoRepository.saveAndFlush(corsoDaAggiornare);
-		
-		if(corsoAggiornato == null)
+
+		if (corsoAggiornato == null)
 			return null;
-		
-		if(corsoAggiornato.getId() != corsoDaAggiornare.getId())
+
+		if (corsoAggiornato.getId() != corsoDaAggiornare.getId())
 			return null;
 
 		return corsoAggiornato;
 	}
-	
-	
+
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
@@ -173,28 +174,26 @@ public class CommentiController {
 	List<Commento> getCommentoByCorsoId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("id_corso") Long id_corso)
-			
-			
+
 	throws IOException {
 		try {
-			
+
 			List<Commento> commenti;
-			
+
 			// Aggiorno le valutazioni del corso
 			UpdateRatingCorso(corsoRepository.findOne(id_corso));
-			
+
 			logger.info("/corso/{id_corso}/commento/all");
 			if (id_corso == null)
 				return null;
-			
-			
+
 			commenti = commentiRepository.getCommentoByCorso(corsoRepository
 					.findOne(id_corso));
-			if(commenti.size() != 0){
+			if (commenti.size() != 0) {
 				return commenti;
-			}else{
+			} else {
 				Corso corso = corsoRepository.findOne(id_corso);
-				
+
 				String token = getToken(request);
 				BasicProfileService service = new BasicProfileService(
 						profileaddress);
@@ -205,20 +204,19 @@ public class CommentiController {
 				commento.setId_studente(studente);
 				commento.setCorso(corso);
 				commento.setId_studente(new Studente());
-				commento.setRating_carico_studio((float)-1);
+				commento.setRating_carico_studio((float) -1);
 				commento.setRating_contenuto((float) -1);
 				commento.setRating_esame((float) -1);
 				commento.setRating_lezioni((float) -1);
 				commento.setRating_materiali((float) -1);
 				commento.setTesto(new String(""));
 				commento.setData_inserimento(null);
-				
+
 				commenti.add(commento);
-				
+
 				return commenti;
-				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			}
-				
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -226,13 +224,11 @@ public class CommentiController {
 		}
 		return null;
 	}
-	
-	
+
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 	}
-	
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
@@ -278,13 +274,13 @@ public class CommentiController {
 			if (commento == null)
 				return false;
 
-			// cerco nel db se il commento dello studente per questo corso è già presente
+			// cerco nel db se il commento dello studente per questo corso è già
+			// presente
 			Commento commentoDaModificare = commentiRepository
 					.getCommentoByStudente(studenteRepository.findOne(commento
 							.getId_studente().getId()), corsoRepository
 							.findOne(commento.getCorso().getId()));
-			
-			
+
 			if (commentoDaModificare == null) {
 				return commentiRepository.save(commento) != null;
 			} else {
@@ -527,18 +523,6 @@ public class CommentiController {
 		c.setId(11);
 		corsoRepository.save(c);
 
-		c = new Corso();
-
-		c.setNome("Economia e Organizzazione Aziendale");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(0);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(2);
-		c.setId(11);
-		corsoRepository.save(c);
 
 		c = new Corso();
 
@@ -618,18 +602,6 @@ public class CommentiController {
 		c.setId(15);
 		corsoRepository.save(c);
 
-		c = new Corso();
-
-		c.setNome("English A2");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(0);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(3);
-		c.setId(15);
-		corsoRepository.save(c);
 
 		c = new Corso();
 
@@ -641,19 +613,6 @@ public class CommentiController {
 		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
-		c.setId(16);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("English C1");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(0);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(2);
 		c.setId(16);
 		corsoRepository.save(c);
 
@@ -695,18 +654,6 @@ public class CommentiController {
 		c.setId(18);
 		corsoRepository.save(c);
 
-		c = new Corso();
-
-		c.setNome("Fisica Ing.");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(0);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(3);
-		c.setId(18);
-		corsoRepository.save(c);
 
 		c = new Corso();
 
@@ -721,18 +668,6 @@ public class CommentiController {
 		c.setId(19);
 		corsoRepository.save(c);
 
-		c = new Corso();
-
-		c.setNome("Geometria e Algebra Lineare");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(0);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(3);
-		c.setId(19);
-		corsoRepository.save(c);
 
 		c = new Corso();
 
@@ -770,19 +705,6 @@ public class CommentiController {
 		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
-		c.setId(22);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Ingegneria Del Software");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(0);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(2);
 		c.setId(22);
 		corsoRepository.save(c);
 
@@ -866,19 +788,6 @@ public class CommentiController {
 
 		c = new Corso();
 
-		c.setNome("Programmazione Ad Oggetti");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(0);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(3);
-		c.setId(29);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
 		c.setNome("Programmazione Funzionale");
 		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
 				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
@@ -926,19 +835,6 @@ public class CommentiController {
 		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
-		c.setId(40);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Programmazione Sistemi Mobili e Tablet");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(0);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(2);
 		c.setId(40);
 		corsoRepository.save(c);
 
@@ -1017,19 +913,6 @@ public class CommentiController {
 		c.setValutazione_media(0);
 		c.setId_dipartimento(1);
 		c.setId_corsoLaurea(1);
-		c.setId(39);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Sistemi Informativi");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(0);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(2);
 		c.setId(39);
 		corsoRepository.save(c);
 
@@ -1122,39 +1005,38 @@ public class CommentiController {
 			studente.setCorsi(esse3);
 			studente.setDipartimento(dipar);
 
-			
 			String supera = null;
-			int z=0;
+			int z = 0;
 			supera = new String();
-			
-			for(Corso cors : esse3){
-				
-				
+
+			for (Corso cors : esse3) {
+
 				GruppoDiStudio gruppoDiSt = new GruppoDiStudio();
 				gruppoDiSt.setCorso(cors);
-				gruppoDiSt.setNome("Mio gruppo"+i1+" di "+cors.getNome());	
-				
-				if(z % 2 == 0){
-					supera = supera.concat(String.valueOf(cors.getId()).concat(","));
+				gruppoDiSt.setNome("Mio gruppo" + i1 + " di " + cors.getNome());
+
+				if (z % 2 == 0) {
+					supera = supera.concat(String.valueOf(cors.getId()).concat(
+							","));
 				}
 				z++;
 			}
-			
-			
+
 			String gruppiDiStIds = new String();
-			
-			z=0;
-			for(Corso cors : esse3){
-				if(z % 2 == 0){
-					gruppiDiStIds = gruppiDiStIds.concat(String.valueOf(cors.getId()).concat(","));
+
+			z = 0;
+			for (Corso cors : esse3) {
+				if (z % 2 == 0) {
+					gruppiDiStIds = gruppiDiStIds.concat(String.valueOf(
+							cors.getId()).concat(","));
 				}
 				z++;
 			}
-			
+
 			studente.setIdsCorsiSuperati(supera);
 			studente.setIdsCorsiInteresse("");
 			studente.setIdsGruppiDiStudio(gruppiDiStIds);
-			
+
 			studenteRepository.save(studente);
 
 		}
@@ -1164,18 +1046,18 @@ public class CommentiController {
 
 		for (Corso co : esse3) {
 
-			if(co.getId()!=1){
-			Commento commento = new Commento();
-			commento.setCorso(co);
-			commento.setRating_carico_studio((float) 4);
-			commento.setRating_contenuto((float) 3);
-			commento.setRating_esame((float) 5);
-			commento.setRating_lezioni((float) 4);
-			commento.setRating_materiali((float) 3);
-			commento.setId_studente(stud);
-			commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
-			commentiRepository.save(commento);
-			}
+//			if (co.getId() != 1) {
+				Commento commento = new Commento();
+				commento.setCorso(co);
+				commento.setRating_carico_studio((float) 4);
+				commento.setRating_contenuto((float) 3);
+				commento.setRating_esame((float) 5);
+				commento.setRating_lezioni((float) 4);
+				commento.setRating_materiali((float) 3);
+				commento.setId_studente(stud);
+				commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
+				commentiRepository.save(commento);
+//			}
 
 		}
 
@@ -1216,23 +1098,20 @@ public class CommentiController {
 				x.setStart(new Time(14, 0, 0));
 				x.setStop(new Time(16, 0, 0));
 				eventoRepository.save(x);
-				
+
 				AttivitaDiStudio attivita = new AttivitaDiStudio();
 				attivita.setCorso(index);
 				attivita.setTitolo(index.getNome());
-				attivita.setDescrizione("Meeting del progetto di " + index.getNome());
+				attivita.setDescrizione("Meeting del progetto di "
+						+ index.getNome());
 				attivita.setRoom("A21" + i1);
 				attivita.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				attivita.setData(new Date(("2013/09/0" + String.valueOf(i1 + 1))
-						.toString()));
+				attivita.setData(new Date(
+						("2013/09/0" + String.valueOf(i1 + 1)).toString()));
 				attivita.setStart(new Time(15, 0, 0));
 				attivita.setStop(new Time(17, 0, 0));
 			}
 		}
-		
-		
-		
-		
 
 	}
 
