@@ -61,11 +61,11 @@ public class Studente extends BasicEntity {
 	private List<CorsoLite> corsiSuperati;
 	
 	
-//	@Column(name = "ESAMI_SUPERATI")
-//	private String idsCorsiInteresse;
-//	
-//	@Transient
-//	private List<CorsoLite> corsiInteresse;
+	@Column(name = "ESAMI_INTERESSE")
+	private String idsCorsiInteresse;
+	
+	@Transient
+	private List<CorsoLite> corsiInteresse;
 	
 	
 	@Column(name = "GRUPPI_DI_STUDIO")
@@ -179,23 +179,35 @@ public class Studente extends BasicEntity {
 		this.corsiSuperati = corsiSuperati;
 	}
 
-	public void setIdsCorsiInteresse(String string) {
-		// TODO Auto-generated method stub
-		
+	public String getIdsCorsiInteresse() {
+		return idsCorsiInteresse;
 	}
-	
-//	public String getIdsCorsiInteresse() {
-//		return idsCorsiInteresse;
-//	}
 
+	public void setIdsCorsiInteresse(String idsCorsiInteresse) {
+		this.idsCorsiInteresse = idsCorsiInteresse;
+	}
 
-//	public Collection<GruppoDiStudio> getGds() {
-//		return gds;
-//	}
-//
-//	public void setGds(Collection<GruppoDiStudio> gds) {
-//		this.gds = gds;
-//	}
+	public List<CorsoLite> getCorsiInteresse() {
+		return corsiInteresse;
+	}
+
+	public void setCorsiInteresse(List<CorsoLite> corsiInteresse) {
+		this.corsiInteresse = corsiInteresse;
+	}
+
+	public void addCorsoInteresse(Studente stud, long idCorsoDaAggiungere) {
+		// TODO Auto-generated method stub
+		stud.setIdsCorsiInteresse(stud.getIdsCorsiInteresse()+String.valueOf(idCorsoDaAggiungere)+",");		
+	}
+
+	public void removeCorsoInteresse(Studente studente, long id2) {
+		// TODO Auto-generated method stub
+		String corsiInteresse = null;
+		corsiInteresse = studente.getIdsCorsiInteresse();
+		corsiInteresse.replace(id2+",","");
+		studente.setIdsCorsiInteresse(corsiInteresse);
+	}
+
 	
 	
 

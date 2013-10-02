@@ -137,15 +137,19 @@ public class CommentiController {
 		}
 
 		// calcolo la media per ogni ambito
-		corsoDaAggiornare.setRating_carico_studio(Rating_carico_studio / len);
-		corsoDaAggiornare.setRating_contenuto(Rating_contenuto / len);
-		corsoDaAggiornare.setRating_esame(Rating_esame / len);
-		corsoDaAggiornare.setRating_lezioni(Rating_lezioni / len);
-		corsoDaAggiornare.setRating_materiali(Rating_materiali / len);
 		
-		//calcolo la valutazione media generale del corso
-		float sommaValutazioni = corsoDaAggiornare.getRating_carico_studio() + corsoDaAggiornare.getRating_contenuto() + corsoDaAggiornare.getRating_esame() + corsoDaAggiornare.getRating_lezioni() + corsoDaAggiornare.getRating_materiali();
+		float sommaValutazioni = 0;
 		
+		if(len!=0){
+			corsoDaAggiornare.setRating_carico_studio(Rating_carico_studio / len);
+			corsoDaAggiornare.setRating_contenuto(Rating_contenuto / len);
+			corsoDaAggiornare.setRating_esame(Rating_esame / len);
+			corsoDaAggiornare.setRating_lezioni(Rating_lezioni / len);
+			corsoDaAggiornare.setRating_materiali(Rating_materiali / len);
+			
+			//calcolo la valutazione media generale del corso
+			sommaValutazioni = corsoDaAggiornare.getRating_carico_studio() + corsoDaAggiornare.getRating_contenuto() + corsoDaAggiornare.getRating_esame() + corsoDaAggiornare.getRating_lezioni() + corsoDaAggiornare.getRating_materiali();
+		}
 		// setto la media delle valutazioni
 		corsoDaAggiornare.setValutazione_media(sommaValutazioni / 5);
 		

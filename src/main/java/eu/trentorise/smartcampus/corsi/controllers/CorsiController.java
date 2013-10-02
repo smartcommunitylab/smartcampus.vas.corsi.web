@@ -20,13 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
-import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
-import eu.trentorise.smartcampus.corsi.model.Evento;
-import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
@@ -324,7 +320,7 @@ public class CorsiController {
 
 			studente = studenteRepository.save(studente);
 
-			return assignCorsi(studente);
+			return assignCorsiSuperati(studente);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -335,7 +331,7 @@ public class CorsiController {
 
 	
 	// metodo che dato lo studente setta la lista dei corsi superati dalla stringa degli ids
-	private List<CorsoLite> assignCorsi(Studente stud) {
+	private List<CorsoLite> assignCorsiSuperati(Studente stud) {
 		// TODO Auto-generated method stub
 
 		String[] listS = stud.getIdsCorsiSuperati().split(",");
@@ -348,19 +344,21 @@ public class CorsiController {
 		return reurList;
 	}
 	
+	
+	
 	// metodo che dato lo studente setta la lista dei corsi di interesse dalla stringa degli ids
-//	private List<CorsoLite> assignCorsiInteresse(Studente stud) {
-//		// TODO Auto-generated method stub
-//
-//		String[] listS = stud.getIdsCorsiInteresse().split(",");
-//
-//		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
-//		for (String s : listS) {
-//			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
-//		}
-//
-//		return reurList;
-//	}
+	private List<CorsoLite> assignCorsiInteresse(Studente stud) {
+		// TODO Auto-generated method stub
+
+		String[] listS = stud.getIdsCorsiInteresse().split(",");
+
+		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
+		for (String s : listS) {
+			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
+		}
+
+		return reurList;
+	}
 
 	/*
 	 * getCorsoByDipartimento
@@ -476,7 +474,7 @@ public class CorsiController {
 			
 			Boolean isSuperato = new Boolean(false);
 			
-			List<CorsoLite> corsiSuperati = assignCorsi(studente);
+			List<CorsoLite> corsiSuperati = assignCorsiSuperati(studente);
 
 			for(CorsoLite corso: corsiSuperati){
 				if(corso.getId() == id_corso)
@@ -511,7 +509,6 @@ public class CorsiController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			List<CorsoLite> corsiSuperati;
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			
@@ -523,8 +520,37 @@ public class CorsiController {
 			Corso corsoDaSeguire = corsoRepository.findOne(corso.getId());
 
 			if (corsoDaSeguire != null) {
-				corsoRepository.delete(corsoDaSeguire);
-				return corsoRepository.save(corsoDaSeguire) != null;
+//				corsoRepository.delete(corsoDaSeguire);
+//				return corsoRepository.save(corsoDaSeguire) != null;
+				List<CorsoLite> corsiInteresse = assignCorsiInteresse(studente);
+				boolean isSeguito = false;
+				
+				// controllo se il corso lo seguo già o no
+				for(CorsoLite c: corsiInteresse){
+					if(c.getId() == corsoDaSeguire.getId()){
+						isSeguito = true;
+						break;
+					}
+				}
+				
+				Studente studenteAggiornato = null;
+				 
+				if(isSeguito){
+					studente.removeCorsoInteresse(studente, corsoDaSeguire.getId());
+					studenteAggiornato = studenteRepository.save(studente);
+				}else{
+				
+				
+					studente.addCorsoInteresse(studente, corsoDaSeguire.getId());
+					studenteAggiornato = studenteRepository.save(studente);
+				
+				
+				}
+				if(studenteAggiornato == null){
+					return false;
+				}else{
+					return true;
+				}
 
 			} else
 				return false;
@@ -536,6 +562,92 @@ public class CorsiController {
 		}
 
 	}
+	
+	
+	
+	/*
+	 * Ritorna tutti i corsi che lo studente sta seguendo che non sono da libretto
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/interesse/me")
+	public @ResponseBody
+	Collection<CorsoLite> getCorsiInteresseByMe(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			logger.info("/corso/interesse/me");
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			List<CorsoLite> corsiSuperati;
+			// test
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
+				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					z++;
+				}
+
+				// TEST
+
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+				studente.setIdsCorsiInteresse(interesse);
+
+			}
+
+			studente = studenteRepository.save(studente);
+
+			return assignCorsiInteresse(studente);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	
+	
 
 	// @PostConstruct
 	private void initCorsi() {
