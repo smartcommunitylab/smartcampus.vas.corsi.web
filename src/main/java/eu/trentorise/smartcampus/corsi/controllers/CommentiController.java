@@ -1055,6 +1055,7 @@ public class CommentiController {
 				commento.setRating_lezioni((float) 4);
 				commento.setRating_materiali((float) 3);
 				commento.setId_studente(stud);
+				commento.setApproved(true);
 				commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
 				commentiRepository.save(commento);
 //			}

@@ -1,5 +1,6 @@
 package eu.trentorise.smartcampus.corsi.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -204,8 +205,17 @@ public class Studente extends BasicEntity {
 		// TODO Auto-generated method stub
 		String corsiInteresse = null;
 		corsiInteresse = studente.getIdsCorsiInteresse();
-		corsiInteresse.replace(id2+",","");
-		studente.setIdsCorsiInteresse(corsiInteresse);
+		
+		String[] listS = corsiInteresse.split(",");
+		
+		String corsiInteresseAggiornata = "";
+		
+		for (String s : listS) {
+			if(!s.equals(String.valueOf(id2))){
+				corsiInteresseAggiornata = corsiInteresseAggiornata.concat(s.toString()+",");
+			}
+		}
+		studente.setIdsCorsiInteresse(corsiInteresseAggiornata);
 	}
 
 	

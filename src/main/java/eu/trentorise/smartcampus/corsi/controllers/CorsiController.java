@@ -89,7 +89,6 @@ public class CorsiController {
 		return null;
 	}
 
-	
 	/*
 	 * Ritorna i dati completi di un corso dato l'id
 	 */
@@ -118,9 +117,10 @@ public class CorsiController {
 
 		if (findOne == null)
 			return findOne;
-		
+
 		// cerco la lista dei commenti
-		List<Commento> listCom = commentiRepository.getCommentoByCorsoAll(findOne);
+		List<Commento> listCom = commentiRepository
+				.getCommentoByCorsoAll(findOne);
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -143,26 +143,27 @@ public class CorsiController {
 		findOne.setRating_esame(Rating_esame / len);
 		findOne.setRating_lezioni(Rating_lezioni / len);
 		findOne.setRating_materiali(Rating_materiali / len);
-		
-		//calcolo la valutazione media generale del corso
-		float sommaValutazioni = findOne.getRating_carico_studio() + findOne.getRating_contenuto() + findOne.getRating_esame() + findOne.getRating_lezioni() + findOne.getRating_materiali();
-		
+
+		// calcolo la valutazione media generale del corso
+		float sommaValutazioni = findOne.getRating_carico_studio()
+				+ findOne.getRating_contenuto() + findOne.getRating_esame()
+				+ findOne.getRating_lezioni() + findOne.getRating_materiali();
+
 		// setto la media delle valutazioni
 		findOne.setValutazione_media(sommaValutazioni / 5);
 
 		return findOne;
 	}
-	
-	
-	
+
 	// aggiorna le valutazioni del corso
 	private Corso UpdateRatingCorso(Corso corsoDaAggiornare) {
 
 		if (corsoDaAggiornare == null)
 			return null;
-		
+
 		// cerco la lista dei commenti
-		List<Commento> listCom = commentiRepository.getCommentoByCorsoAll(corsoDaAggiornare);
+		List<Commento> listCom = commentiRepository
+				.getCommentoByCorsoAll(corsoDaAggiornare);
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -185,25 +186,27 @@ public class CorsiController {
 		corsoDaAggiornare.setRating_esame(Rating_esame / len);
 		corsoDaAggiornare.setRating_lezioni(Rating_lezioni / len);
 		corsoDaAggiornare.setRating_materiali(Rating_materiali / len);
-		
-		//calcolo la valutazione media generale del corso
-		float sommaValutazioni = corsoDaAggiornare.getRating_carico_studio() + corsoDaAggiornare.getRating_contenuto() + corsoDaAggiornare.getRating_esame() + corsoDaAggiornare.getRating_lezioni() + corsoDaAggiornare.getRating_materiali();
-		
+
+		// calcolo la valutazione media generale del corso
+		float sommaValutazioni = corsoDaAggiornare.getRating_carico_studio()
+				+ corsoDaAggiornare.getRating_contenuto()
+				+ corsoDaAggiornare.getRating_esame()
+				+ corsoDaAggiornare.getRating_lezioni()
+				+ corsoDaAggiornare.getRating_materiali();
+
 		// setto la media delle valutazioni
 		corsoDaAggiornare.setValutazione_media(sommaValutazioni / 5);
-		
+
 		Corso corsoAggiornato = corsoRepository.saveAndFlush(corsoDaAggiornare);
-		
-		if(corsoAggiornato == null)
+
+		if (corsoAggiornato == null)
 			return null;
-		
-		if(corsoAggiornato.getId() != corsoDaAggiornare.getId())
+
+		if (corsoAggiornato.getId() != corsoDaAggiornare.getId())
 			return null;
 
 		return corsoAggiornato;
 	}
-	
-	
 
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
@@ -259,7 +262,8 @@ public class CorsiController {
 	}
 
 	/*
-	 * Ritorna tutti i corsi che lo studente ha superato, quindi che pu� votare
+	 * Ritorna tutti i corsi che lo studente ha superato, quindi che pu�
+	 * votare
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/superati/me")
 	public @ResponseBody
@@ -329,8 +333,8 @@ public class CorsiController {
 		return null;
 	}
 
-	
-	// metodo che dato lo studente setta la lista dei corsi superati dalla stringa degli ids
+	// metodo che dato lo studente setta la lista dei corsi superati dalla
+	// stringa degli ids
 	private List<CorsoLite> assignCorsiSuperati(Studente stud) {
 		// TODO Auto-generated method stub
 
@@ -343,10 +347,9 @@ public class CorsiController {
 
 		return reurList;
 	}
-	
-	
-	
-	// metodo che dato lo studente setta la lista dei corsi di interesse dalla stringa degli ids
+
+	// metodo che dato lo studente setta la lista dei corsi di interesse dalla
+	// stringa degli ids
 	private List<CorsoLite> assignCorsiInteresse(Studente stud) {
 		// TODO Auto-generated method stub
 
@@ -426,9 +429,9 @@ public class CorsiController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-			
+
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
+
 			if (studente == null) {
 				studente = new Studente();
 				studente.setId(userId);
@@ -467,17 +470,16 @@ public class CorsiController {
 				studente.setIdsCorsiSuperati(supera);
 
 			}
-			
-			////////////////////////////////////////////////////////////////////////////////////////////////
+
+			// //////////////////////////////////////////////////////////////////////////////////////////////
 			studente = studenteRepository.save(studente);
-			
-			
+
 			Boolean isSuperato = new Boolean(false);
-			
+
 			List<CorsoLite> corsiSuperati = assignCorsiSuperati(studente);
 
-			for(CorsoLite corso: corsiSuperati){
-				if(corso.getId() == id_corso)
+			for (CorsoLite corso : corsiSuperati) {
+				if (corso.getId() == id_corso)
 					isSuperato = true;
 			}
 
@@ -511,6 +513,57 @@ public class CorsiController {
 
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			
+			
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
+				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					z++;
+				}
+
+				// TEST
+
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+				studente.setIdsCorsiInteresse(interesse);
+				
+				studente = studenteRepository.save(studente);
+			}
+			
 			
 			logger.info("/corso/seguo");
 			// TODO control valid field
@@ -562,11 +615,10 @@ public class CorsiController {
 		}
 
 	}
-	
-	
-	
+
 	/*
-	 * Ritorna tutti i corsi che lo studente sta seguendo che non sono da libretto
+	 * Ritorna tutti i corsi che lo studente sta seguendo che non sono da
+	 * libretto
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/interesse/me")
 	public @ResponseBody
@@ -613,12 +665,12 @@ public class CorsiController {
 						supera = supera.concat(String.valueOf(cors.getId())
 								.concat(","));
 					}
-					
+
 					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
+						interesse = interesse.concat(String.valueOf(
+								cors.getId()).concat(","));
 					}
-					
+
 					z++;
 				}
 
@@ -644,10 +696,6 @@ public class CorsiController {
 		}
 		return null;
 	}
-	
-	
-	
-	
 
 	// @PostConstruct
 	private void initCorsi() {

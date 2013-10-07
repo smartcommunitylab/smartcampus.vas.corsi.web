@@ -11,7 +11,7 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "Commento.getCommentoByCorsoApproved", query = "select c from Commento c where c.corso = ?1 and c.approved = true"),
+		@NamedQuery(name = "Commento.getCommentoByCorsoApproved", query = "select c from Commento c where c.corso = ?1 and c.approved = true"), 
 		@NamedQuery(name = "Commento.getCommentoByStudenteApproved", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2 and c.approved=true"),
 		@NamedQuery(name = "Commento.getCommentoByCorsoAll", query = "select c from Commento c where c.corso = ?1"),
 		@NamedQuery(name = "Commento.getCommentoByStudenteAll", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })

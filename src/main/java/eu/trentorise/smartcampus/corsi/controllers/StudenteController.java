@@ -116,8 +116,12 @@ public class StudenteController {
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			if (studente == null) {
 				studente = new Studente();
+				studente.setId(userId);
 				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
 				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
 
 				// TODO caricare corsi da esse3
 				// Creare associazione su frequenze
@@ -125,15 +129,40 @@ public class StudenteController {
 				// TEST
 				List<Corso> corsiEsse3 = corsoRepository.findAll();
 
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(
+								cors.getId()).concat(","));
+					}
+
+					z++;
+				}
+
 				// TEST
 
 				// Set corso follwed by studente
 				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
 
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+				studente.setIdsCorsiInteresse(interesse);
 			}
-			
+
 			Studente stud = studenteRepository.save(studente);
-			//stud.setCorsiSuperati(assignCorsi(stud));
+			// stud.setCorsiSuperati(assignCorsi(stud));
 			return stud;
 
 		} catch (Exception e) {
@@ -145,15 +174,14 @@ public class StudenteController {
 
 	private List<CorsoLite> assignCorsi(Studente stud) {
 		// TODO Auto-generated method stub
-		
+
 		String[] listS = stud.getIdsCorsiSuperati().split(",");
-		
-		List<CorsoLite> reurList=new ArrayList<CorsoLite>();
-		for(String s: listS){
-			//reurList.add(corsoRepository.findOne(Long.valueOf(s)));
+
+		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
+		for (String s : listS) {
+			// reurList.add(corsoRepository.findOne(Long.valueOf(s)));
 		}
-		
-		
+
 		return reurList;
 	}
 
@@ -171,20 +199,21 @@ public class StudenteController {
 				studente.setNome("NomeStudente" + i);
 				studente.setCognome("CognomeStudente" + i);
 				studente.setCorsi(s3);
-				
+
 				String supera = null;
-				int z=0;
-				
-				for(Corso cors : s3){
+				int z = 0;
+
+				for (Corso cors : s3) {
 					supera = new String();
-					if(z % 2 == 0){
-						supera = supera.concat(String.valueOf(cors.getId()).concat(","));
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
 						z++;
 					}
 				}
-				
+
 				studente.setIdsCorsiSuperati(supera);
-				
+
 				studenteRepository.save(studente);
 			}
 
@@ -194,20 +223,21 @@ public class StudenteController {
 				studente.setNome("NomeStudente" + i);
 				studente.setCognome("CognomeStudente" + i);
 				studente.setCorsi(esse3);
-				
+
 				String supera = null;
-				int z=0;
-				
-				for(Corso cors : esse3){
+				int z = 0;
+
+				for (Corso cors : esse3) {
 					supera = new String();
-					if(z % 2 == 0){
-						supera = supera.concat(String.valueOf(cors.getId()).concat(","));
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
 						z++;
 					}
 				}
-				
+
 				studente.setIdsCorsiSuperati(supera);
-				
+
 				studenteRepository.save(studente);
 			}
 		}
