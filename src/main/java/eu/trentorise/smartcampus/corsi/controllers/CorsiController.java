@@ -120,7 +120,7 @@ public class CorsiController {
 			return findOne;
 		
 		// cerco la lista dei commenti
-		List<Commento> listCom = commentiRepository.getCommentoByCorso(findOne);
+		List<Commento> listCom = commentiRepository.getCommentoByCorsoAll(findOne);
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -162,7 +162,7 @@ public class CorsiController {
 			return null;
 		
 		// cerco la lista dei commenti
-		List<Commento> listCom = commentiRepository.getCommentoByCorso(corsoDaAggiornare);
+		List<Commento> listCom = commentiRepository.getCommentoByCorsoAll(corsoDaAggiornare);
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -259,7 +259,7 @@ public class CorsiController {
 	}
 
 	/*
-	 * Ritorna tutti i corsi che lo studente ha superato, quindi che può votare
+	 * Ritorna tutti i corsi che lo studente ha superato, quindi che puï¿½ votare
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/superati/me")
 	public @ResponseBody
@@ -525,7 +525,7 @@ public class CorsiController {
 				List<CorsoLite> corsiInteresse = assignCorsiInteresse(studente);
 				boolean isSeguito = false;
 				
-				// controllo se il corso lo seguo già o no
+				// controllo se il corso lo seguo giï¿½ o no
 				for(CorsoLite c: corsiInteresse){
 					if(c.getId() == corsoDaSeguire.getId()){
 						isSeguito = true;

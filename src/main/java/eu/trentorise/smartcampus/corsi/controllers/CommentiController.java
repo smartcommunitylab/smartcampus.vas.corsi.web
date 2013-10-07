@@ -73,7 +73,7 @@ public class CommentiController {
 			return findOne;
 
 		// cerco la lista dei commenti
-		List<Commento> listCom = commentiRepository.getCommentoByCorso(findOne);
+		List<Commento> listCom = commentiRepository.getCommentoByCorsoAll(findOne);
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -116,7 +116,7 @@ public class CommentiController {
 
 		// cerco la lista dei commenti
 		List<Commento> listCom = commentiRepository
-				.getCommentoByCorso(corsoDaAggiornare);
+				.getCommentoByCorsoAll(corsoDaAggiornare);
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -187,7 +187,7 @@ public class CommentiController {
 			if (id_corso == null)
 				return null;
 
-			commenti = commentiRepository.getCommentoByCorso(corsoRepository
+			commenti = commentiRepository.getCommentoByCorsoApproved(corsoRepository
 					.findOne(id_corso));
 			if (commenti.size() != 0) {
 				return commenti;
@@ -246,7 +246,7 @@ public class CommentiController {
 			if (id_studente == null)
 				return null;
 
-			return commentiRepository.getCommentoByStudente(
+			return commentiRepository.getCommentoByStudenteApproved(
 					studenteRepository.findOne(id_studente),
 					corsoRepository.findOne(id_corso));
 
@@ -274,10 +274,10 @@ public class CommentiController {
 			if (commento == null)
 				return false;
 
-			// cerco nel db se il commento dello studente per questo corso è già
+			// cerco nel db se il commento dello studente per questo corso ï¿½ giï¿½
 			// presente
 			Commento commentoDaModificare = commentiRepository
-					.getCommentoByStudente(studenteRepository.findOne(commento
+					.getCommentoByStudenteApproved(studenteRepository.findOne(commento
 							.getId_studente().getId()), corsoRepository
 							.findOne(commento.getCorso().getId()));
 
@@ -286,7 +286,7 @@ public class CommentiController {
 			} else {
 
 				commentiRepository.delete(commentoDaModificare);
-
+				commento.setApproved(true);
 				return commentiRepository.save(commento) != null;
 
 			}

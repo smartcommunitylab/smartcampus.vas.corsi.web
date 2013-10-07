@@ -11,8 +11,10 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "Commento.getCommentoByCorso", query = "select c from Commento c where c.corso = ?1"),
-		@NamedQuery(name = "Commento.getCommentoByStudente", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })
+		@NamedQuery(name = "Commento.getCommentoByCorsoApproved", query = "select c from Commento c where c.corso = ?1 and c.approved = true"),
+		@NamedQuery(name = "Commento.getCommentoByStudenteApproved", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2 and c.approved=true"),
+		@NamedQuery(name = "Commento.getCommentoByCorsoAll", query = "select c from Commento c where c.corso = ?1"),
+		@NamedQuery(name = "Commento.getCommentoByStudenteAll", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })
 public class Commento {
 	// id del commento
 	@Id
@@ -23,6 +25,9 @@ public class Commento {
 	@ManyToOne
 	@JoinColumn(name = "CORSO_ID")
 	private Corso corso;
+	
+	@Column(name = "APPROVED")
+	private boolean  approved;
 
 	// utente che ha scritto commento
 	@ManyToOne
@@ -138,6 +143,14 @@ public class Commento {
 
 	public void setRating_esame(Float rating_esame) {
 		this.rating_esame = rating_esame;
+	}
+
+	public boolean isApproved() {
+		return approved;
+	}
+
+	public void setApproved(boolean approved) {
+		this.approved = approved;
 	}
 
 }
