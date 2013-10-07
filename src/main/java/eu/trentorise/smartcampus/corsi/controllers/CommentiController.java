@@ -274,10 +274,10 @@ public class CommentiController {
 			if (commento == null)
 				return false;
 
-			// cerco nel db se il commento dello studente per questo corso ï¿½ giï¿½
+			// cerco nel db se il commento dello studente per questo corso c'è già
 			// presente
 			Commento commentoDaModificare = commentiRepository
-					.getCommentoByStudenteApproved(studenteRepository.findOne(commento
+					.getCommentoByStudenteAll(studenteRepository.findOne(commento
 							.getId_studente().getId()), corsoRepository
 							.findOne(commento.getCorso().getId()));
 

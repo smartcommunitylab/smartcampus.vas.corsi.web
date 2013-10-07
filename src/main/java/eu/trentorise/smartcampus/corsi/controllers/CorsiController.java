@@ -299,8 +299,10 @@ public class CorsiController {
 				List<Corso> corsiEsse3 = corsoRepository.findAll();
 
 				String supera = null;
+				String interesse = null;
 				int z = 0;
 				supera = new String();
+				interesse = new String();
 
 				for (Corso cors : corsiEsse3) {
 
@@ -308,6 +310,12 @@ public class CorsiController {
 						supera = supera.concat(String.valueOf(cors.getId())
 								.concat(","));
 					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
 					z++;
 				}
 
@@ -319,7 +327,9 @@ public class CorsiController {
 
 				// Set corsi superati
 				studente.setIdsCorsiSuperati(supera);
-
+				studente.setIdsCorsiInteresse(interesse);
+				
+				studente = studenteRepository.save(studente);
 			}
 
 			studente = studenteRepository.save(studente);
