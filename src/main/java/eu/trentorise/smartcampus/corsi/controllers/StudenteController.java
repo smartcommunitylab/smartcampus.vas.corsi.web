@@ -67,8 +67,12 @@ public class StudenteController {
 
 			if (studente == null) {
 				studente = new Studente();
+				studente.setId(userId);
 				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
 				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
 
 				// TODO caricare corsi da esse3
 				// Creare associazione su frequenze
@@ -76,11 +80,37 @@ public class StudenteController {
 				// TEST
 				List<Corso> corsiEsse3 = corsoRepository.findAll();
 
-				// TEST
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
 
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					z++;
+				}
+				
 				// Set corso follwed by studente
 				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
 
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+				studente.setIdsCorsiInteresse(interesse);
+				
+				studente = studenteRepository.save(studente);
+				
 			}
 
 			studente = studenteRepository.save(studente);
