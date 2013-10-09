@@ -470,101 +470,6 @@ public class CorsiController {
 
 	
 	
-	/*
-	 * Ritorna tutte le recensioni dato l'id di un corso
-	 */
-	
-	/**
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @param id_studente
-	 * @return Collection<Corso>
-	 * @throws IOException
-	 * 
-	 * 
-	 * Restituisce la lista dei corsi (da libretto) riferiti allo studente
-	 * 
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsi/me")
-	public @ResponseBody
-	Collection<Corso> getStudente(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-
-	throws IOException {
-		try {
-			logger.info("/corsi/me");
-
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
-
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					z++;
-				}
-				
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
-				
-				studente = studenteRepository.save(studente);
-				
-			}
-
-			studente = studenteRepository.save(studente);
-
-			return studente.getCorsi();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-	
-	
 	
 	/**
 	 * 
@@ -729,6 +634,8 @@ public class CorsiController {
 	throws IOException {
 		try {
 			
+			logger.info("/corso/seguo");
+			
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
@@ -784,8 +691,7 @@ public class CorsiController {
 				studente = studenteRepository.save(studente);
 			}
 			
-			
-			logger.info("/corso/seguo");
+
 			// TODO control valid field
 			if (corso == null)
 				return false;
