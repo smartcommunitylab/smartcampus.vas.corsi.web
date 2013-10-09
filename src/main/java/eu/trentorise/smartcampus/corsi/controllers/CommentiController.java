@@ -1197,6 +1197,7 @@ public class CommentiController {
 				commento.setRating_lezioni((float) 4);
 				commento.setRating_materiali((float) 3);
 				commento.setId_studente(stud.getId());
+				commento.setNome_studente(stud.getNome());
 				commento.setApproved(true);
 				commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
 				commentiRepository.save(commento);

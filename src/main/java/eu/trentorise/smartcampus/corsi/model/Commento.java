@@ -31,6 +31,10 @@ public class Commento {
 	// utente che ha scritto commento
 	@JoinColumn(name = "ID_STUDENTE")
 	private long id_studente;
+	
+	// utente che ha scritto commento
+	@Column(name = "NOME_STUDENTE")
+	private String nome_studente;
 
 	// testo del commento
 	@Column(name = "TESTO")
@@ -150,5 +154,15 @@ public class Commento {
 	public void setApproved(boolean approved) {
 		this.approved = approved;
 	}
+
+	public String getNome_studente() {
+		return nome_studente;
+	}
+
+	public void setNome_studente(String nome_studente) {
+		this.nome_studente = nome_studente;
+	}
+	
+	
 
 }
