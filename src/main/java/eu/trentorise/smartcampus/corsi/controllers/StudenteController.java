@@ -44,88 +44,22 @@ public class StudenteController {
 	@Value("${profile.address}")
 	private String profileaddress;
 
-	/*
-	 * Ritorna tutte le recensioni dato l'id di un corso
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/studente/me/{id_studente}")
-	public @ResponseBody
-	Collection<Corso> getStudenteByMe(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_studente") Long id_studente)
-
-	throws IOException {
-		try {
-			logger.info("/studente/me/id_studente");
-
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
-
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					z++;
-				}
-				
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
-				
-				studente = studenteRepository.save(studente);
-				
-			}
-
-			studente = studenteRepository.save(studente);
-
-			return studente.getCorsi();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
+	
 
 	/*
 	 * Ritorna tutti i corsi in versione lite
+	 */
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return Studente
+	 * @throws IOException
+	 * 
+	 * Restituisce i dati dello studente riferiti allo studente che effetua la richiesta
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/studente/me")
 	public @ResponseBody
@@ -150,8 +84,6 @@ public class StudenteController {
 				studente.setNome(profile.getName());
 				studente.setCognome(profile.getSurname());
 				studente = studenteRepository.save(studente);
-
-				// studente = studenteRepository.save(studente);
 
 				// TODO caricare corsi da esse3
 				// Creare associazione su frequenze
@@ -202,78 +134,16 @@ public class StudenteController {
 		return null;
 	}
 
-	private List<CorsoLite> assignCorsi(Studente stud) {
-		// TODO Auto-generated method stub
+	
 
-		String[] listS = stud.getIdsCorsiSuperati().split(",");
-
-		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
-		for (String s : listS) {
-			// reurList.add(corsoRepository.findOne(Long.valueOf(s)));
-		}
-
-		return reurList;
-	}
-
-	// @PostConstruct
-	private void initStudenti() {
-
-		long c = 1;
-		List<Corso> esse3 = corsoRepository.findCorsoByCorsoLaureaId(c);
-
-		if (esse3 == null) {
-			List<Corso> s3 = corsoRepository.findAll();
-			for (int i = 0; i < 50; i++) {
-				Studente studente = new Studente();
-				studente.setId(i);
-				studente.setNome("NomeStudente" + i);
-				studente.setCognome("CognomeStudente" + i);
-				studente.setCorsi(s3);
-
-				String supera = null;
-				int z = 0;
-
-				for (Corso cors : s3) {
-					supera = new String();
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-						z++;
-					}
-				}
-
-				studente.setIdsCorsiSuperati(supera);
-
-				studenteRepository.save(studente);
-			}
-
-		} else {
-			for (int i = 0; i < 50; i++) {
-				Studente studente = new Studente();
-				studente.setNome("NomeStudente" + i);
-				studente.setCognome("CognomeStudente" + i);
-				studente.setCorsi(esse3);
-
-				String supera = null;
-				int z = 0;
-
-				for (Corso cors : esse3) {
-					supera = new String();
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-						z++;
-					}
-				}
-
-				studente.setIdsCorsiSuperati(supera);
-
-				studenteRepository.save(studente);
-			}
-		}
-
-	}
-
+	/**
+	 * 
+	 * @param request
+	 * @return String
+	 * 
+	 * Ottiene il token riferito alla request
+	 * 
+	 */
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();

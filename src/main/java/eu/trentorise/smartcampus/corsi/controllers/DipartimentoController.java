@@ -27,8 +27,17 @@ public class DipartimentoController {
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
-	/*
-	 * Ritorna tutti i dipartimenti
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<Dipartimento>
+	 * @throws IOException
+	 * 
+	 * Restituisce la lista di tutti i dipartimenti
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/dipartimento/all")
 	public @ResponseBody
@@ -53,6 +62,19 @@ public class DipartimentoController {
 	/*
 	 * Ritorna tutti i corsi di laurea associati al dipartimento
 	 */
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_dipartimento
+	 * @return Dipartimento
+	 * @throws IOException
+	 * 
+	 * Restituisce le informazioni di un dipartimento dato l'id
+	 * 
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/dipartimento/{id_dipartimento}")
 	public @ResponseBody
 	Dipartimento getDipartimentoAll(HttpServletRequest request,
@@ -75,34 +97,5 @@ public class DipartimentoController {
 		return null;
 	}
 
-	// @PostConstruct
-	private void initCorsi() {
-
-		// /////// dipartimento 1
-		Dipartimento d = new Dipartimento();
-
-		d.setNome("Ingegneria e scienza dell informazione");
-
-		dipartimentoRepository.save(d);
-
-		// /////// dipartimento 2
-
-		d = new Dipartimento();
-
-		d.setNome("Psicologia e scienze cognitive");
-
-		dipartimentoRepository.save(d);
-
-		// /////// dipartimento 3
-
-		d = new Dipartimento();
-
-		d.setNome("Fisica");
-
-		dipartimentoRepository.save(d);
-
-		// TEST
-
-	}
 
 }

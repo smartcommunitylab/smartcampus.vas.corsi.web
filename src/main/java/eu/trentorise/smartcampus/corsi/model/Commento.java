@@ -22,17 +22,15 @@ public class Commento {
 	private int id;
 
 	// corso di riferimento
-	@ManyToOne
 	@JoinColumn(name = "CORSO_ID")
-	private Corso corso;
+	private long corso;
 	
 	@Column(name = "APPROVED")
 	private boolean approved;
 
 	// utente che ha scritto commento
-	@ManyToOne
 	@JoinColumn(name = "ID_STUDENTE")
-	private Studente id_studente;
+	private long id_studente;
 
 	// testo del commento
 	@Column(name = "TESTO")
@@ -73,19 +71,19 @@ public class Commento {
 		this.id = id;
 	}
 
-	public Corso getCorso() {
-		return corso;
-	}
-
-	public void setCorso(Corso corso) {
-		this.corso = corso;
-	}
-
-	public Studente getId_studente() {
+	public long getId_studente() {
 		return id_studente;
 	}
 
-	public void setId_studente(Studente id_studente) {
+	public long getCorso() {
+		return corso;
+	}
+
+	public void setCorso(long corso) {
+		this.corso = corso;
+	}
+
+	public void setId_studente(long id_studente) {
 		this.id_studente = id_studente;
 	}
 

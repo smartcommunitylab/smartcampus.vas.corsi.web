@@ -12,11 +12,11 @@ import eu.trentorise.smartcampus.corsi.model.Studente;
 @Repository
 public interface CommentiRepository extends JpaRepository<Commento, Long> {
 
-	List<Commento> getCommentoByCorsoAll(Corso corso);
+	List<Commento> getCommentoByCorsoAll(Long corso);
 
-	Commento getCommentoByStudenteAll(Studente studente, Corso corso);
+	Commento getCommentoByStudenteAll(Long studente, Long corso);
 	
-	List<Commento> getCommentoByCorsoApproved(Corso corso);
+	List<Commento> getCommentoByCorsoApproved(Long corso);
 
-	Commento getCommentoByStudenteApproved(Studente studente, Corso corso);
+	Commento getCommentoByStudenteApproved(Long studente, Long corso);
 }

@@ -45,15 +45,30 @@ public class CommentiController {
 	private static final Logger logger = Logger
 			.getLogger(CommentiController.class);
 
+	
+	/*
+	 * the base url of the service. Configure it in webtemplate.properties
+	 */
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
 
 	@Autowired
 	private CommentiRepository commentiRepository;
+	
+	@Autowired
+	@Value("${communicator.address}")
+	private String communicatoraddress;
 
 	@Autowired
 	private CorsoRepository corsoRepository;
+	
+	/*
+	 * the base appName of the service. Configure it in webtemplate.properties
+	 */
+	@Autowired
+	@Value("${webapp.name}")
+	private String appName;
 
 	@Autowired
 	private StudenteRepository studenteRepository;
@@ -67,48 +82,15 @@ public class CommentiController {
 	@Autowired
 	private EventoRepository eventoRepository;
 
-	private Corso calcRating(Corso findOne) {
-
-		if (findOne == null)
-			return findOne;
-
-		// cerco la lista dei commenti
-		List<Commento> listCom = commentiRepository.getCommentoByCorsoAll(findOne);
-		float Rating_carico_studio = 0;
-		float Rating_contenuto = 0;
-		float Rating_esame = 0;
-		float Rating_lezioni = 0;
-		float Rating_materiali = 0;
-		int len = listCom.size();
-
-		// sommo le valutazioni per ogni ambito
-		for (Commento index : listCom) {
-			Rating_carico_studio += index.getRating_carico_studio();
-			Rating_contenuto += index.getRating_contenuto();
-			Rating_esame += index.getRating_esame();
-			Rating_lezioni += index.getRating_lezioni();
-			Rating_materiali += index.getRating_materiali();
-		}
-
-		// calcolo la media per ogni ambito
-		findOne.setRating_carico_studio(Rating_carico_studio / len);
-		findOne.setRating_contenuto(Rating_contenuto / len);
-		findOne.setRating_esame(Rating_esame / len);
-		findOne.setRating_lezioni(Rating_lezioni / len);
-		findOne.setRating_materiali(Rating_materiali / len);
-
-		// calcolo la valutazione media generale del corso
-		float sommaValutazioni = findOne.getRating_carico_studio()
-				+ findOne.getRating_contenuto() + findOne.getRating_esame()
-				+ findOne.getRating_lezioni() + findOne.getRating_materiali();
-
-		// setto la media delle valutazioni
-		findOne.setValutazione_media(sommaValutazioni / 5);
-
-		return findOne;
-	}
-
-	// aggiorno le
+	
+/**
+ * 
+ * @param corsoDaAggiornare
+ * @return Il corso le cui valutazioni sono state aggiornate con successo, altrimenti ritorna null
+ * 
+ * Calcola e aggiorna nel DB le valutazioni medie per ogni ambito del corso 
+ * 
+ */
 	private Corso UpdateRatingCorso(Corso corsoDaAggiornare) {
 
 		if (corsoDaAggiornare == null)
@@ -116,7 +98,7 @@ public class CommentiController {
 
 		// cerco la lista dei commenti
 		List<Commento> listCom = commentiRepository
-				.getCommentoByCorsoAll(corsoDaAggiornare);
+				.getCommentoByCorsoAll(corsoDaAggiornare.getId());
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -166,8 +148,18 @@ public class CommentiController {
 		return corsoAggiornato;
 	}
 
-	/*
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_corso
+	 * @return List<Commento>
+	 * @throws IOException
+	 * 
 	 * Ritorna tutte le recensioni dato l'id di un corso
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/{id_corso}/commento/all")
 	public @ResponseBody
@@ -188,22 +180,69 @@ public class CommentiController {
 				return null;
 
 			commenti = commentiRepository.getCommentoByCorsoApproved(corsoRepository
-					.findOne(id_corso));
+					.findOne(id_corso).getId());
 			if (commenti.size() != 0) {
 				return commenti;
 			} else {
 				Corso corso = corsoRepository.findOne(id_corso);
-
 				String token = getToken(request);
 				BasicProfileService service = new BasicProfileService(
 						profileaddress);
 				BasicProfile profile = service.getBasicProfile(token);
 				Long userId = Long.valueOf(profile.getUserId());
 				Studente studente = studenteRepository.findOne(userId);
+				
+				if (studente == null) {
+					studente = new Studente();
+					studente.setId(userId);
+					studente.setNome(profile.getName());
+					studente.setCognome(profile.getSurname());
+					studente = studenteRepository.save(studente);
+
+					// studente = studenteRepository.save(studente);
+
+					// TODO caricare corsi da esse3
+					// Creare associazione su frequenze
+
+					// TEST
+					List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+					String supera = null;
+					String interesse = null;
+					int z = 0;
+					supera = new String();
+					interesse = new String();
+
+					for (Corso cors : corsiEsse3) {
+
+						if (z % 2 == 0) {
+							supera = supera.concat(String.valueOf(cors.getId())
+									.concat(","));
+						}
+						
+						if (z % 4 == 0) {
+							interesse = interesse.concat(String.valueOf(cors.getId())
+									.concat(","));
+						}
+						
+						z++;
+					}
+					
+					// Set corso follwed by studente
+					studente.setCorsi(corsiEsse3);
+					studente = studenteRepository.save(studente);
+
+					// Set corsi superati
+					studente.setIdsCorsiSuperati(supera);
+					studente.setIdsCorsiInteresse(interesse);
+					
+					studente = studenteRepository.save(studente);
+				}
+				
+				
 				Commento commento = new Commento();
-				commento.setId_studente(studente);
-				commento.setCorso(corso);
-				commento.setId_studente(new Studente());
+				commento.setId_studente(studente.getId());
+				commento.setCorso(corso.getId());
 				commento.setRating_carico_studio((float) -1);
 				commento.setRating_contenuto((float) -1);
 				commento.setRating_esame((float) -1);
@@ -215,7 +254,7 @@ public class CommentiController {
 				commenti.add(commento);
 
 				return commenti;
-				// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
 			}
 
 		} catch (Exception e) {
@@ -225,6 +264,14 @@ public class CommentiController {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param request
+	 * @return String
+	 * 
+	 * Ottiene il token riferito alla request
+	 * 
+	 */
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
@@ -233,22 +280,42 @@ public class CommentiController {
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/commento/{id_corso}/{id_studente}")
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_corso
+	 * @return Commento
+	 * @throws IOException
+	 * 
+	 * Restituisce il commento personale per un determinato corso
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/commento/{id_corso}/me")
 	public @ResponseBody
 	Commento getCommentoByStudenteId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_corso") Long id_corso,
-			@PathVariable("id_studente") Long id_studente)
+			@PathVariable("id_corso") Long id_corso)
 
 	throws IOException {
 		try {
-			logger.info("/commenti/{id_corso}/{id_studente}");
-			if (id_studente == null)
+			logger.info("/commento/{id_corso}/me");
+			
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+			
+			
+			if (userId == null)
 				return null;
 
 			return commentiRepository.getCommentoByStudenteApproved(
-					studenteRepository.findOne(id_studente),
-					corsoRepository.findOne(id_corso));
+					studenteRepository.findOne(userId).getId(),
+					corsoRepository.findOne(id_corso).getId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -259,6 +326,18 @@ public class CommentiController {
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
+	 */
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param commento
+	 * @return boolean
+	 * @throws IOException
+	 * 
+	 * Riceve il metodo post dal client e lo salva nel DB. Ritorna true se l'operazione va a buon fine, altrimenti false.
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/commento")
 	//
@@ -274,14 +353,75 @@ public class CommentiController {
 			if (commento == null)
 				return false;
 
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+				
+			
+			// controllo se lo studente è presente nel db
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
+				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					z++;
+				}
+				
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+				studente.setIdsCorsiInteresse(interesse);
+				
+				studente = studenteRepository.save(studente);
+			}
+			
+			
+			
+			
 			// cerco nel db se il commento dello studente per questo corso c'è già
 			// presente
 			Commento commentoDaModificare = commentiRepository
-					.getCommentoByStudenteAll(studenteRepository.findOne(commento
-							.getId_studente().getId()), corsoRepository
-							.findOne(commento.getCorso().getId()));
+					.getCommentoByStudenteAll(studenteRepository.findOne(userId).getId(), corsoRepository
+							.findOne(commento.getCorso()).getId());
 
 			if (commentoDaModificare == null) {
+				commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
 				return commentiRepository.save(commento) != null;
 			} else {
 
@@ -300,6 +440,10 @@ public class CommentiController {
 
 	}
 
+	
+	/**
+	 * Metodo che viene chiamato alla definizione delle entità per la creazione nel db di dati (fake)
+	 */
 	@SuppressWarnings("deprecation")
 	@PostConstruct
 	private void initCommenti() {
@@ -327,7 +471,7 @@ public class CommentiController {
 
 		dipartimentoRepository.save(d);
 
-		List<Dipartimento> dip = new ArrayList();
+		List<Dipartimento> dip = new ArrayList<Dipartimento>();
 
 		dip = dipartimentoRepository.findAll();
 
@@ -1045,21 +1189,17 @@ public class CommentiController {
 		Studente stud = studenteRepository.findOne((long) 1);
 
 		for (Corso co : esse3) {
-
-//			if (co.getId() != 1) {
 				Commento commento = new Commento();
-				commento.setCorso(co);
+				commento.setCorso(co.getId());
 				commento.setRating_carico_studio((float) 4);
 				commento.setRating_contenuto((float) 3);
 				commento.setRating_esame((float) 5);
 				commento.setRating_lezioni((float) 4);
 				commento.setRating_materiali((float) 3);
-				commento.setId_studente(stud);
+				commento.setId_studente(stud.getId());
 				commento.setApproved(true);
 				commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
 				commentiRepository.save(commento);
-//			}
-
 		}
 
 		esse3 = corsoRepository.findAll();

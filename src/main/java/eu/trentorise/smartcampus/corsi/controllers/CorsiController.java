@@ -69,6 +69,18 @@ public class CorsiController {
 	/*
 	 * Ritorna tutti i corsi
 	 */
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<Corso>
+	 * @throws IOException
+	 * 
+	 * Restituisce al client tutti i corsi presenti nel DB
+	 * 
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/all")
 	public @ResponseBody
 	List<Corso> getCorsiCompletiAll(HttpServletRequest request,
@@ -89,8 +101,21 @@ public class CorsiController {
 		return null;
 	}
 
-	/*
-	 * Ritorna i dati completi di un corso dato l'id
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_corso
+	 * @return Corso
+	 * @throws IOException
+	 * 
+	 * Restituisce al client i dati completi di un corso dato l'id
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/{id_corso}")
 	public @ResponseBody
@@ -113,49 +138,17 @@ public class CorsiController {
 		return null;
 	}
 
-	private Corso calcRating(Corso findOne) {
-
-		if (findOne == null)
-			return findOne;
-
-		// cerco la lista dei commenti
-		List<Commento> listCom = commentiRepository
-				.getCommentoByCorsoAll(findOne);
-		float Rating_carico_studio = 0;
-		float Rating_contenuto = 0;
-		float Rating_esame = 0;
-		float Rating_lezioni = 0;
-		float Rating_materiali = 0;
-		int len = listCom.size();
-
-		// sommo le valutazioni per ogni ambito
-		for (Commento index : listCom) {
-			Rating_carico_studio += index.getRating_carico_studio();
-			Rating_contenuto += index.getRating_contenuto();
-			Rating_esame += index.getRating_esame();
-			Rating_lezioni += index.getRating_lezioni();
-			Rating_materiali += index.getRating_materiali();
-		}
-
-		// calcolo la media per ogni ambito
-		findOne.setRating_carico_studio(Rating_carico_studio / len);
-		findOne.setRating_contenuto(Rating_contenuto / len);
-		findOne.setRating_esame(Rating_esame / len);
-		findOne.setRating_lezioni(Rating_lezioni / len);
-		findOne.setRating_materiali(Rating_materiali / len);
-
-		// calcolo la valutazione media generale del corso
-		float sommaValutazioni = findOne.getRating_carico_studio()
-				+ findOne.getRating_contenuto() + findOne.getRating_esame()
-				+ findOne.getRating_lezioni() + findOne.getRating_materiali();
-
-		// setto la media delle valutazioni
-		findOne.setValutazione_media(sommaValutazioni / 5);
-
-		return findOne;
-	}
-
-	// aggiorna le valutazioni del corso
+	
+	
+	
+	/**
+	 * 
+	 * @param corsoDaAggiornare
+	 * @return Il corso le cui valutazioni sono state aggiornate con successo, altrimenti ritorna null
+	 * 
+	 * Calcola e aggiorna nel DB le valutazioni medie per ogni ambito del corso 
+	 * 
+	 */
 	private Corso UpdateRatingCorso(Corso corsoDaAggiornare) {
 
 		if (corsoDaAggiornare == null)
@@ -163,7 +156,7 @@ public class CorsiController {
 
 		// cerco la lista dei commenti
 		List<Commento> listCom = commentiRepository
-				.getCommentoByCorsoAll(corsoDaAggiornare);
+				.getCommentoByCorsoAll(corsoDaAggiornare.getId());
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -213,8 +206,19 @@ public class CorsiController {
 				.getPrincipal();
 	}
 
-	/*
-	 * Ritorna tutte le recensioni dato l'id di un corso
+
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return Collection<Corso>
+	 * @throws IOException
+	 * 
+	 * Restituisce tutti i corsi (corsi da libretto) dello studente che manda la richiesta get
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/me")
 	public @ResponseBody
@@ -289,9 +293,20 @@ public class CorsiController {
 		return null;
 	}
 
-	/*
-	 * Ritorna tutti i corsi che lo studente ha superato, quindi che puï¿½
-	 * votare
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return Collection<CorsoLite>
+	 * @throws IOException
+	 * 
+	 * Ritorna tutti i corsi che lo studente che ha fatto la richiesta, ha superato, quindi che può votare
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/superati/me")
 	public @ResponseBody
@@ -308,7 +323,6 @@ public class CorsiController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			List<CorsoLite> corsiSuperati;
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			if (studente == null) {
@@ -371,8 +385,19 @@ public class CorsiController {
 		return null;
 	}
 
-	// metodo che dato lo studente setta la lista dei corsi superati dalla
-	// stringa degli ids
+	
+	
+	
+	
+
+	/**
+	 * 
+	 * @param stud
+	 * @return List<CorsoLite>
+	 * 
+	 * Metodo che dato lo studente setta la lista dei corsi superati dalla stringa degli ids
+	 * 
+	 */
 	private List<CorsoLite> assignCorsiSuperati(Studente stud) {
 		// TODO Auto-generated method stub
 
@@ -386,8 +411,15 @@ public class CorsiController {
 		return reurList;
 	}
 
-	// metodo che dato lo studente setta la lista dei corsi di interesse dalla
-	// stringa degli ids
+	
+	/**
+	 * 
+	 * @param stud
+	 * @return List<CorsoLite>
+	 * 
+	 * metodo che dato lo studente setta la lista dei corsi di interesse dalla stringa degli ids
+	 * 
+	 */
 	private List<CorsoLite> assignCorsiInteresse(Studente stud) {
 		// TODO Auto-generated method stub
 
@@ -400,9 +432,19 @@ public class CorsiController {
 
 		return reurList;
 	}
-
-	/*
-	 * getCorsoByDipartimento
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_dipartimento
+	 * @return Collection<Corso>
+	 * @throws IOException
+	 * 
+	 * Metodo che dato un id_dipartimento ritorna al client la lista dei corsi riferiti a quel dipartimento
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/dipartimento/{id_dipartimento}")
 	public @ResponseBody
@@ -425,42 +467,34 @@ public class CorsiController {
 		return null;
 	}
 
+
+	
+	
 	/*
-	 * getCorsoByCorsoLaurea
+	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corso/corsolaurea/{id_corsoLaurea}")
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_studente
+	 * @return Collection<Corso>
+	 * @throws IOException
+	 * 
+	 * 
+	 * Restituisce la lista dei corsi (da libretto) riferiti allo studente
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corsi/me")
 	public @ResponseBody
-	Collection<Corso> getCorsoByCorsoLaurea(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_corsoLaurea") Long id_corsoLaurea)
+	Collection<Corso> getStudente(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/corsi/corsolaurea/{id_corsoLaurea}");
-			if (id_corsoLaurea == null)
-				return null;
-
-			return corsoRepository.findCorsoByCorsoLaureaId(id_corsoLaurea);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
-	/*
-	 * getCorsoByCorsoLaurea
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corso/superati/{id_corso}")
-	public @ResponseBody
-	Boolean isMyCourseSuperato(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_corso") Long id_corso)
-
-	throws IOException {
-		try {
-			logger.info("/corso/superati/" + id_corso.toString());
+			logger.info("/corsi/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -512,6 +546,133 @@ public class CorsiController {
 
 				// Set corsi superati
 				studente.setIdsCorsiSuperati(supera);
+				studente.setIdsCorsiInteresse(interesse);
+				
+				studente = studenteRepository.save(studente);
+				
+			}
+
+			studente = studenteRepository.save(studente);
+
+			return studente.getCorsi();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_corsoLaurea
+	 * @return Collection<Corso>
+	 * @throws IOException
+	 * 
+	 * Metodo che dato un id_corsoLaurea ritorna al client la lista dei corsi riferiti a quel corso di laurea
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/corsolaurea/{id_corsoLaurea}")
+	public @ResponseBody
+	Collection<Corso> getCorsoByCorsoLaurea(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_corsoLaurea") Long id_corsoLaurea)
+
+	throws IOException {
+		try {
+			logger.info("/corsi/corsolaurea/{id_corsoLaurea}");
+			if (id_corsoLaurea == null)
+				return null;
+
+			return corsoRepository.findCorsoByCorsoLaureaId(id_corsoLaurea);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	/*
+	 * getCorsoByCorsoLaurea
+	 */
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_corso
+	 * @return Boolean
+	 * @throws IOException
+	 * 
+	 * Metodo che dato un id_corso ritorna al client true se il corso è stato superato, false altrimenti
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corso/superato/{id_corso}")
+	public @ResponseBody
+	Boolean isMyCourseSuperato(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_corso") Long id_corso)
+
+	throws IOException {
+		try {
+			logger.info("/corso/superato/" + id_corso.toString());
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
+				studente = studenteRepository.save(studente);
+
+				// Aggiunta dati fake //////////////////////////////////////////
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					z++;
+				}
+				///////////////////////////////////////////////////////
+				
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+				// Set corsi interesse
 				studente.setIdsCorsiInteresse(interesse);
 				
 				studente = studenteRepository.save(studente);
@@ -545,6 +706,19 @@ public class CorsiController {
 	/*
 	 * Riceve oggetto Corso e lo salva come corso che seguo
 	 */
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param corso
+	 * @return boolean
+	 * @throws IOException
+	 * 
+	 * Dato un corso restituisce al client true se il corso è di interesse dello studente altrimenti false 
+	 * 
+	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/corso/seguo")
 	//
 	public @ResponseBody
@@ -571,11 +745,6 @@ public class CorsiController {
 				studente.setNome(profile.getName());
 				studente.setCognome(profile.getSurname());
 				studente = studenteRepository.save(studente);
-
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
 
 				// TEST
 				List<Corso> corsiEsse3 = corsoRepository.findAll();
@@ -609,6 +778,7 @@ public class CorsiController {
 
 				// Set corsi superati
 				studente.setIdsCorsiSuperati(supera);
+				// Set corsi interesse
 				studente.setIdsCorsiInteresse(interesse);
 				
 				studente = studenteRepository.save(studente);
@@ -623,12 +793,10 @@ public class CorsiController {
 			Corso corsoDaSeguire = corsoRepository.findOne(corso.getId());
 
 			if (corsoDaSeguire != null) {
-//				corsoRepository.delete(corsoDaSeguire);
-//				return corsoRepository.save(corsoDaSeguire) != null;
 				List<CorsoLite> corsiInteresse = assignCorsiInteresse(studente);
 				boolean isSeguito = false;
 				
-				// controllo se il corso lo seguo giï¿½ o no
+				// controllo se il corso lo seguo gia o no
 				for(CorsoLite c: corsiInteresse){
 					if(c.getId() == corsoDaSeguire.getId()){
 						isSeguito = true;
@@ -666,9 +834,16 @@ public class CorsiController {
 
 	}
 
-	/*
-	 * Ritorna tutti i corsi che lo studente sta seguendo che non sono da
-	 * libretto
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return Collection<CorsoLite>
+	 * @throws IOException
+	 * 
+	 * Ritorna tutti i corsi che lo studente sta seguendo
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/interesse/me")
 	public @ResponseBody
@@ -685,20 +860,17 @@ public class CorsiController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			List<CorsoLite> corsiSuperati;
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			
 			if (studente == null) {
+				
 				studente = new Studente();
 				studente.setId(userId);
 				studente.setNome(profile.getName());
 				studente.setCognome(profile.getSurname());
 				studente = studenteRepository.save(studente);
 
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
 
 				// TEST
 				List<Corso> corsiEsse3 = corsoRepository.findAll();
@@ -732,6 +904,7 @@ public class CorsiController {
 
 				// Set corsi superati
 				studente.setIdsCorsiSuperati(supera);
+				// Set corsi interesse
 				studente.setIdsCorsiInteresse(interesse);
 
 			}
@@ -747,256 +920,5 @@ public class CorsiController {
 		return null;
 	}
 
-	// @PostConstruct
-	private void initCorsi() {
-		Corso c = new Corso();
-
-		c.setNome("Programmazione 1");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Analisi matematica 1");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Matematica discreta 1");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Programmazione 2");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Programmazione funzionale");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Architettura degli elaboratori");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Matematica discreta 2");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Probabilitï¿½ e statistica");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Ingegneria del software");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Basi di dati");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Sistemi operativi");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Reti di calcolatori");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Algoritmi e strutture dati");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		c = new Corso();
-
-		c.setNome("Programmazione per sistemi mobili e tablet");
-		c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-				+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-				+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-				+ "dolore eu fugiat nulla pariatur.");
-		c.setValutazione_media(4);
-		c.setId_dipartimento(1);
-		c.setId_corsoLaurea(1);
-		corsoRepository.save(c);
-
-		int i = 0;
-		int j = 0;
-		for (i = 2; i < 4; i++) {
-
-			c = new Corso();
-
-			c.setNome("Corso" + j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Corso" + j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Corso" + j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Corso" + j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Analisi matematica 1");
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-			corsoRepository.save(c);
-
-			c = new Corso();
-
-			c.setNome("Corso" + j++);
-			c.setDescrizione("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut "
-					+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "
-					+ "aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum "
-					+ "dolore eu fugiat nulla pariatur.");
-			c.setValutazione_media(4);
-			c.setId_dipartimento(i);
-			c.setId_corsoLaurea(i);
-
-			corsoRepository.save(c);
-		}
-		// TEST
-
-	}
-
+	
 }

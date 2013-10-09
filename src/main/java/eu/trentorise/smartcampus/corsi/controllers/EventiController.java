@@ -64,8 +64,18 @@ public class EventiController {
 	@Autowired
 	private EventoRepository eventoRepository;
 
-	/*
-	 * Ritorna tutti gli eventi per corso
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param idcorso
+	 * @return List<Evento>
+	 * @throws IOException
+	 * 
+	 * Restituisce tutti gli eventi riferiti ad un corso dato
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/evento/{idcorso}")
 	public @ResponseBody
@@ -95,6 +105,21 @@ public class EventiController {
 	/*
 	 * Riceve evento e lo salva nel db
 	 */
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param evento
+	 * @return Evento
+	 * @throws IOException
+	 * 
+	 * Salva nel DB l'evento passato dal client e restituisce l'evento se l'operazione va a buon fine, altrimenti false
+	 * 
+	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/evento")
 	public @ResponseBody
 	Evento saveEvento(HttpServletRequest request, HttpServletResponse response,
@@ -102,9 +127,6 @@ public class EventiController {
 
 	throws IOException {
 		try {
-
-			// User Request create event
-			// creati a notification and send to Communicator
 
 			// TODO controlli se campi validi
 			if (evento != null && evento.getTitolo() != "") {
@@ -140,8 +162,19 @@ public class EventiController {
 		return null;
 	}
 
-	/*
-	 * Ritorna tutti gli eventi per corso
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<Evento>
+	 * @throws IOException
+	 * 
+	 * Restituisce tutti gli eventi di tutti i corsi personali riferiti allo studente
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/evento/me")
 	public @ResponseBody
@@ -202,6 +235,7 @@ public class EventiController {
 
 				// Set corsi superati
 				studente.setIdsCorsiSuperati(supera);
+				// Set corsi interesse
 				studente.setIdsCorsiInteresse(interesse);
 				
 				studente = studenteRepository.save(studente);
@@ -225,52 +259,15 @@ public class EventiController {
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
-	// @PostConstruct
-	private void initEvento() {
-
-		List<Corso> esse3 = corsoRepository.findAll();
-		for (Corso index : esse3) {
-			for (int i = 0; i < 2; i++) {
-				Evento x = new Evento();
-				x.setCorso(index);
-				x.setTitolo(index.getNome());
-				x.setDescrizione("Lezione teorica di " + index.getNome());
-				x.setRoom("A20" + i);
-				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date("2013/06/2" + String.valueOf(i + 1)));
-				x.setStart(new Time(8, 30, 00));
-				x.setStop(new Time(10, 30, 00));
-				eventoRepository.save(x);
-
-				x = new Evento();
-				x.setCorso(index);
-				x.setTitolo(index.getNome());
-				x.setDescrizione("Appello d'esame di " + index.getNome());
-				x.setRoom("A10" + i);
-				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date(("2013/07/0" + String.valueOf(i + 1))
-						.toString()));
-				x.setStart(new Time(10, 30, 0));
-				x.setStop(new Time(12, 30, 0));
-				eventoRepository.save(x);
-
-				x = new Evento();
-				x.setCorso(index);
-				x.setTitolo(index.getNome());
-				x.setDescrizione("Lezione di laboratorio di " + index.getNome());
-				x.setRoom("A10" + i);
-				x.setEvent_location("Polo Tecnologico Ferrari, Povo");
-				x.setData(new Date(("2013/07/0" + String.valueOf(i + 1))
-						.toString()));
-				x.setStart(new Time(14, 0, 0));
-				x.setStop(new Time(16, 0, 0));
-				eventoRepository.save(x);
-			}
-		}
-
-	}
-
+	
+	/**
+	 * 
+	 * @param request
+	 * @return String
+	 * 
+	 * Ottiene il token riferito alla request
+	 * 
+	 */
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();

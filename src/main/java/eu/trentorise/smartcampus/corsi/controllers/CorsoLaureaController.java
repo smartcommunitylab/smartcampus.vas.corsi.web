@@ -1,13 +1,10 @@
 package eu.trentorise.smartcampus.corsi.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,9 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
-import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 
@@ -33,8 +28,16 @@ public class CorsoLaureaController {
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
-	/*
-	 * Ritorna tutti i corsi di laurea
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<CorsoLaurea>
+	 * @throws IOException
+	 * 
+	 * Restituisce tutti i corsi di laurea
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsolaurea/all")
 	public @ResponseBody
@@ -58,6 +61,19 @@ public class CorsoLaureaController {
 
 	/*
 	 * Ritorna tutti i corsi di laurea di un dipartimento dato
+	 */
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_dipartimento
+	 * @return List<CorsoLaurea>
+	 * @throws IOException
+	 * 
+	 * Restituisce tutti i corsi di laurea dato un dipartimento
+	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsolaurea/{id_dipartimento}")
 	public @ResponseBody
@@ -83,34 +99,4 @@ public class CorsoLaureaController {
 
 	}
 
-	// @PostConstruct
-	private void initCorsi() {
-
-		List<Dipartimento> dip = new ArrayList();
-
-		dip = dipartimentoRepository.findAll();
-
-		for (Dipartimento d : dip) {
-
-			CorsoLaurea corsoL = new CorsoLaurea();
-			corsoL.setDipartimento(d);
-			corsoL.setNome("Informatica");
-			corsoLaureaRepository.save(corsoL);
-
-			corsoL = new CorsoLaurea();
-			corsoL.setDipartimento(d);
-			corsoL.setNome("Ingegneria dell informazione");
-			corsoLaureaRepository.save(corsoL);
-
-			corsoL = new CorsoLaurea();
-			corsoL.setDipartimento(d);
-			corsoL.setNome("Ingegneria elettronica e delle telecomunicazioni");
-
-			corsoLaureaRepository.save(corsoL);
-
-		}
-
-		// TEST
-
-	}
 }
