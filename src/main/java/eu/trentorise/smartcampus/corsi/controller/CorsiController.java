@@ -1,4 +1,4 @@
-package eu.trentorise.smartcampus.corsi.controllers;
+package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -305,7 +305,7 @@ public class CorsiController {
 	 * @return Collection<CorsoLite>
 	 * @throws IOException
 	 * 
-	 * Ritorna tutti i corsi che lo studente che ha fatto la richiesta, ha superato, quindi che può votare
+	 * Ritorna tutti i corsi che lo studente che ha fatto la richiesta, ha superato, quindi che puï¿½ votare
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/superati/me")
@@ -518,7 +518,7 @@ public class CorsiController {
 	 * @return Boolean
 	 * @throws IOException
 	 * 
-	 * Metodo che dato un id_corso ritorna al client true se il corso è stato superato, false altrimenti
+	 * Metodo che dato un id_corso ritorna al client true se il corso ï¿½ stato superato, false altrimenti
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/superato/{id_corso}")
@@ -621,7 +621,7 @@ public class CorsiController {
 	 * @return boolean
 	 * @throws IOException
 	 * 
-	 * Dato un corso restituisce al client true se il corso è di interesse dello studente altrimenti false 
+	 * Dato un corso restituisce al client true se il corso ï¿½ di interesse dello studente altrimenti false 
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/corso/seguo")

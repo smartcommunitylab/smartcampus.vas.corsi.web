@@ -1,4 +1,4 @@
-package eu.trentorise.smartcampus.corsi.controllers;
+package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;

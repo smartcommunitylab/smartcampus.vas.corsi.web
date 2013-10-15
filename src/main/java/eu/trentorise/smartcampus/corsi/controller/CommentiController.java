@@ -1,4 +1,4 @@
-package eu.trentorise.smartcampus.corsi.controllers;
+package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
 import java.sql.Time;
@@ -365,7 +365,7 @@ public class CommentiController {
 			Long userId = Long.valueOf(profile.getUserId());
 				
 			
-			// controllo se lo studente è presente nel db
+			// controllo se lo studente ï¿½ presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			
 			if (studente == null) {
@@ -418,7 +418,7 @@ public class CommentiController {
 			
 			
 			
-			// cerco nel db se il commento dello studente per questo corso c'è già
+			// cerco nel db se il commento dello studente per questo corso c'ï¿½ giï¿½
 			// presente
 			Commento commentoDaModificare = commentiRepository
 					.getCommentoByStudenteAll(studenteRepository.findOne(userId).getId(), corsoRepository
@@ -435,7 +435,7 @@ public class CommentiController {
 			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
 			
 			
-			// Controllo se il commento è già presente
+			// Controllo se il commento ï¿½ giï¿½ presente
 			if (commentoDaModificare == null) {
 				commentoSalvato = commentiRepository.saveAndFlush(commento);
 			} else {
@@ -462,7 +462,7 @@ public class CommentiController {
 
 	
 	/**
-	 * Metodo che viene chiamato alla definizione delle entità per la creazione nel db di dati (fake)
+	 * Metodo che viene chiamato alla definizione delle entitï¿½ per la creazione nel db di dati (fake)
 	 */
 	@SuppressWarnings("deprecation")
 	@PostConstruct
