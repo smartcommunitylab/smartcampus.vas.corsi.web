@@ -428,8 +428,9 @@ public class CommentiController {
 			Commento commentoSalvato = null;
 			
 			
-			//check text
-			commento.setApproved(mediationParserImpl.validateComment(commento));
+			//check text		
+			
+			commento.setApproved(mediationParserImpl.validateComment(commento,token));
 			logger.info("APPROVED="+ commento.isApproved());
 			
 			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
