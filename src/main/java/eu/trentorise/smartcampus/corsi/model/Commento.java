@@ -1,3 +1,4 @@
+
 package eu.trentorise.smartcampus.corsi.model;
 
 import javax.persistence.Column;
@@ -9,13 +10,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
+import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
+
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "Commento.getCommentoByCorsoApproved", query = "select c from Commento c where c.corso = ?1 and c.approved = true"), 
 		@NamedQuery(name = "Commento.getCommentoByStudenteApproved", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2 and c.approved = true"),
 		@NamedQuery(name = "Commento.getCommentoByCorsoAll", query = "select c from Commento c where c.corso = ?1"),
 		@NamedQuery(name = "Commento.getCommentoByStudenteAll", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })
-public class Commento {
+public class Commento extends CommentBaseEntity{
 	// id del commento
 	@Id
 	@GeneratedValue
@@ -37,7 +40,7 @@ public class Commento {
 	private String nome_studente;
 
 	// testo del commento
-	@Column(name = "TESTO")
+	@Column(name = "TESTO",length=2000)
 	private String testo;
 
 	// data in cui e' stato scritto commento
