@@ -18,7 +18,7 @@ import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 		@NamedQuery(name = "Commento.getCommentoByStudenteApproved", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2 and c.approved = true"),
 		@NamedQuery(name = "Commento.getCommentoByCorsoAll", query = "select c from Commento c where c.corso = ?1"),
 		@NamedQuery(name = "Commento.getCommentoByStudenteAll", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })
-public class Commento extends CommentBaseEntity{
+public class Commento {
 	// id del commento
 	@Id
 	@GeneratedValue

@@ -430,7 +430,7 @@ public class CommentiController {
 			
 			//check text		
 			
-			commento.setApproved(mediationParserImpl.validateComment(commento,token));
+			commento.setApproved(mediationParserImpl.validateComment(commento.getTesto(),commento.getId(),token));
 			logger.info("APPROVED="+ commento.isApproved());
 			
 			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
