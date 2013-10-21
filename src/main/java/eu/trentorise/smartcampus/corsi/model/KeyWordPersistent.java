@@ -3,15 +3,26 @@ package eu.trentorise.smartcampus.corsi.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+@Entity
 public class KeyWordPersistent {
 
+	@Id
+	@GeneratedValue
 	private String id;
+	
+	@Column(name = "KEY")
 	private String key;
+	
+	@Column(name = "TIMESTAMP")
 	private long timestamp;
 
 	public KeyWordPersistent() {

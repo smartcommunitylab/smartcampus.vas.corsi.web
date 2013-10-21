@@ -418,19 +418,23 @@ public class CommentiController {
 			
 			
 			
-			// cerco nel db se il commento dello studente per questo corso c'� gi�
+			// cerco nel db se il commento dello studente per questo corso è
 			// presente
 			Commento commentoDaModificare = commentiRepository
 					.getCommentoByStudenteAll(studenteRepository.findOne(userId).getId(), corsoRepository
 							.findOne(commento.getCorso()).getId());
 
+			commento.setId_studente(userId);
+			commento.setNome_studente(profile.getName());
+			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
+			
+			commento = commentiRepository.save(commento);
 			
 			Commento commentoSalvato = null;
 			
-			
 			//check text		
 			
-			commento.setApproved(mediationParserImpl.fastValidateComment(commento.getTesto(),commento.getId(),userId,token));
+			//commento.setApproved(mediationParserImpl.fastValidateComment(commento.getTesto(),commento.getId(),userId,token));
 			
 			// se il commento viene approvato dal primo filtro allora lo passo al portale
 			if(commento.isApproved()){
@@ -442,7 +446,7 @@ public class CommentiController {
 			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
 			
 			
-			// Controllo se il commento � gi� presente
+			// Controllo se il commento è già presente
 			if (commentoDaModificare == null) {
 				commentoSalvato = commentiRepository.saveAndFlush(commento);
 			} else {
