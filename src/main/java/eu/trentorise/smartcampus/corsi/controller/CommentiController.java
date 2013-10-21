@@ -431,6 +431,12 @@ public class CommentiController {
 			//check text		
 			
 			commento.setApproved(mediationParserImpl.fastValidateComment(commento.getTesto(),commento.getId(),userId,token));
+			
+			// se il commento viene approvato dal primo filtro allora lo passo al portale
+			if(commento.isApproved()){
+				commento.setApproved(mediationParserImpl.remoteValidateComment(commento.getTesto(),commento.getId(),userId,token));
+			}
+			
 			logger.info("APPROVED="+ commento.isApproved());
 			
 			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
