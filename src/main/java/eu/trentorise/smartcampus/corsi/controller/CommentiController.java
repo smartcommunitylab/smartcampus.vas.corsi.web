@@ -418,19 +418,15 @@ public class CommentiController {
 			
 			
 			
-			// cerco nel db se il commento dello studente per questo corso è
+			// cerco nel db se il commento dello studente per questo corso c'� gi�
 			// presente
 			Commento commentoDaModificare = commentiRepository
 					.getCommentoByStudenteAll(studenteRepository.findOne(userId).getId(), corsoRepository
 							.findOne(commento.getCorso()).getId());
 
-			commento.setId_studente(userId);
-			commento.setNome_studente(profile.getName());
-			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
-			
-			commento = commentiRepository.save(commento);
 			
 			Commento commentoSalvato = null;
+			
 			
 			//check text		
 			
@@ -446,7 +442,7 @@ public class CommentiController {
 			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
 			
 			
-			// Controllo se il commento è già presente
+			// Controllo se il commento � gi� presente
 			if (commentoDaModificare == null) {
 				commentoSalvato = commentiRepository.saveAndFlush(commento);
 			} else {
