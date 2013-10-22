@@ -29,6 +29,7 @@ import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
+import eu.trentorise.smartcampus.corsi.model.KeyWordStudyMate;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
@@ -1287,6 +1288,18 @@ public class CommentiController {
 			}
 		}
 
+	}
+	
+
+	
+	@PostConstruct
+	private void initKeyWords() {
+//		KeyWordStudyMate keyWordStudyMate = new KeyWordStudyMate();
+//		
+//		commentiRepository.findLastComment();
+//	
+//		mediationParserImpl.updateKeyWord(getToken(), data)
+		
 	}
 
 }
