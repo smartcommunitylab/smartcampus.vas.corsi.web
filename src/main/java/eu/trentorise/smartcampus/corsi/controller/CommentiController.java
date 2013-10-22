@@ -425,6 +425,12 @@ public class CommentiController {
 							.findOne(commento.getCorso()).getId());
 
 			
+			commento.setId_studente(userId);
+			commento.setNome_studente(profile.getName());
+			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
+			
+			commento = commentiRepository.save(commento);
+			
 			Commento commentoSalvato = null;
 			
 			
@@ -439,7 +445,6 @@ public class CommentiController {
 			
 			logger.info("APPROVED="+ commento.isApproved());
 			
-			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
 			
 			
 			// Controllo se il commento � gi� presente
