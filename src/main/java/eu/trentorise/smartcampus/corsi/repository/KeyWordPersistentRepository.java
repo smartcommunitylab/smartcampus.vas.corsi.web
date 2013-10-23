@@ -2,9 +2,10 @@ package eu.trentorise.smartcampus.corsi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import eu.trentorise.smartcampus.corsi.model.KeyWordStudyMate;
+
+import eu.trentorise.smartcampus.corsi.model.KeyWordPersistent;
 
 @Repository
-public interface KeyWordRepository extends JpaRepository<KeyWordStudyMate, Long>{
+public interface KeyWordPersistentRepository extends JpaRepository<KeyWordPersistent, Long> {
 
 }

@@ -29,6 +29,7 @@
 	
 	<import resource="datalayer.xml"/>
 	
+	
 	<bean id="dataSource" destroy-method="close"
 		class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${jdbc.driver}" />

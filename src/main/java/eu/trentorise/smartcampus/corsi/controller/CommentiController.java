@@ -3,6 +3,7 @@ package eu.trentorise.smartcampus.corsi.controller;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -29,13 +30,14 @@ import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
-import eu.trentorise.smartcampus.corsi.model.KeyWordStudyMate;
+import eu.trentorise.smartcampus.corsi.model.KeyWordPersistent;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
+import eu.trentorise.smartcampus.corsi.repository.KeyWordPersistentRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
@@ -67,6 +69,10 @@ public class CommentiController {
 	
 	@Autowired
 	private MediationParserImpl mediationParserImpl;
+	
+	@Autowired
+	private KeyWordPersistentRepository keyWordPersistentRepository;
+	
 	
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
@@ -365,6 +371,8 @@ public class CommentiController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 				
+			
+			mediationParserImpl.updateKeyWord(token);
 			
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
@@ -1290,16 +1298,12 @@ public class CommentiController {
 
 	}
 	
-
-	
 	@PostConstruct
-	private void initKeyWords() {
-//		KeyWordStudyMate keyWordStudyMate = new KeyWordStudyMate();
-//		
-//		commentiRepository.findLastComment();
-//	
-//		mediationParserImpl.updateKeyWord(getToken(), data)
-		
+	private void initUpdateKeyWord() {
+		KeyWordPersistent keyWord = new KeyWordPersistent("", "culo", Calendar.getInstance().getTimeInMillis());		
+		keyWordPersistentRepository.save(keyWord);
+	
 	}
+	
 
 }
