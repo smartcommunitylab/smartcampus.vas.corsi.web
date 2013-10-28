@@ -49,6 +49,10 @@ public class GruppoDiStudio {
 	}
 
 
+	public void setId(long id){
+		this.id = id;
+	}
+	
 	public long getCorso() {
 		return corso;
 	}
@@ -68,6 +72,9 @@ public class GruppoDiStudio {
 		this.nome = nome;
 	}
 	
+	public long getId(){
+		return id;
+	}
 	
 	public String getIdsStudenti() {
 		return idsStudenti;
@@ -94,6 +101,13 @@ public class GruppoDiStudio {
 		gds.setIdsStudenti(gds.getIdsStudenti()+String.valueOf(idStudenteDaAggiungere)+",");		
 	}
 
+	// chiamata soltanto alla creazione di un nuovo gruppo
+	public void initStudenteGruppo(GruppoDiStudio gds, long idStudenteDaAggiungere) {
+		// TODO Auto-generated method stub
+		gds.setIdsStudenti(String.valueOf(idStudenteDaAggiungere)+",");		
+	}
+
+	
 	public void removeStudenteGruppo(GruppoDiStudio gds, long id2) {
 		// TODO Auto-generated method stub
 		String studentiGruppoIds = null;
