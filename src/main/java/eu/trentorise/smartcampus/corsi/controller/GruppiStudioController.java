@@ -94,30 +94,6 @@ public class GruppiStudioController {
 		}
 		return null;
 	}
-//
-//	/*
-//	 * Ritorna i dati completi di un gruppo dato l'id
-//	 */
-//	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_gruppidistudio}")
-//	public @ResponseBody
-//	GruppoDiStudio getgruppidistudioByID(HttpServletRequest request,
-//			HttpServletResponse response, HttpSession session,
-//			@PathVariable("id_gruppidistudio") Long id_gruppidistudio)
-//
-//	throws IOException {
-//		try {
-//			logger.info("/gruppidistudio/{id_gruppidistudio}");
-//
-//			if (id_gruppidistudio == null)
-//				return null;
-//
-//			return  gruppidistudioRepository.findOne(id_gruppidistudio);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//		}
-//		return null;
-//	}
 
 
 	private String getToken(HttpServletRequest request) {
@@ -547,6 +523,93 @@ public class GruppiStudioController {
 			return false;
 		}
 	
+	}
+	
+	
+	
+	/*
+	 * Ritorna i gruppi di uno studente
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value = "/gruppidistudio/delete/me")
+	public @ResponseBody
+	boolean deleteMeByGds(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
+
+	throws IOException {
+		try {
+			logger.info("/gruppidistudio/me");
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+			
+			Studente studente = studenteRepository.findOne(userId);
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
+				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					z++;
+				}
+				
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+				studente.setIdsCorsiInteresse(interesse);
+				
+				studente = studenteRepository.save(studente);
+			}
+			
+			
+			if (userId == null)
+				return false;
+			
+			GruppoDiStudio gdsFromDB = gruppidistudioRepository.findOne(gruppodistudio.getId());
+
+			gruppodistudio.removeStudenteGruppo(gdsFromDB, userId);
+			
+			gruppidistudioRepository.save(gdsFromDB);
+			
+			return true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return false;
 	}
 
 }

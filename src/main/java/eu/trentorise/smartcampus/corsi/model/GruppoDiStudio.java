@@ -112,6 +112,10 @@ public class GruppoDiStudio {
 	public void removeStudenteGruppo(GruppoDiStudio gds, long id2) {
 		// TODO Auto-generated method stub
 		String studentiGruppoIds = null;
+		
+		if(gds.getIdsStudenti() == null)
+			return;
+		
 		studentiGruppoIds = gds.getIdsStudenti();
 		
 		String[] listS = studentiGruppoIds.split(",");
