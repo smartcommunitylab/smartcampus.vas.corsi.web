@@ -59,9 +59,6 @@ public class CommentiController {
 	private CommentiRepository commentiRepository;
 	
 	@Autowired
-	private GruppoDiStudioRepository gruppoDiStudioRepository;
-	
-	@Autowired
 	@Value("${communicator.address}")
 	private String communicatoraddress;
 
@@ -371,7 +368,7 @@ public class CommentiController {
 			Long userId = Long.valueOf(profile.getUserId());
 				
 			
-			//mediationParserImpl.updateKeyWord(token);
+			mediationParserImpl.updateKeyWord(token);
 			
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
@@ -444,11 +441,11 @@ public class CommentiController {
 			
 			//check text		
 			
-			commento.setApproved(mediationParserImpl.fastValidateComment(commento.getTesto(),commento.getId(),userId,token));
+			commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
 			
 			// se il commento viene approvato dal primo filtro allora lo passo al portale
 			if(commento.isApproved()){
-				commento.setApproved(mediationParserImpl.fastValidateComment(commento.getTesto(),commento.getId(),userId,token));
+				commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
 			}
 			
 			logger.info("APPROVED="+ commento.isApproved());
@@ -1195,12 +1192,6 @@ public class CommentiController {
 
 			for (Corso cors : esse3) {
 
-				GruppoDiStudio gruppoDiSt = new GruppoDiStudio();
-				gruppoDiSt.setCorso(cors.getId());
-				gruppoDiSt.setNome("Mio gruppo" + i1 + " di " + cors.getNome());
-				gruppoDiSt.addStudenteGruppo(gruppoDiSt, i1);
-				
-				gruppoDiStudioRepository.save(gruppoDiSt);
 
 				if (z % 2 == 0) {
 					supera = supera.concat(String.valueOf(cors.getId()).concat(

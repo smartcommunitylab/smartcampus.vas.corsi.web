@@ -4,14 +4,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.derby.catalog.GetProcedureColumns;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mysql.jdbc.PreparedStatement;
 
 import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
@@ -318,15 +325,26 @@ public class GruppiStudioController {
 	}
 
 	
-	
-	@RequestMapping(method = RequestMethod.POST, value = "/addgruppodistudio")
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param gruppodistudio
+	 * @return true se l'operazione va a buon fine, false altrimenti
+	 * @throws IOException
+	 * 
+	 * Aggiunge un nuovo gruppo di studio nel db. L'unico studente appartenente al gruppo è chi ha fatto la POST.
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/add")
 	public @ResponseBody
 	boolean AddGds(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
 
 					throws IOException {
 		try {
-			logger.info("/addgruppodistudio");
+			logger.info("/gruppodistudio/add");
 			// TODO control valid field
 			if (gruppodistudio == null)
 				return false;
@@ -399,9 +417,7 @@ public class GruppiStudioController {
 			GruppoDiStudio gruppodistudioAggiornato = gruppidistudioRepository.save(gruppodistudio);
 			
 			
-			
-			
-			// Controllo se il commento � gi� presente
+			// Controllo se il commento è gia presente
 			if (gruppodistudioAggiornato == null) {
 				return false;
 			} else {
@@ -417,9 +433,121 @@ public class GruppiStudioController {
 		}
 	
 	}
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param gruppodistudio
+	 * @return true se l'operazione va a buon fine, false altrimenti
+	 * @throws IOException
+	 * 
+	 * Aggiunge un nuovo membro al gruppo di studio passato come input.
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/accept")
+	public @ResponseBody
+	boolean AcceptGds(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
 
-	private void checkStudentExists(){
-		
+					throws IOException {
+		try {
+			logger.info("/gruppodistudio/accept");
+			// TODO control valid field
+			if (gruppodistudio == null)
+				return false;
+
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+				
+			
+			//mediationParserImpl.updateKeyWord(token);
+			
+			// controllo se lo studente � presente nel db
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
+				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					z++;
+				}
+				
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+				studente.setIdsCorsiInteresse(interesse);
+				
+				studente = studenteRepository.save(studente);
+			}
+			
+			GruppoDiStudio gdsFromDB = gruppidistudioRepository.findOne(gruppodistudio.getId());
+				
+			// se gds non è nel db -> false
+			if(gdsFromDB == null)
+				return false;
+			
+			gdsFromDB.addStudenteGruppo(gdsFromDB, userId); // aggiungo il membro al gruppo
+			GruppoDiStudio gruppodistudioAggiornato = gruppidistudioRepository.save(gdsFromDB);
+			
+			if (gruppodistudioAggiornato == null) {
+				return false;
+			} else {
+				// controllo che il gds aggiornato abbia lo stesso id di prima
+				if(gdsFromDB.getId() == gruppodistudioAggiornato.getId())
+					return true;
+				else
+					return false;
+			}
+
+			
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return false;
+		}
+	
 	}
+
 }
 	
