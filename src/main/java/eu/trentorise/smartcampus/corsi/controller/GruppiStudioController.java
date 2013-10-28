@@ -59,28 +59,28 @@ public class GruppiStudioController {
 	@Autowired
 	private StudenteRepository studenteRepository;
 
-//	/*
-//	 * Ritorna tutti i corsi in versione lite
-//	 */
-//	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/all")
-//	public @ResponseBody
-//	List<GruppoDiStudio> getgruppidistudioAll(HttpServletRequest request,
-//			HttpServletResponse response, HttpSession session)
-//
-//	throws IOException {
-//		try {
-//
-//			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository.findAll();
-//
-//			return getgruppidistudio;
-//
-//		} catch (Exception e) {
-//			logger.error(e.getMessage());
-//			e.printStackTrace();
-//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//		}
-//		return null;
-//	}
+	/*
+	 * Ritorna tutti i corsi in versione lite
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/all")
+	public @ResponseBody
+	List<GruppoDiStudio> getgruppidistudioAll(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+
+			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository.findAll();
+
+			return getgruppidistudio;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
 //
 //	/*
 //	 * Ritorna i dati completi di un gruppo dato l'id

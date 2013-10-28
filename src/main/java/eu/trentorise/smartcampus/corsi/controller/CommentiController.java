@@ -35,6 +35,7 @@ import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
+import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
@@ -56,6 +57,9 @@ public class CommentiController {
 
 	@Autowired
 	private CommentiRepository commentiRepository;
+	
+	@Autowired
+	private GruppoDiStudioRepository gruppoDiStudioRepository;
 	
 	@Autowired
 	@Value("${communicator.address}")
@@ -440,11 +444,11 @@ public class CommentiController {
 			
 			//check text		
 			
-			commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
+			commento.setApproved(mediationParserImpl.fastValidateComment(commento.getTesto(),commento.getId(),userId,token));
 			
 			// se il commento viene approvato dal primo filtro allora lo passo al portale
 			if(commento.isApproved()){
-				commento.setApproved(mediationParserImpl.remoteValidationComment(commento.getTesto(),commento.getId(),userId,token));
+				commento.setApproved(mediationParserImpl.fastValidateComment(commento.getTesto(),commento.getId(),userId,token));
 			}
 			
 			logger.info("APPROVED="+ commento.isApproved());
@@ -1194,6 +1198,8 @@ public class CommentiController {
 				GruppoDiStudio gruppoDiSt = new GruppoDiStudio();
 				gruppoDiSt.setCorso(cors);
 				gruppoDiSt.setNome("Mio gruppo" + i1 + " di " + cors.getNome());
+				
+				gruppoDiStudioRepository.save(gruppoDiSt);
 
 				if (z % 2 == 0) {
 					supera = supera.concat(String.valueOf(cors.getId()).concat(
