@@ -22,9 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
+import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
@@ -58,6 +60,9 @@ public class GruppiStudioController {
 
 	@Autowired
 	private StudenteRepository studenteRepository;
+	
+	@Autowired
+	private CorsoRepository corsoRepository;
 
 	/*
 	 * Ritorna tutti i corsi in versione lite
@@ -111,29 +116,205 @@ public class GruppiStudioController {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 	}
+	
+	
 	/*
 	 * Ritorna i gruppi di un corso
 	 */
-//	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_course}")
-//	public @ResponseBody
-//	List<GruppoDiStudio> getgruppidistudioByIDCourse(HttpServletRequest request,
-//			HttpServletResponse response, HttpSession session,
-//			@PathVariable("id_course") Long id_course)
-//
-//	throws IOException {
-//		try {
-//			logger.info("/gruppidistudio/{id_course}");
-//
-//			if (id_course == null)
-//				return null;
-//
-//			return  gruppidistudioRepository.findGdsBycourseId(id_course);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//		}
-//		return null;
-//	}
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_corso}")
+	public @ResponseBody
+	List<GruppoDiStudio> getgruppidistudioByIDCourse(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_corso") Long id_corso)
+
+	throws IOException {
+		try {
+			logger.info("/gruppidistudio/{id_corso}");
+
+			if (id_corso == null)
+				return null;
+
+			return  gruppidistudioRepository.findGdsBycourseId(id_corso);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	/*
+	 * Ritorna i gruppi di uno studente
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/me")
+	public @ResponseBody
+	List<GruppoDiStudio> getgruppidistudioByMe(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			logger.info("/gruppidistudio/me");
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+			
+			Studente studente = studenteRepository.findOne(userId);
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
+				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					z++;
+				}
+				
+				// Set corso follwed by studente
+				studente.setCorsi(corsiEsse3);
+				studente = studenteRepository.save(studente);
+
+				// Set corsi superati
+				studente.setIdsCorsiSuperati(supera);
+				studente.setIdsCorsiInteresse(interesse);
+				
+				studente = studenteRepository.save(studente);
+			}
+			
+			
+			if (userId == null)
+				return null;
+
+			List<GruppoDiStudio> listaGruppi = gruppidistudioRepository.findAll();
+			
+			List<GruppoDiStudio> listaGruppiStudente = new ArrayList<GruppoDiStudio>();
+			
+			for(GruppoDiStudio gruppoDiStudio : listaGruppi){
+				if(gruppoDiStudio.isContainsStudente(gruppoDiStudio, userId)){
+					listaGruppiStudente.add(gruppoDiStudio);
+				}
+			}
+			
+			return listaGruppiStudente;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	/*
+	 * Ritorna i gruppi di uno studente per un determinato corso
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_corso}/me")
+	public @ResponseBody
+	List<GruppoDiStudio> getgruppidistudioByIDCourseByMe(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_corso") Long id_corso)
+
+	throws IOException {
+		try {
+			logger.info("/gruppidistudio/{id_corso}/me");
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+			
+			Studente studente = studenteRepository.findOne(userId);
+			if (studente == null) {
+				studente = new Studente();
+				studente.setId(userId);
+				studente.setNome(profile.getName());
+				studente.setCognome(profile.getSurname());
+				studente = studenteRepository.save(studente);
+
+				// studente = studenteRepository.save(studente);
+
+				// TODO caricare corsi da esse3
+				// Creare associazione su frequenze
+
+				// TEST
+				List<Corso> corsiEsse3 = corsoRepository.findAll();
+
+				String supera = null;
+				String interesse = null;
+				int z = 0;
+				supera = new String();
+				interesse = new String();
+
+				for (Corso cors : corsiEsse3) {
+
+					if (z % 2 == 0) {
+						supera = supera.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					if (z % 4 == 0) {
+						interesse = interesse.concat(String.valueOf(cors.getId())
+								.concat(","));
+					}
+					
+					z++;
+				}
+			}
+			
+			if (userId == null)
+				return null;
+
+			if (id_corso == null)
+				return null;
+
+			List<GruppoDiStudio> listaGruppiCorso = gruppidistudioRepository.findGdsBycourseId(id_corso);
+			
+			List<GruppoDiStudio> listaGruppiCorsoStudente = new ArrayList<GruppoDiStudio>();
+			
+			for(GruppoDiStudio gruppoDiStudio : listaGruppiCorso){
+				if(gruppoDiStudio.isContainsStudente(gruppoDiStudio, userId)){
+					listaGruppiCorsoStudente.add(gruppoDiStudio);
+				}
+			}
+			
+			return listaGruppiCorsoStudente;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
 
 	
 //	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/me")
@@ -225,6 +406,8 @@ public class GruppiStudioController {
 //		return null;
 //	}
 
-	
+	private void checkStudentExists(){
+		
+	}
 }
 	

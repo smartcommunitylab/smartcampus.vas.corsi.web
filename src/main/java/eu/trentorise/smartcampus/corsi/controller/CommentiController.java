@@ -371,7 +371,7 @@ public class CommentiController {
 			Long userId = Long.valueOf(profile.getUserId());
 				
 			
-			mediationParserImpl.updateKeyWord(token);
+			//mediationParserImpl.updateKeyWord(token);
 			
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
@@ -1196,8 +1196,9 @@ public class CommentiController {
 			for (Corso cors : esse3) {
 
 				GruppoDiStudio gruppoDiSt = new GruppoDiStudio();
-				gruppoDiSt.setCorso(cors);
+				gruppoDiSt.setCorso(cors.getId());
 				gruppoDiSt.setNome("Mio gruppo" + i1 + " di " + cors.getNome());
+				gruppoDiSt.addStudenteGruppo(gruppoDiSt, i1);
 				
 				gruppoDiStudioRepository.save(gruppoDiSt);
 

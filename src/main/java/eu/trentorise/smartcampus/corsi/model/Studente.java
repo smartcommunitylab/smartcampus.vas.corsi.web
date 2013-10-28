@@ -218,7 +218,28 @@ public class Studente extends BasicEntity {
 		studente.setIdsCorsiInteresse(corsiInteresseAggiornata);
 	}
 
-	
+	public void addGruppoStudente(Studente studente, long idGruppoDaAggiungere) {
+		// TODO Auto-generated method stub
+		studente.setIdsGruppiDiStudio(studente.getIdsGruppiDiStudio()+String.valueOf(idGruppoDaAggiungere)+",");		
+	}
+
+	public void removeGruppoStudente(Studente studente, long id2) {
+		// TODO Auto-generated method stub
+		String studenteGruppoIds = null;
+		studenteGruppoIds = studente.getIdsGruppiDiStudio();
+		
+		String[] listS = studenteGruppoIds.split(",");
+		
+		String studenteGruppoAggiornato = "";
+		
+		for (String s : listS) {
+			if(!s.equals(String.valueOf(id2))){
+				studenteGruppoAggiornato = studenteGruppoAggiornato.concat(s.toString()+",");
+			}
+		}
+		studente.setIdsGruppiDiStudio(studenteGruppoAggiornato);
+	}
+
 	
 
 }
