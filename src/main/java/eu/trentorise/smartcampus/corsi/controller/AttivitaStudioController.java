@@ -33,12 +33,20 @@ import eu.trentorise.smartcampus.corsi.repository.AttivitaStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
+import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("attivitaStudioController")
 public class AttivitaStudioController {
 
+	private enum TypeNotification {
+		AVVISO
+	}
+	
+	private static final String CLIENT_ID = "b8fcb94d-b4cf-438f-802a-c0a560734c88";
+	private static final String CLIENT_SECRET = "186b10c3-1f14-4833-9728-14eaa6c27891";
+	
 	private static final Logger logger = Logger
 			.getLogger(AttivitaStudioController.class);
 	/*
@@ -108,26 +116,26 @@ public class AttivitaStudioController {
 					users.add(id);
 				}
 				
-//				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-//						communicatoraddress, appName);
-//
-//				Notification n = new Notification();
-//				n.setTitle(atDiStudio.getTitolo());
-//				NotificationAuthor nAuthor = new NotificationAuthor();
-//				nAuthor.setAppId(appName);
-//				nAuthor.setUserId(userId.toString());
-//				n.setAuthor(nAuthor);
-//				n.setUser(userId.toString());
-//				n.setTimestamp(System.currentTimeMillis());
-//				n.setDescription("Nuova attività "+atDiStudio.getTitolo()+" creata da "+profile+" nel gruppo "+gruppoRefersAttivita.getNome());
-//				Map<String, Object> mapAttivita = new HashMap<String, Object>();
-//				mapAttivita.put("AttivitaDiStudio", atDiStudio); //passo come contenuto della notifica l'hashmap con l'attivita
-//				n.setContent(mapAttivita);
-//				
-//				
-//				communicatorConnector.sendAppNotification(n, appName, users,
-//						getToken(request));
+				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+						communicatoraddress, appName);
+
+				Notification n = new Notification();
+				n.setTitle(atDiStudio.getTitolo());
+				NotificationAuthor nAuthor = new NotificationAuthor();
+				nAuthor.setAppId(appName);
+				nAuthor.setUserId(userId.toString());
+				n.setAuthor(nAuthor);
+				n.setUser(userId.toString());
+				n.setType(TypeNotification.AVVISO.toString());
+				n.setTimestamp(System.currentTimeMillis());
+				n.setDescription("Nuova attività "+atDiStudio.getTitolo()+" creata da "+profile+" nel gruppo "+gruppoRefersAttivita.getNome());
+				Map<String, Object> mapAttivita = new HashMap<String, Object>();
+				mapAttivita.put("AttivitaDiStudio", atDiStudio); //passo come contenuto della notifica l'hashmap con l'attivita
+				n.setContent(mapAttivita);
 				
+				EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID, CLIENT_SECRET, communicatoraddress);
+				
+				communicatorConnector.sendAppNotification(n, appName, users, tManager.getClientSmartCampusToken());
 				
 				AttivitaDiStudio attivitaSaved = attivitastudioRepository.save(atDiStudio);
 

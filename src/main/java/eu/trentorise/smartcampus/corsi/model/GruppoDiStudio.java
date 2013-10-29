@@ -152,9 +152,9 @@ public class GruppoDiStudio {
 
 	
 	public boolean canRemoveGruppoDiStudioIfVoid() {
-		int numMembers = this.getIdsStudenti().split(",").length;
+		String[] listIds = this.getIdsStudenti().split(",");
 		
-		if(numMembers <= 1)
+		if(listIds[0] == "")
 			return true;
 		else
 			return false;

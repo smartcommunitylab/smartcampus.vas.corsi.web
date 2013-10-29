@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mysql.jdbc.PreparedStatement;
 
 import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
+import eu.trentorise.smartcampus.communicator.model.EntityObject;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.corsi.model.Commento;
@@ -40,12 +41,22 @@ import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
+import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("gruppiStudioController")
 public class GruppiStudioController {
+	
+	private enum TypeNotification {
+		INVITO, AVVISO
+	}
 
+	private static final String CLIENT_ID = "b8fcb94d-b4cf-438f-802a-c0a560734c88";
+	private static final String CLIENT_SECRET = "536560ac-cb74-4e1b-86a1-ef2c06c3313a";
+	private static final String CLIENT = "bd4f112b-7951-4ab2-be8c-e504ac7bff15";
+	
+	
 	private static final Logger logger = Logger
 			.getLogger(GruppiStudioController.class);
 	/*
@@ -78,14 +89,14 @@ public class GruppiStudioController {
 	/*
 	 * Ritorna tutti i corsi in versione lite
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/all")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-
+			logger.info("/gruppodistudio/all");
 			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository.findAll();
 
 			return getgruppidistudio;
@@ -108,7 +119,7 @@ public class GruppiStudioController {
 	/*
 	 * Ritorna i gruppi di un corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_corso}")
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/{id_corso}")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioByIDCourse(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -116,7 +127,7 @@ public class GruppiStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/gruppidistudio/{id_corso}");
+			logger.info("/gruppodistudio/{id_corso}");
 
 			if (id_corso == null)
 				return null;
@@ -134,14 +145,14 @@ public class GruppiStudioController {
 	/*
 	 * Ritorna i gruppi di uno studente
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/me")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioByMe(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/gruppidistudio/me");
+			logger.info("/gruppodistudio/me");
 			
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -224,7 +235,7 @@ public class GruppiStudioController {
 	/*
 	 * Ritorna i gruppi di uno studente per un determinato corso
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppidistudio/{id_corso}/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/{id_corso}/me")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioByIDCourseByMe(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -389,33 +400,37 @@ public class GruppiStudioController {
 			}
 			
 			
-//			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-//					communicatoraddress, appName);
-//
-//			List<String> users = new ArrayList<String>();
-//			List<String> idsInvited = gruppodistudio.getListInvited(gruppodistudio, userId);
-//			
-//			for(String id : idsInvited){
-//				users.add(id);
-//			}
-//
-//			Notification n = new Notification();
-//			n.setTitle(gruppodistudio.getNome());
-//			NotificationAuthor nAuthor = new NotificationAuthor();
-//			nAuthor.setAppId(appName);
-//			nAuthor.setUserId(userId.toString());
-//			n.setAuthor(nAuthor);
-//			n.setUser(userId.toString());
-//			n.setTimestamp(System.currentTimeMillis());
-//			n.setDescription("Invito da "+profile+" al gruppo "+gruppodistudio.getNome());
-//			Map<String, Object> mapGruppo = new HashMap<String, Object>();
+			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+					communicatoraddress, appName);
+
+			List<String> users = new ArrayList<String>();
+			List<String> idsInvited = gruppodistudio.getListInvited(userId);
+			
+			for(String id : idsInvited){
+				users.add(id);
+			}
+
+			Notification n = new Notification();
+			n.setTitle(gruppodistudio.getNome());
+			NotificationAuthor nAuthor = new NotificationAuthor();
+			nAuthor.setAppId(appName);
+			nAuthor.setUserId(userId.toString());
+			n.setAuthor(nAuthor);
+			n.setUser(userId.toString());
+			n.setType(TypeNotification.INVITO.toString());
+			n.setTimestamp(System.currentTimeMillis());
+			n.setDescription("Invito da "+profile.getName()+" "+profile.getSurname()+" al gruppo "+gruppodistudio.getNome());
+			Map<String, Object> mapGruppo = new HashMap<String, Object>();
 			gruppodistudio.initStudenteGruppo(userId); //inizializzo i membri del gruppo
 			gruppodistudio.setVisible(false); // setto a visible = false finchè non ci saranno almeno 2 componenti
-//			mapGruppo.put("GruppoDiStudio", gruppodistudio); //passo come contenuto della notifica l'hashmap con l'attivita
-//			n.setContent(mapGruppo);
-//			
-//			communicatorConnector.sendAppNotification(n, appName, users,
-//					getToken(request));
+			mapGruppo.put("GruppoDiStudio", gruppodistudio); //passo come contenuto della notifica l'hashmap con l'attivita
+			n.setContent(mapGruppo);
+			
+			
+			//ottengo il client token
+			EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID, CLIENT_SECRET, profileaddress);
+			
+			communicatorConnector.sendAppNotification(n, appName, users, tManager.getClientSmartCampusToken());
 			
 			
 			gruppodistudio.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
@@ -536,6 +551,47 @@ public class GruppiStudioController {
 			gdsFromDB.addStudenteGruppo(userId); // aggiungo il membro al gruppo
 			gdsFromDB.setIfVisibleFromNumMembers();
 			
+			
+			// mando una notifica se il gruppo diventa visibile (ci sono almeno 2 membri)
+			if(gdsFromDB.isVisible()){
+				
+				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+						communicatoraddress, appName);
+
+				List<String> users = new ArrayList<String>();
+				List<String> idsInvited = gdsFromDB.getListInvited(userId);
+				
+				for(String id : idsInvited){
+					users.add(id);
+				}
+
+				Notification n = new Notification();
+				n.setTitle(gdsFromDB.getNome());
+				NotificationAuthor nAuthor = new NotificationAuthor();
+				nAuthor.setAppId(appName);
+				nAuthor.setUserId(userId.toString());
+				n.setAuthor(nAuthor);
+				n.setUser(userId.toString());
+				n.setType(TypeNotification.AVVISO.toString());
+				n.setTimestamp(System.currentTimeMillis());
+				n.setDescription("Invito da "+profile.getName()+" "+profile.getSurname()+" al gruppo "+gdsFromDB.getNome());
+				Map<String, Object> mapGruppo = new HashMap<String, Object>();
+				
+				gdsFromDB.initStudenteGruppo(userId); //inizializzo i membri del gruppo
+				gdsFromDB.setVisible(false); // setto a visible = false finchè non ci saranno almeno 2 componenti
+				mapGruppo.put("GruppoDiStudio", gdsFromDB); //passo come contenuto della notifica l'hashmap con l'attivita
+				
+				n.setContent(mapGruppo);
+				
+				//ottengo il client token
+				EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID, CLIENT_SECRET, profileaddress);
+				
+				
+				communicatorConnector.sendAppNotification(n, appName, users, tManager.getClientSmartCampusToken());
+				
+				
+			}
+				
 			
 			GruppoDiStudio gruppodistudioAggiornato = gruppidistudioRepository.save(gdsFromDB);
 			
