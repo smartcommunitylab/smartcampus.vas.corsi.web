@@ -9,5 +9,5 @@ import eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio;
 
 @Repository
 public interface AttivitaStudioRepository extends JpaRepository<AttivitaDiStudio, Long> {
-	//List<AttivitaDiStudio> findAttByIdGds(Long id_gruppidistudio);
+	List<AttivitaDiStudio> findAttByIdGds(Long id_gruppodistudio);
 }

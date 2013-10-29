@@ -12,17 +12,16 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
-@NamedQuery(name = "AttivitaDiStudio.findAttByIdGds(id_gruppidistudio)", query = "select a from AttivitaDiStudio a where a.gruppo = ?1")
+@NamedQuery(name = "AttivitaDiStudio.findAttByIdGds", query = "select a from AttivitaDiStudio a where a.gruppo = ?1")
 public class AttivitaDiStudio extends Evento {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	// gds di riferimento
-	@ManyToOne
+	// gds di riferimentoì
 	@JoinColumn(name = "GRUPPODISTUDIO_ID")
-	private GruppoDiStudio gruppo;
+	private long gruppo;
 
 //	@OneToMany
 //	@JoinColumn(name = "ALLEGATO_ID")
@@ -49,12 +48,12 @@ public class AttivitaDiStudio extends Evento {
 	}
 
 
-	public GruppoDiStudio getGruppo() {
+	public long getGruppo() {
 		return gruppo;
 	}
 
 
-	public void setGruppo(GruppoDiStudio gruppo) {
+	public void setGruppo(long gruppo) {
 		this.gruppo = gruppo;
 	}
 

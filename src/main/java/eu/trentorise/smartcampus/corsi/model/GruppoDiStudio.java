@@ -1,19 +1,10 @@
 package eu.trentorise.smartcampus.corsi.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.*;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Transient;
 
 @Entity
 @NamedQuery(name = "GruppoDiStudio.findGdsBycourseId", query = "select gds from GruppoDiStudio gds where gds.corso = ?1")
@@ -146,6 +137,28 @@ public class GruppoDiStudio {
 		}
 		
 		return false;
+	}
+	
+	public List<Long> getListInvited(GruppoDiStudio gds, long idStudente){
+		return convertIdsInvitedToList(gds.getIdsStudenti(),idStudente);
+	}
+	
+	
+	public List<Long> convertIdsInvitedToList(String ids, long idStudente){
+		String[] listIds = null;
+		List<Long> listIdsInvited = new ArrayList<Long>();
+		
+		listIds = ids.split(",");
+		
+		for (String id : listIds) {
+			
+			if(!id.equals(String.valueOf(idStudente))){
+				listIdsInvited.add(Long.parseLong(id));
+			}
+			
+		}
+		
+		return listIdsInvited;
 	}
 
 }

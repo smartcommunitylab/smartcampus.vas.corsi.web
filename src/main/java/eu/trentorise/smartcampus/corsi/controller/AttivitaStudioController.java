@@ -58,79 +58,90 @@ public class AttivitaStudioController {
 
 
 
-//	@RequestMapping(method = RequestMethod.GET, value = "/attivitastudio/{id_gruppidistudio}")
-//	public @ResponseBody
-//	List<AttivitaDiStudio> getgruppidistudioByID(HttpServletRequest request,
-//			HttpServletResponse response, HttpSession session,
-//			@PathVariable("id_gruppidistudio") Long id_gruppidistudio)
-//
-//	throws IOException {
-//		try {
-//			logger.info("/attivitastudio/{id_gruppidistudio}");
-//
-//			if (id_gruppidistudio == null)
-//				return null;
-//
-//			return  attivitastudioRepository.findAttByIdGds(id_gruppidistudio);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//		}
-//		return null;
-//	}
-//
-//
-//	private String getToken(HttpServletRequest request) {
-//		return (String) SecurityContextHolder.getContext().getAuthentication()
-//				.getPrincipal();
-//	}
-//	
-//	
-//	@RequestMapping(method = RequestMethod.POST, value = "/addgruppodistudio")
-//	public @ResponseBody
-//	AttivitaDiStudio saveAttivitaStudio(HttpServletRequest request, HttpServletResponse response,
-//			HttpSession session, @RequestBody AttivitaDiStudio atDiStudio)
-//
-//	throws IOException {
-//		try {
-//
-//			// User Request create event
-//			// creati a notification and send to Communicator
-//
-//			// TODO controlli se campi validi
-//			if (atDiStudio != null && atDiStudio.getTitolo() != "") {
-//
-//				String token = getToken(request);
-//				BasicProfileService service = new BasicProfileService(
-//						profileaddress);
-//				BasicProfile profile = service.getBasicProfile(token);
-//				Long userId = Long.valueOf(profile.getUserId());
-//
-//				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-//						communicatoraddress, appName);
-//
-//				List<String> users = new ArrayList<String>();
-//				users.add(userId.toString());
-//
-//				Notification n = new Notification();
-//				n.setTitle(atDiStudio.getTitolo());
-//				n.setUser(userId.toString());
-//				n.setTimestamp(System.currentTimeMillis());
-//				n.setDescription("Creazione Evento");
-//
-//				communicatorConnector.sendAppNotification(n, appName, users,
-//						token);
-//
-//				return attivitastudioRepository.save(atDiStudio);
-//			} else
-//				return null;
-//
-//		} catch (Exception e) {
-//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//		}
-//		return null;
-//	}
+	@RequestMapping(method = RequestMethod.POST, value = "/addgruppodistudio")
+	public @ResponseBody
+	AttivitaDiStudio saveAttivitaStudio(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session, @RequestBody AttivitaDiStudio atDiStudio)
 
+	throws IOException {
+		try {
+
+			// User Request create event
+			// crea a notification and send to Communicator
+
+			// controllo se i campi sono validi	
+			if (atDiStudio != null && atDiStudio.getTitolo() != "") {
+				String token = getToken(request);
+				BasicProfileService service = new BasicProfileService(
+						profileaddress);
+				BasicProfile profile = service.getBasicProfile(token);
+				Long userId = Long.valueOf(profile.getUserId());
+
+				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+						communicatoraddress, appName);
+
+				List<String> users = new ArrayList<String>();
+				users.add(userId.toString());
+
+				Notification n = new Notification();
+				n.setTitle(atDiStudio.getTitolo());
+				n.setUser(userId.toString());
+				n.setTimestamp(System.currentTimeMillis());
+				n.setDescription("Creazione Evento");
+
+				communicatorConnector.sendAppNotification(n, appName, users,
+						token);
+
+				return attivitastudioRepository.save(atDiStudio);
+			} else
+				return null;
+
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/attivitastudio/{id_gruppodistudio}")
+	public @ResponseBody
+	List<AttivitaDiStudio> getgruppidistudioByID(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_gruppodistudio") Long id_gruppodistudio)
+
+	throws IOException {
+		try {
+			logger.info("/attivitastudio/{id_gruppidistudio}");
+
+			if (id_gruppodistudio == null)
+				return null;
+
+			return  attivitastudioRepository.findAttByIdGds(id_gruppodistudio);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+
+
+	/**
+	 * 
+	 * @param request
+	 * @return String
+	 * 
+	 * Ottiene il token
+	 * 
+	 */
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+	}
+	
+	
 	
 }
 	
