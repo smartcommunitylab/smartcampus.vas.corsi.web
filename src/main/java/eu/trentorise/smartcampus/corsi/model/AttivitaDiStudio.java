@@ -22,15 +22,7 @@ public class AttivitaDiStudio extends Evento {
 	// gds di riferimentoì
 	@JoinColumn(name = "GRUPPODISTUDIO_ID")
 	private long gruppo;
-
-//	@OneToMany
-//	@JoinColumn(name = "ALLEGATO_ID")
-//	private Collection<Allegato> allegato;
-
-//	@OneToMany
-//	@JoinColumn(name = "SERVIZIO_ID")
-//	private Collection<Servizio> servizio;
-
+	
 	// topic
 	@Column(name = "Topic")
 	private String topic;

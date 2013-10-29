@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.mysql.jdbc.Blob;
+
 @Entity
 @NamedQuery(name = "GruppoDiStudio.findGdsBycourseId", query = "select gds from GruppoDiStudio gds where gds.corso = ?1")
 public class GruppoDiStudio {
@@ -28,13 +30,11 @@ public class GruppoDiStudio {
 	@Transient
 	private List<Studente> studentiGruppo;
 
-//	@ManyToMany(cascade=CascadeType.ALL)
-//	@JoinTable(name = "GruppiStudioAttivita", joinColumns = @JoinColumn(name = "GRUPPODISTUDIO_ID"), inverseJoinColumns = @JoinColumn(name = "ATTIVITADISTUDIO_ID"))
-//	private Collection<AttivitaDiStudio> attivitaStudio;
-
-//	@ManyToMany(cascade=CascadeType.ALL)
-//	@JoinTable(name = "GruppiStudioStudenti", joinColumns = @JoinColumn(name = "GRUPPODISTUDIO_ID"), inverseJoinColumns = @JoinColumn(name = "STUDENTE_ID"))
-//	private Collection<Studente> studentiGruppo;
+//	@Column(name = "LOGO")
+//	private Blob logo;
+	
+	@Column(name = "VISIBLE")
+	private boolean visible;
 	
 	public GruppoDiStudio() {
 		this.idsStudenti = "";
@@ -82,32 +82,61 @@ public class GruppoDiStudio {
 		return studentiGruppo;
 	}
 
+	
+//	public Blob getLogo() {
+//		return logo;
+//	}
+//
+//
+//	public void setLogo(Blob logo) {
+//		this.logo = logo;
+//	}
+
 
 	public void setStudentiGruppo(List<Studente> studentiGruppo) {
 		this.studentiGruppo = studentiGruppo;
 	}
 
 
-	public void addStudenteGruppo(GruppoDiStudio gds, long idStudenteDaAggiungere) {
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	
+	public void setIfVisibleFromNumMembers(){
+		int numMembers = this.getIdsStudenti().split(",").length;
+		
+		if(numMembers >= 2)
+			this.setVisible(true);
+		else
+			this.setVisible(false);
+		
+	}
+
+
+	public void addStudenteGruppo(long idStudenteDaAggiungere) {
 		// TODO Auto-generated method stub
-		gds.setIdsStudenti(gds.getIdsStudenti()+String.valueOf(idStudenteDaAggiungere)+",");		
+		this.setIdsStudenti(this.getIdsStudenti()+String.valueOf(idStudenteDaAggiungere)+",");		
 	}
 
 	// chiamata soltanto alla creazione di un nuovo gruppo
-	public void initStudenteGruppo(GruppoDiStudio gds, long idStudenteDaAggiungere) {
+	public void initStudenteGruppo(long idStudenteDaAggiungere) {
 		// TODO Auto-generated method stub
-		gds.setIdsStudenti(String.valueOf(idStudenteDaAggiungere)+",");		
+		this.setIdsStudenti(String.valueOf(idStudenteDaAggiungere)+",");		
 	}
 
 	
-	public void removeStudenteGruppo(GruppoDiStudio gds, long id2) {
+	public void removeStudenteGruppo(long id2) {
 		// TODO Auto-generated method stub
 		String studentiGruppoIds = null;
 		
-		if(gds.getIdsStudenti() == null)
+		if(this.getIdsStudenti() == null)
 			return;
 		
-		studentiGruppoIds = gds.getIdsStudenti();
+		studentiGruppoIds = this.getIdsStudenti();
 		
 		String[] listS = studentiGruppoIds.split(",");
 		
@@ -118,14 +147,23 @@ public class GruppoDiStudio {
 				studentiGruppoAggiornato = studentiGruppoAggiornato.concat(s.toString()+",");
 			}
 		}
-		gds.setIdsStudenti(studentiGruppoAggiornato);
+		this.setIdsStudenti(studentiGruppoAggiornato);
 	}
 
 	
-	public boolean isContainsStudente(GruppoDiStudio gds, long idStudente) {
+	public boolean canRemoveGruppoDiStudioIfVoid() {
+		int numMembers = this.getIdsStudenti().split(",").length;
+		
+		if(numMembers <= 1)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean isContainsStudente(long idStudente) {
 		// TODO Auto-generated method stub
 		String studentiGruppoIds = null;
-		studentiGruppoIds = gds.getIdsStudenti();
+		studentiGruppoIds = this.getIdsStudenti();
 		
 		String[] listS = studentiGruppoIds.split(",");
 		
@@ -139,21 +177,21 @@ public class GruppoDiStudio {
 		return false;
 	}
 	
-	public List<Long> getListInvited(GruppoDiStudio gds, long idStudente){
-		return convertIdsInvitedToList(gds.getIdsStudenti(),idStudente);
+	public List<String> getListInvited(long idStudente){
+		return convertIdsInvitedToList(this.getIdsStudenti(),idStudente);
 	}
 	
 	
-	public List<Long> convertIdsInvitedToList(String ids, long idStudente){
+	public List<String> convertIdsInvitedToList(String ids, long idStudente){
 		String[] listIds = null;
-		List<Long> listIdsInvited = new ArrayList<Long>();
+		List<String> listIdsInvited = new ArrayList<String>();
 		
 		listIds = ids.split(",");
 		
 		for (String id : listIds) {
 			
 			if(!id.equals(String.valueOf(idStudente))){
-				listIdsInvited.add(Long.parseLong(id));
+				listIdsInvited.add(id);
 			}
 			
 		}
