@@ -564,14 +564,14 @@ public class GruppiStudioController {
 	/*
 	 * Cancella lo studente dal gruppo
 	 */
-	@RequestMapping(method = RequestMethod.DELETE, value = "/gruppidistudio/delete/me")
+	@RequestMapping(method = RequestMethod.DELETE, value = "/gruppodistudio/delete/me")
 	public @ResponseBody
 	boolean deleteMeByGds(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
 
 	throws IOException {
 		try {
-			logger.info("/gruppidistudio/me");
+			logger.info("/gruppodistudio/me");
 			
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
