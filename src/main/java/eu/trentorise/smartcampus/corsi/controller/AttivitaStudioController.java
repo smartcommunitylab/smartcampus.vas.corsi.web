@@ -31,6 +31,7 @@ import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
+import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
@@ -43,10 +44,10 @@ public class AttivitaStudioController {
 	private enum TypeNotification {
 		AVVISO
 	}
-	
+
 	private static final String CLIENT_ID = "b8fcb94d-b4cf-438f-802a-c0a560734c88";
 	private static final String CLIENT_SECRET = "186b10c3-1f14-4833-9728-14eaa6c27891";
-	
+
 	private static final Logger logger = Logger
 			.getLogger(AttivitaStudioController.class);
 	/*
@@ -66,7 +67,7 @@ public class AttivitaStudioController {
 	@Autowired
 	@Value("${communicator.address}")
 	private String communicatoraddress;
-	
+
 	@Autowired
 	private AttivitaStudioRepository attivitastudioRepository;
 
@@ -74,75 +75,104 @@ public class AttivitaStudioController {
 	private GruppoDiStudioRepository gruppstudioRepository;
 	
 	@Autowired
+	private EventoRepository eventoRepository;
+
+
+	@Autowired
 	private CorsoRepository corsoRepository;
-	
+
 	@Autowired
 	private StudenteRepository studenteRepository;
 
-
-
 	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/add")
 	public @ResponseBody
-	boolean saveAttivitaStudio(HttpServletRequest request, HttpServletResponse response,
-			HttpSession session, @RequestBody AttivitaDiStudio atDiStudio)
+	boolean saveAttivitaStudio(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@RequestBody AttivitaDiStudio atDiStudio)
 
 	throws IOException {
 		try {
 
 			logger.info("/attivitadistudio/add");
 
-			// controllo se i campi sono validi	
+			// controllo se i campi sono validi
 			if (atDiStudio != null && atDiStudio.getTitolo() != "") {
 				String token = getToken(request);
 				BasicProfileService service = new BasicProfileService(
 						profileaddress);
 				BasicProfile profile = service.getBasicProfile(token);
 				Long userId = Long.valueOf(profile.getUserId());
-				
-				
-				// ottengo i membri che fanno parte del gruppo di studio relativo all'attività di studio
-				GruppoDiStudio gruppoRefersAttivita = gruppstudioRepository.findOne(atDiStudio.getGruppo());
-			
-				
-				// controllo se lo studente che manda la richiesta fa parte del gruppo associato all'attività e se il gruppo esiste
-				if(gruppoRefersAttivita == null || gruppoRefersAttivita.isContainsStudente(userId))
+
+				// ottengo i membri che fanno parte del gruppo di studio
+				// relativo all'attività di studio
+				GruppoDiStudio gruppoRefersAttivita = gruppstudioRepository
+						.findOne(atDiStudio.getGruppo());
+
+				// controllo se lo studente che manda la richiesta fa parte del
+				// gruppo associato all'attività e se il gruppo esiste
+				if (gruppoRefersAttivita == null
+						|| !gruppoRefersAttivita.isContainsStudente(userId))
 					return false;
-				
 
 				List<String> users = new ArrayList<String>();
-				List<String> idsInvited = gruppoRefersAttivita.getListInvited(userId);
-				
-				for(String id : idsInvited){
+				List<String> idsInvited = gruppoRefersAttivita
+						.getListInvited(userId);
+
+				// aggiungo gli user a cui deve essere inviata l'avviso (tranne
+				// chi ha effettuato la richiesta)
+				for (String id : idsInvited) {
 					users.add(id);
 				}
-				
-				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-						communicatoraddress, appName);
 
-				Notification n = new Notification();
-				n.setTitle(atDiStudio.getTitolo());
-				NotificationAuthor nAuthor = new NotificationAuthor();
-				nAuthor.setAppId(appName);
-				nAuthor.setUserId(userId.toString());
-				n.setAuthor(nAuthor);
-				n.setUser(userId.toString());
-				n.setType(TypeNotification.AVVISO.toString());
-				n.setTimestamp(System.currentTimeMillis());
-				n.setDescription("Nuova attività "+atDiStudio.getTitolo()+" creata da "+profile+" nel gruppo "+gruppoRefersAttivita.getNome());
-				Map<String, Object> mapAttivita = new HashMap<String, Object>();
-				mapAttivita.put("AttivitaDiStudio", atDiStudio); //passo come contenuto della notifica l'hashmap con l'attivita
-				n.setContent(mapAttivita);
-				
-				EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID, CLIENT_SECRET, communicatoraddress);
-				
-				communicatorConnector.sendAppNotification(n, appName, users, tManager.getClientSmartCampusToken());
-				
-				AttivitaDiStudio attivitaSaved = attivitastudioRepository.save(atDiStudio);
+				// se ci sono notifiche da mandare
+				if (users.size() > 0) {
 
-				if(attivitaSaved == null)
+					CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+							communicatoraddress, appName);
+
+					Notification n = new Notification();
+					n.setTitle(atDiStudio.getTitolo());
+					NotificationAuthor nAuthor = new NotificationAuthor();
+					nAuthor.setAppId(appName);
+					nAuthor.setUserId(userId.toString());
+					n.setAuthor(nAuthor);
+					n.setUser(userId.toString());
+					n.setType(TypeNotification.AVVISO.toString());
+					n.setTimestamp(System.currentTimeMillis());
+					n.setDescription("Nuova attività " + atDiStudio.getTitolo()
+							+ " creata da " + profile.getName() + " "
+							+ profile.getSurname() + " nel gruppo "
+							+ gruppoRefersAttivita.getNome());
+					Map<String, Object> mapAttivita = new HashMap<String, Object>();
+					mapAttivita.put("AttivitaDiStudio", atDiStudio); // passo
+																		// come
+																		// contenuto
+																		// della
+																		// notifica
+																		// l'hashmap
+																		// con
+																		// l'attivita
+					n.setContent(mapAttivita);
+
+					// ottengo il client token
+					EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
+							CLIENT_SECRET, profileaddress);
+
+					communicatorConnector.sendAppNotification(n, appName,
+							users, tManager.getClientSmartCampusToken());
+
+				}
+				
+				
+				AttivitaDiStudio attivitaSaved = attivitastudioRepository
+						.save(atDiStudio);
+				
+
+
+				if (attivitaSaved == null)
 					return false;
 				else
-					return true; 
+					return true;
 			} else
 				return false;
 
@@ -152,48 +182,46 @@ public class AttivitaStudioController {
 		return false;
 	}
 
-	
-	
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadistudio/{id_gruppodistudio}")
 	public @ResponseBody
 	List<AttivitaDiStudio> getAttivitadistudioByID(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_attivitadistudio") Long id_attivitadistudio)
+			@PathVariable("id_gruppodistudio") Long id_gruppodistudio)
 
 	throws IOException {
 		try {
 			logger.info("/attivitastudio/{id_gruppidistudio}");
 
-			if (id_attivitadistudio == null)
+			if (id_gruppodistudio == null)
 				return null;
 
-			return  attivitastudioRepository.findAttByIdGds(id_attivitadistudio);
-			
+			return attivitastudioRepository.findAttByIdGds(id_gruppodistudio);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
 	}
-	
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/change")
 	public @ResponseBody
-	boolean changeAttivitaDiStudio(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
+	boolean changeAttivitaDiStudio(
+			HttpServletRequest request,
+			HttpServletResponse response,
+			HttpSession session,
 			@PathVariable("id_attivitadistudio") AttivitaDiStudio attivitadistudio)
 
 	throws IOException {
 		try {
 			logger.info("/attivitadistudio/change");
-			
-			
+
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-			
+
 			Studente studente = studenteRepository.findOne(userId);
 			if (studente == null) {
 				studente = new Studente();
@@ -222,15 +250,15 @@ public class AttivitaStudioController {
 						supera = supera.concat(String.valueOf(cors.getId())
 								.concat(","));
 					}
-					
+
 					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
+						interesse = interesse.concat(String.valueOf(
+								cors.getId()).concat(","));
 					}
-					
+
 					z++;
 				}
-				
+
 				// Set corso follwed by studente
 				studente.setCorsi(corsiEsse3);
 				studente = studenteRepository.save(studente);
@@ -238,73 +266,84 @@ public class AttivitaStudioController {
 				// Set corsi superati
 				studente.setIdsCorsiSuperati(supera);
 				studente.setIdsCorsiInteresse(interesse);
-				
+
 				studente = studenteRepository.save(studente);
 			}
-			
 
-			// ottengo i membri che fanno parte del gruppo di studio relativo all'attività di studio
-			GruppoDiStudio gruppoRefersAttivita = gruppstudioRepository.findOne(attivitadistudio.getGruppo());
-		
-			
-			// controllo se lo studente che manda la richiesta fa parte del gruppo associato all'attività e se il gruppo esiste
-			if(gruppoRefersAttivita == null || gruppoRefersAttivita.isContainsStudente(userId))
-				return false;			
-			
-			
+			// ottengo i membri che fanno parte del gruppo di studio relativo
+			// all'attività di studio
+			GruppoDiStudio gruppoRefersAttivita = gruppstudioRepository
+					.findOne(attivitadistudio.getGruppo());
+
+			// controllo se lo studente che manda la richiesta fa parte del
+			// gruppo associato all'attività e se il gruppo esiste
+			if (gruppoRefersAttivita == null
+					|| gruppoRefersAttivita.isContainsStudente(userId))
+				return false;
+
 			List<String> users = new ArrayList<String>();
-			List<String> idsInvited = gruppoRefersAttivita.getListInvited(userId);
-			
-			for(String id : idsInvited){
+			List<String> idsInvited = gruppoRefersAttivita
+					.getListInvited(userId);
+
+			// controllo se lo studente che manda la richiesta fa parte del
+			// gruppo associato all'attività e se il gruppo esiste
+			for (String id : idsInvited) {
 				users.add(id);
 			}
-			
-//			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-//					communicatoraddress, appName);
-//
-//			Notification n = new Notification();
-//			n.setTitle(attivitadistudio.getTitolo());
-//			NotificationAuthor nAuthor = new NotificationAuthor();
-//			nAuthor.setAppId(appName);
-//			nAuthor.setUserId(userId.toString());
-//			n.setAuthor(nAuthor);
-//			n.setUser(userId.toString());
-//			n.setTimestamp(System.currentTimeMillis());
-//			n.setDescription("Nuova attività "+attivitadistudio.getTitolo()+" creata da "+profile+" nel gruppo "+gruppoRefersAttivita.getNome());
-//			Map<String, Object> mapAttivita = new HashMap<String, Object>();
-//			mapAttivita.put("AttivitaDiStudio", attivitadistudio); //passo come contenuto della notifica l'hashmap con l'attivita
-//			n.setContent(mapAttivita);
-//			
-//			
-//			communicatorConnector.sendAppNotification(n, appName, users,
-//					getToken(request));
-			
-			
-			
-			AttivitaDiStudio attivitadistudioAggiornato = attivitastudioRepository.save(attivitadistudio);
-			
+
+			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+					communicatoraddress, appName);
+
+			Notification n = new Notification();
+			n.setTitle(attivitadistudio.getTitolo());
+			NotificationAuthor nAuthor = new NotificationAuthor();
+			nAuthor.setAppId(appName);
+			nAuthor.setUserId(userId.toString());
+			n.setAuthor(nAuthor);
+			n.setUser(userId.toString());
+			n.setTimestamp(System.currentTimeMillis());
+			n.setDescription("L'attività " + attivitadistudio.getTitolo()
+					+ " è stata modificata da " + profile.getName() + " "
+					+ profile.getSurname());
+			Map<String, Object> mapAttivita = new HashMap<String, Object>();
+			mapAttivita.put("AttivitaDiStudio", attivitadistudio); // passo come
+																	// contenuto
+																	// della
+																	// notifica
+																	// l'hashmap
+																	// con
+																	// l'attivita
+			n.setContent(mapAttivita);
+
+			// ottengo il client token
+			EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
+					CLIENT_SECRET, profileaddress);
+
+			communicatorConnector.sendAppNotification(n, appName, users,
+					tManager.getClientSmartCampusToken());
+
+			AttivitaDiStudio attivitadistudioAggiornato = attivitastudioRepository
+					.save(attivitadistudio);
+
 			if (attivitadistudioAggiornato == null) {
 				return false;
 			} else {
-				// controllo che il l'attivita aggiornata abbia lo stesso id di prima
-				if(attivitadistudioAggiornato.getId() == attivitadistudio.getId())
+				// controllo che il l'attivita aggiornata abbia lo stesso id di
+				// prima
+				if (attivitadistudioAggiornato.getId() == attivitadistudio
+						.getId())
 					return true;
 				else
 					return false;
 			}
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;
 	}
-	
 
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -314,24 +353,25 @@ public class AttivitaStudioController {
 	 * @return true se l'operazione è andata a buon fine
 	 * @throws IOExceptionù
 	 * 
-	 * Elimina un'attività di studio
+	 *             Elimina un'attività di studio
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.DELETE, value = "/attivitadistudio/delete")
 	public @ResponseBody
 	boolean deleteAttivita(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @RequestBody AttivitaDiStudio attivitadistudio)
+			HttpServletResponse response, HttpSession session,
+			@RequestBody AttivitaDiStudio attivitadistudio)
 
 	throws IOException {
 		try {
 			logger.info("/attivitadistudio/delete");
-			
+
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-			
+
 			Studente studente = studenteRepository.findOne(userId);
 			if (studente == null) {
 				studente = new Studente();
@@ -360,15 +400,15 @@ public class AttivitaStudioController {
 						supera = supera.concat(String.valueOf(cors.getId())
 								.concat(","));
 					}
-					
+
 					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
+						interesse = interesse.concat(String.valueOf(
+								cors.getId()).concat(","));
 					}
-					
+
 					z++;
 				}
-				
+
 				// Set corso follwed by studente
 				studente.setCorsi(corsiEsse3);
 				studente = studenteRepository.save(studente);
@@ -376,54 +416,90 @@ public class AttivitaStudioController {
 				// Set corsi superati
 				studente.setIdsCorsiSuperati(supera);
 				studente.setIdsCorsiInteresse(interesse);
-				
+
 				studente = studenteRepository.save(studente);
 			}
-			
-			
+
 			if (userId == null)
 				return false;
-			
-			
-			// ottengo i membri che fanno parte del gruppo di studio relativo all'attività di studio
-			GruppoDiStudio gruppoRefersAttivita = gruppstudioRepository.findOne(attivitadistudio.getGruppo());
-		
-			
-			// controllo se lo studente che manda la richiesta fa parte del gruppo associato all'attività e se il gruppo esiste
-			if(gruppoRefersAttivita == null || gruppoRefersAttivita.isContainsStudente(userId))
+
+			// ottengo i membri che fanno parte del gruppo di studio relativo
+			// all'attività di studio
+			GruppoDiStudio gruppoRefersAttivita = gruppstudioRepository
+					.findOne(attivitadistudio.getGruppo());
+
+			// controllo se lo studente che manda la richiesta fa parte del
+			// gruppo associato all'attività e se il gruppo esiste
+			if (gruppoRefersAttivita == null
+					|| gruppoRefersAttivita.isContainsStudente(userId))
 				return false;
-			
-			
-			AttivitaDiStudio AttivitaFromDB = attivitastudioRepository.findOne(attivitadistudio.getId());
+
+			List<String> users = new ArrayList<String>();
+			List<String> idsInvited = gruppoRefersAttivita
+					.getListInvited(userId);
+
+			// controllo se lo studente che manda la richiesta fa parte del
+			// gruppo associato all'attività e se il gruppo esiste
+			for (String id : idsInvited) {
+				users.add(id);
+			}
+
+			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+					communicatoraddress, appName);
+
+			Notification n = new Notification();
+			n.setTitle(attivitadistudio.getTitolo());
+			NotificationAuthor nAuthor = new NotificationAuthor();
+			nAuthor.setAppId(appName);
+			nAuthor.setUserId(userId.toString());
+			n.setAuthor(nAuthor);
+			n.setUser(userId.toString());
+			n.setTimestamp(System.currentTimeMillis());
+			n.setDescription("L'attività " + attivitadistudio.getTitolo()
+					+ " è stata eliminata da " + profile.getName() + " "
+					+ profile.getSurname());
+			Map<String, Object> mapAttivita = new HashMap<String, Object>();
+			mapAttivita.put("AttivitaDiStudio", attivitadistudio); // passo come
+																	// contenuto
+																	// della
+																	// notifica
+																	// l'hashmap
+																	// con
+																	// l'attivita
+			n.setContent(mapAttivita);
+
+			// ottengo il client token
+			EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
+					CLIENT_SECRET, profileaddress);
+
+			communicatorConnector.sendAppNotification(n, appName, users,
+					tManager.getClientSmartCampusToken());
+
+			AttivitaDiStudio AttivitaFromDB = attivitastudioRepository
+					.findOne(attivitadistudio.getId());
 
 			attivitastudioRepository.delete(AttivitaFromDB);
-			
+
 			return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;
 	}
-	
-	
-	
 
 	/**
 	 * 
 	 * @param request
 	 * @return String
 	 * 
-	 * Ottiene il token
+	 *         Ottiene il token
 	 * 
 	 */
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 	}
-	
-	
-	
+
 }
-	

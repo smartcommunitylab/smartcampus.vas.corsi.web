@@ -564,6 +564,10 @@ public class GruppiStudioController {
 				for(String id : idsInvited){
 					users.add(id);
 				}
+				
+				// se ci sono notifiche da mandare
+				if(users.size() > 0){
+				
 
 				Notification n = new Notification();
 				n.setTitle(gdsFromDB.getNome());
@@ -574,7 +578,7 @@ public class GruppiStudioController {
 				n.setUser(userId.toString());
 				n.setType(TypeNotification.AVVISO.toString());
 				n.setTimestamp(System.currentTimeMillis());
-				n.setDescription("Invito da "+profile.getName()+" "+profile.getSurname()+" al gruppo "+gdsFromDB.getNome());
+				n.setDescription("Il gruppo "+gdsFromDB.getNome()+" a cui sei iscritto ora è visibile");
 				Map<String, Object> mapGruppo = new HashMap<String, Object>();
 				
 				gdsFromDB.initStudenteGruppo(userId); //inizializzo i membri del gruppo
@@ -589,7 +593,7 @@ public class GruppiStudioController {
 				
 				communicatorConnector.sendAppNotification(n, appName, users, tManager.getClientSmartCampusToken());
 				
-				
+				}
 			}
 				
 			
@@ -627,7 +631,7 @@ public class GruppiStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/me");
+			logger.info("/gruppodistudio/delete/me");
 			
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
