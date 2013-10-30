@@ -320,7 +320,7 @@ public class AttivitaStudioController {
 				communicatorConnector.sendAppNotification(n, appName, users,
 						tManager.getClientSmartCampusToken());
 			}
-			
+
 			AttivitaDiStudio attivitadistudioAggiornato = attivitastudioRepository
 					.save(attivitadistudio);
 
@@ -430,7 +430,7 @@ public class AttivitaStudioController {
 			// controllo se lo studente che manda la richiesta fa parte del
 			// gruppo associato all'attività e se il gruppo esiste
 			if (gruppoRefersAttivita == null
-					|| gruppoRefersAttivita.isContainsStudente(userId))
+					|| !gruppoRefersAttivita.isContainsStudente(userId))
 				return false;
 
 			List<String> users = new ArrayList<String>();
@@ -443,36 +443,41 @@ public class AttivitaStudioController {
 				users.add(id);
 			}
 
-			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-					communicatoraddress, appName);
+			// se ci sono notifiche da mandare
+			if (users.size() > 0) {
 
-			Notification n = new Notification();
-			n.setTitle(attivitadistudio.getTitolo());
-			NotificationAuthor nAuthor = new NotificationAuthor();
-			nAuthor.setAppId(appName);
-			nAuthor.setUserId(userId.toString());
-			n.setAuthor(nAuthor);
-			n.setUser(userId.toString());
-			n.setTimestamp(System.currentTimeMillis());
-			n.setDescription("L'attività " + attivitadistudio.getTitolo()
-					+ " è stata eliminata da " + profile.getName() + " "
-					+ profile.getSurname());
-			Map<String, Object> mapAttivita = new HashMap<String, Object>();
-			mapAttivita.put("AttivitaDiStudio", attivitadistudio); // passo come
-																	// contenuto
-																	// della
-																	// notifica
-																	// l'hashmap
-																	// con
-																	// l'attivita
-			n.setContent(mapAttivita);
+				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+						communicatoraddress, appName);
 
-			// ottengo il client token
-			EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
-					CLIENT_SECRET, profileaddress);
+				Notification n = new Notification();
+				n.setTitle(attivitadistudio.getTitolo());
+				NotificationAuthor nAuthor = new NotificationAuthor();
+				nAuthor.setAppId(appName);
+				nAuthor.setUserId(userId.toString());
+				n.setAuthor(nAuthor);
+				n.setUser(userId.toString());
+				n.setTimestamp(System.currentTimeMillis());
+				n.setDescription("L'attività " + attivitadistudio.getTitolo()
+						+ " è stata eliminata da " + profile.getName() + " "
+						+ profile.getSurname());
+				Map<String, Object> mapAttivita = new HashMap<String, Object>();
+				mapAttivita.put("AttivitaDiStudio", attivitadistudio); // passo
+																		// come
+																		// contenuto
+																		// della
+																		// notifica
+																		// l'hashmap
+																		// con
+																		// l'attivita
+				n.setContent(mapAttivita);
 
-			communicatorConnector.sendAppNotification(n, appName, users,
-					tManager.getClientSmartCampusToken());
+				// ottengo il client token
+				EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
+						CLIENT_SECRET, profileaddress);
+
+				communicatorConnector.sendAppNotification(n, appName, users,
+						tManager.getClientSmartCampusToken());
+			}
 
 			AttivitaDiStudio AttivitaFromDB = attivitastudioRepository
 					.findOne(attivitadistudio.getId());
