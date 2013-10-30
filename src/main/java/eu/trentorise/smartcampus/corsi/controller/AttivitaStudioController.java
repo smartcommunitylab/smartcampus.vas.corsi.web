@@ -481,6 +481,9 @@ public class AttivitaStudioController {
 
 			AttivitaDiStudio AttivitaFromDB = attivitastudioRepository
 					.findOne(attivitadistudio.getId());
+			
+			if(AttivitaFromDB==null)
+				return false;
 
 			attivitastudioRepository.delete(AttivitaFromDB);
 

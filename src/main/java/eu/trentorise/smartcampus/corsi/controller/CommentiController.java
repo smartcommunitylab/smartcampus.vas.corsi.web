@@ -367,8 +367,8 @@ public class CommentiController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 				
-			
-			mediationParserImpl.updateKeyWord(token);
+			//sincronizzo le keyword tra il portale e studymate
+			//mediationParserImpl.updateKeyWord(token);
 			
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
@@ -441,12 +441,12 @@ public class CommentiController {
 			
 			//check text		
 			
-			commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
+			commento.setApproved(mediationParserImpl.validateComment(commento.getTesto(),commento.getId(),userId,token));
 			
 			// se il commento viene approvato dal primo filtro allora lo passo al portale
-			if(commento.isApproved()){
-				commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
-			}
+//			if(commento.isApproved()){
+//				commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
+//			}
 			
 			logger.info("APPROVED="+ commento.isApproved());
 			
