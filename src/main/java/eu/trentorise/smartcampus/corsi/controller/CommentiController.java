@@ -441,7 +441,7 @@ public class CommentiController {
 			
 			//check text		
 			
-			commento.setApproved(mediationParserImpl.validateComment(commento.getTesto(),commento.getId(),userId,token));
+			commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
 			
 			// se il commento viene approvato dal primo filtro allora lo passo al portale
 //			if(commento.isApproved()){
