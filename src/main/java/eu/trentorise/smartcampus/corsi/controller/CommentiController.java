@@ -368,7 +368,7 @@ public class CommentiController {
 			Long userId = Long.valueOf(profile.getUserId());
 				
 			//sincronizzo le keyword tra il portale e studymate
-			//mediationParserImpl.updateKeyWord(token);
+			mediationParserImpl.updateKeyWord(token);
 			
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
@@ -440,7 +440,6 @@ public class CommentiController {
 			
 			
 			//check text		
-			
 			commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
 			
 			// se il commento viene approvato dal primo filtro allora lo passo al portale
