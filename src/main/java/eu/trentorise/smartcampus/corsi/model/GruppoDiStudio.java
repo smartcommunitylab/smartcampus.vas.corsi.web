@@ -106,6 +106,10 @@ public class GruppoDiStudio {
 		this.visible = visible;
 	}
 	
+	public List<String> getListInvited(long idStudente){
+		return convertIdsInvitedToList(this.getIdsStudenti(),idStudente);
+	}
+	
 	public void setIfVisibleFromNumMembers(){
 		int numMembers = this.getIdsStudenti().split(",").length;
 		
@@ -116,18 +120,36 @@ public class GruppoDiStudio {
 		
 	}
 
-
-	public void addStudenteGruppo(long idStudenteDaAggiungere) {
-		// TODO Auto-generated method stub
-		this.setIdsStudenti(this.getIdsStudenti()+String.valueOf(idStudenteDaAggiungere)+",");		
-	}
-
 	// chiamata soltanto alla creazione di un nuovo gruppo
 	public void initStudenteGruppo(long idStudenteDaAggiungere) {
 		// TODO Auto-generated method stub
 		this.setIdsStudenti(String.valueOf(idStudenteDaAggiungere)+",");		
 	}
 
+
+	public void addStudenteGruppo(long idStudenteDaAggiungere) {
+		// TODO Auto-generated method stub
+		this.setIdsStudenti(this.getIdsStudenti()+String.valueOf(idStudenteDaAggiungere)+",");		
+	}
+	
+	
+	public List<String> convertIdsInvitedToList(String ids, long idStudente){
+		String[] listIds = null;
+		List<String> listIdsInvited = new ArrayList<String>();
+		
+		listIds = ids.split(",");
+		
+		for (String id : listIds) {
+			
+			if(!id.equals(String.valueOf(idStudente))){
+				listIdsInvited.add(id);
+			}
+			
+		}
+		
+		return listIdsInvited;
+	}
+	
 	
 	public void removeStudenteGruppo(long id2) {
 		// TODO Auto-generated method stub
@@ -149,16 +171,6 @@ public class GruppoDiStudio {
 		}
 		this.setIdsStudenti(studentiGruppoAggiornato);
 	}
-
-	
-	public boolean canRemoveGruppoDiStudioIfVoid() {
-		String[] listIds = this.getIdsStudenti().split(",");
-		
-		if(listIds[0] == "")
-			return true;
-		else
-			return false;
-	}
 	
 	public boolean isContainsStudente(long idStudente) {
 		// TODO Auto-generated method stub
@@ -177,26 +189,14 @@ public class GruppoDiStudio {
 		return false;
 	}
 	
-	public List<String> getListInvited(long idStudente){
-		return convertIdsInvitedToList(this.getIdsStudenti(),idStudente);
+	public boolean canRemoveGruppoDiStudioIfVoid() {
+		String[] listIds = this.getIdsStudenti().split(",");
+		
+		if(listIds[0] == "")
+			return true;
+		else
+			return false;
 	}
 	
-	
-	public List<String> convertIdsInvitedToList(String ids, long idStudente){
-		String[] listIds = null;
-		List<String> listIdsInvited = new ArrayList<String>();
-		
-		listIds = ids.split(",");
-		
-		for (String id : listIds) {
-			
-			if(!id.equals(String.valueOf(idStudente))){
-				listIdsInvited.add(id);
-			}
-			
-		}
-		
-		return listIdsInvited;
-	}
 
 }

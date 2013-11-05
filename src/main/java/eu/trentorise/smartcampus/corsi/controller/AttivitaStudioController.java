@@ -82,7 +82,43 @@ public class AttivitaStudioController {
 
 	@Autowired
 	private StudenteRepository studenteRepository;
+	
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// METODI GET /////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/attivitadistudio/{id_gruppodistudio}")
+	public @ResponseBody
+	List<AttivitaDiStudio> getAttivitadistudioByID(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_gruppodistudio") Long id_gruppodistudio)
 
+	throws IOException {
+		try {
+			logger.info("/attivitastudio/{id_gruppidistudio}");
+
+			if (id_gruppodistudio == null)
+				return null;
+
+			return attivitastudioRepository.findAttByIdGds(id_gruppodistudio);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// METODI POST ////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/add")
 	public @ResponseBody
 	boolean saveAttivitaStudio(HttpServletRequest request,
@@ -178,27 +214,7 @@ public class AttivitaStudioController {
 		return false;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/attivitadistudio/{id_gruppodistudio}")
-	public @ResponseBody
-	List<AttivitaDiStudio> getAttivitadistudioByID(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_gruppodistudio") Long id_gruppodistudio)
-
-	throws IOException {
-		try {
-			logger.info("/attivitastudio/{id_gruppidistudio}");
-
-			if (id_gruppodistudio == null)
-				return null;
-
-			return attivitastudioRepository.findAttByIdGds(id_gruppodistudio);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
+	
 
 	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/change")
 	public @ResponseBody
@@ -342,6 +358,14 @@ public class AttivitaStudioController {
 		}
 		return false;
 	}
+	
+	
+	
+	
+	
+	///////////////////////////////////////////////////////////////////////////
+	// METODI DELETE //////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * 

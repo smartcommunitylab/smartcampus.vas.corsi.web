@@ -55,7 +55,7 @@ public class Evento extends BasicEntity {
 	@Column(name = "ROOM")
 	private String room;
 
-	// the room where the place takes places
+	// the date where the place takes places
 	@Column(name = "DATA")
 	private Date data;
 
