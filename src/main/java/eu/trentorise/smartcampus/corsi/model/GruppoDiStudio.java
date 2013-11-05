@@ -30,7 +30,7 @@ public class GruppoDiStudio {
 	@Transient
 	private List<Studente> studentiGruppo;
 
-	@Column(name = "LOGO",length=5000)
+	@Column(name = "LOGO",length=6000)
 	private Byte[] logo;
 	
 	@Column(name = "VISIBLE")
