@@ -30,8 +30,8 @@ public class GruppoDiStudio {
 	@Transient
 	private List<Studente> studentiGruppo;
 
-//	@Column(name = "LOGO")
-//	private Blob logo;
+	@Column(name = "LOGO",length=5000)
+	private Byte[] logo;
 	
 	@Column(name = "VISIBLE")
 	private boolean visible;
@@ -83,14 +83,14 @@ public class GruppoDiStudio {
 	}
 
 	
-//	public Blob getLogo() {
-//		return logo;
-//	}
-//
-//
-//	public void setLogo(Blob logo) {
-//		this.logo = logo;
-//	}
+	public Byte[] getLogo() {
+		return logo;
+	}
+
+
+	public void setLogo(Byte[] logo) {
+		this.logo = logo;
+	}
 
 
 	public void setStudentiGruppo(List<Studente> studentiGruppo) {
