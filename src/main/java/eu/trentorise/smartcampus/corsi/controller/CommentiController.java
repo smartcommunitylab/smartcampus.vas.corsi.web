@@ -540,7 +540,7 @@ public class CommentiController {
 	 * nel db di dati (fake)
 	 */
 	@SuppressWarnings("deprecation")
-	@PostConstruct
+	//@PostConstruct
 	private void initCommenti() {
 
 		Dipartimento d = new Dipartimento();
@@ -1272,23 +1272,23 @@ public class CommentiController {
 
 		}
 
-//		esse3 = corsoRepository.findAll();
-//		Studente stud = studenteRepository.findOne((long) 1);
-//
-//		for (Corso co : esse3) {
-//			Commento commento = new Commento();
-//			commento.setCorso(co.getId());
-//			commento.setRating_carico_studio((float) 4);
-//			commento.setRating_contenuto((float) 3);
-//			commento.setRating_esame((float) 5);
-//			commento.setRating_lezioni((float) 4);
-//			commento.setRating_materiali((float) 3);
-//			commento.setId_studente(stud.getId());
-//			commento.setNome_studente(stud.getNome());
-//			commento.setApproved(true);
-//			commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
-//			commentiRepository.save(commento);
-//		}
+		esse3 = corsoRepository.findAll();
+		Studente stud = studenteRepository.findOne((long) 1);
+
+		for (Corso co : esse3) {
+			Commento commento = new Commento();
+			commento.setCorso(co.getId());
+			commento.setRating_carico_studio((float) 4);
+			commento.setRating_contenuto((float) 3);
+			commento.setRating_esame((float) 5);
+			commento.setRating_lezioni((float) 4);
+			commento.setRating_materiali((float) 3);
+			commento.setId_studente(stud.getId());
+			commento.setNome_studente(stud.getNome());
+			commento.setApproved(true);
+			commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
+			commentiRepository.save(commento);
+		}
 
 		esse3 = corsoRepository.findAll();
 		for (Corso index : esse3) {

@@ -92,12 +92,8 @@ public class StudenteController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			StudentInfoData student = studentInfoService.getStudentData(token);
 			
 			if (studente == null) {
-				
-				
-				
 				
 				studente = new Studente();
 				studente.setId(userId);
