@@ -1,8 +1,10 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
+import java.awt.color.CMMException;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +40,7 @@ import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
+import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
@@ -47,7 +50,6 @@ public class CommentiController {
 	private static final Logger logger = Logger
 			.getLogger(CommentiController.class);
 
-	
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */
@@ -57,19 +59,17 @@ public class CommentiController {
 
 	@Autowired
 	private CommentiRepository commentiRepository;
-	
+
 	@Autowired
 	@Value("${communicator.address}")
 	private String communicatoraddress;
 
 	@Autowired
 	private CorsoRepository corsoRepository;
-	
+
 	@Autowired
 	private MediationParserImpl mediationParserImpl;
-	
 
-	
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
 	 */
@@ -89,15 +89,16 @@ public class CommentiController {
 	@Autowired
 	private EventoRepository eventoRepository;
 
-	
-/**
- * 
- * @param corsoDaAggiornare
- * @return Il corso le cui valutazioni sono state aggiornate con successo, altrimenti ritorna null
- * 
- * Calcola e aggiorna nel DB le valutazioni medie per ogni ambito del corso 
- * 
- */
+	/**
+	 * 
+	 * @param corsoDaAggiornare
+	 * @return Il corso le cui valutazioni sono state aggiornate con successo,
+	 *         altrimenti ritorna null.
+	 * 
+	 *         Calcola e aggiorna nel DB le valutazioni medie per ogni ambito
+	 *         del corso
+	 * 
+	 */
 	private Corso UpdateRatingCorso(Corso corsoDaAggiornare) {
 
 		if (corsoDaAggiornare == null)
@@ -155,7 +156,6 @@ public class CommentiController {
 		return corsoAggiornato;
 	}
 
-	
 	/**
 	 * 
 	 * @param request
@@ -165,7 +165,7 @@ public class CommentiController {
 	 * @return List<Commento>
 	 * @throws IOException
 	 * 
-	 * Ritorna tutte le recensioni dato l'id di un corso
+	 *             Ritorna tutte le recensioni dato l'id di un corso
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/{id_corso}/commento/all")
@@ -178,6 +178,7 @@ public class CommentiController {
 		try {
 
 			List<Commento> commenti;
+			List<Commento> commentiAggiornati;
 
 			// Aggiorno le valutazioni del corso
 			UpdateRatingCorso(corsoRepository.findOne(id_corso));
@@ -186,10 +187,17 @@ public class CommentiController {
 			if (id_corso == null)
 				return null;
 
-			commenti = commentiRepository.getCommentoByCorsoApproved(corsoRepository
-					.findOne(id_corso).getId());
-			if (commenti.size() != 0) {
-				return commenti;
+
+
+			synchronizeApprovationComments(id_corso,request);
+			
+			commentiAggiornati = commentiRepository
+					.getCommentoByCorsoApproved(corsoRepository.findOne(
+							id_corso).getId());
+
+			if (commentiAggiornati.size() != 0) {
+				commentiAggiornati = commentiRepository.save(commentiAggiornati);
+				return commentiAggiornati;
 			} else {
 				Corso corso = corsoRepository.findOne(id_corso);
 				String token = getToken(request);
@@ -198,7 +206,7 @@ public class CommentiController {
 				BasicProfile profile = service.getBasicProfile(token);
 				Long userId = Long.valueOf(profile.getUserId());
 				Studente studente = studenteRepository.findOne(userId);
-				
+
 				if (studente == null) {
 					studente = new Studente();
 					studente.setId(userId);
@@ -226,15 +234,15 @@ public class CommentiController {
 							supera = supera.concat(String.valueOf(cors.getId())
 									.concat(","));
 						}
-						
+
 						if (z % 4 == 0) {
-							interesse = interesse.concat(String.valueOf(cors.getId())
-									.concat(","));
+							interesse = interesse.concat(String.valueOf(
+									cors.getId()).concat(","));
 						}
-						
+
 						z++;
 					}
-					
+
 					// Set corso follwed by studente
 					studente.setCorsi(corsiEsse3);
 					studente = studenteRepository.save(studente);
@@ -242,11 +250,10 @@ public class CommentiController {
 					// Set corsi superati
 					studente.setIdsCorsiSuperati(supera);
 					studente.setIdsCorsiInteresse(interesse);
-					
+
 					studente = studenteRepository.save(studente);
 				}
-				
-				
+
 				Commento commento = new Commento();
 				commento.setId_studente(studente.getId());
 				commento.setCorso(corso.getId());
@@ -258,10 +265,11 @@ public class CommentiController {
 				commento.setTesto(new String(""));
 				commento.setData_inserimento(null);
 
-				commenti.add(commento);
-
-				return commenti;
+				commentiAggiornati.add(commento);
 				
+
+				return commentiAggiornati;
+
 			}
 
 		} catch (Exception e) {
@@ -271,12 +279,61 @@ public class CommentiController {
 		return null;
 	}
 
+	private void synchronizeApprovationComments(Long id_corso, HttpServletRequest request) {
+		
+		List<Commento> commenti = commentiRepository.getCommentoByCorsoApproved(corsoRepository.findOne(
+				id_corso).getId());
+				
+		
+		if(commenti.size() == 0)
+			return;
+
+		// costruisco la lista di CommentBaseEntity da mandare al mediatore
+		List<CommentBaseEntity> commentiEntity = new ArrayList<CommentBaseEntity>();
+		for (Commento commento : commenti) {
+			CommentBaseEntity commentMediator = new CommentBaseEntity();
+			commentMediator.setId(commento.getId());
+			commentMediator.setTesto(commento.getTesto());
+			commentMediator.setApproved(commento.isApproved());
+			commentiEntity.add(commentMediator);
+		}
+
+		Collection<CommentBaseEntity> commentiEntityAggiornata = new ArrayList<CommentBaseEntity>();
+
+		// aggiorno i commenti con il mediatore
+		commentiEntityAggiornata = mediationParserImpl
+				.updateCommentToMediationService(commentiEntity,
+						getToken(request));
+		
+		
+		
+		
+		for (CommentBaseEntity commentoMediatoreAggiornato : commentiEntityAggiornata) {
+			Commento commentoDB = commentiRepository.findOne(commentoMediatoreAggiornato.getId());
+			commentoDB.setId(commentoMediatoreAggiornato.getId());
+			commentoDB.setTesto(commentoMediatoreAggiornato.getTesto());
+			commentoDB.setApproved(commentoMediatoreAggiornato.isApproved());
+			
+			commentiRepository.save(commentoDB);
+
+		}
+		
+//		// costruisco la lista di CommentBaseEntity da mandare al mediatore
+//		Collection<CommentBaseEntity> commentiEntity = new ArrayList<CommentBaseEntity>();
+//		
+//		commentiEntity = mediationParserImpl
+//				.updateCommentToMediationService((List<CommentBaseEntity>)commenti,
+//						getToken(request));
+//		
+		
+	}
+
 	/**
 	 * 
 	 * @param request
 	 * @return String
 	 * 
-	 * Ottiene il token riferito alla request
+	 *         Ottiene il token riferito alla request
 	 * 
 	 */
 	private String getToken(HttpServletRequest request) {
@@ -296,7 +353,7 @@ public class CommentiController {
 	 * @return Commento
 	 * @throws IOException
 	 * 
-	 * Restituisce il commento personale per un determinato corso
+	 *             Restituisce il commento personale per un determinato corso
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/commento/{id_corso}/me")
@@ -308,21 +365,19 @@ public class CommentiController {
 	throws IOException {
 		try {
 			logger.info("/commento/{id_corso}/me");
-			
-			
+
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-			
-			
+
 			if (userId == null)
 				return null;
 
 			return commentiRepository.getCommentoByStudenteApproved(
-					studenteRepository.findOne(userId).getId(),
-					corsoRepository.findOne(id_corso).getId());
+					studenteRepository.findOne(userId).getId(), corsoRepository
+							.findOne(id_corso).getId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -334,7 +389,7 @@ public class CommentiController {
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
 	 */
-	
+
 	/**
 	 * 
 	 * @param request
@@ -344,7 +399,8 @@ public class CommentiController {
 	 * @return boolean
 	 * @throws IOException
 	 * 
-	 * Riceve il metodo post dal client e lo salva nel DB. Ritorna true se l'operazione va a buon fine, altrimenti false.
+	 *             Riceve il metodo post dal client e lo salva nel DB. Ritorna
+	 *             true se l'operazione va a buon fine, altrimenti false.
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/commento")
 	//
@@ -360,19 +416,18 @@ public class CommentiController {
 			if (commento == null)
 				return false;
 
-			
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-				
-			//sincronizzo le keyword tra il portale e studymate
+
+			// sincronizzo le keyword tra il portale e studymate
 			mediationParserImpl.updateKeyWord(token);
-			
+
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
+
 			if (studente == null) {
 				studente = new Studente();
 				studente.setId(userId);
@@ -400,15 +455,15 @@ public class CommentiController {
 						supera = supera.concat(String.valueOf(cors.getId())
 								.concat(","));
 					}
-					
+
 					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
+						interesse = interesse.concat(String.valueOf(
+								cors.getId()).concat(","));
 					}
-					
+
 					z++;
 				}
-				
+
 				// Set corso follwed by studente
 				studente.setCorsi(corsiEsse3);
 				studente = studenteRepository.save(studente);
@@ -416,41 +471,47 @@ public class CommentiController {
 				// Set corsi superati
 				studente.setIdsCorsiSuperati(supera);
 				studente.setIdsCorsiInteresse(interesse);
-				
+
 				studente = studenteRepository.save(studente);
 			}
-			
-			
-			
-			
-			// cerco nel db se il commento dello studente per questo corso c'� gi�
+
+			// cerco nel db se il commento dello studente per questo corso c'�
+			// gi�
 			// presente
 			Commento commentoDaModificare = commentiRepository
-					.getCommentoByStudenteAll(studenteRepository.findOne(userId).getId(), corsoRepository
-							.findOne(commento.getCorso()).getId());
+					.getCommentoByStudenteApproved(studenteRepository
+							.findOne(userId).getId(),
+							corsoRepository.findOne(commento.getCorso())
+									.getId());
 
-			
 			commento.setId_studente(userId);
 			commento.setNome_studente(profile.getName());
-			commento.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto
-			
+			commento.setId((long) -1); // setto l'id a -1 per evitare che il commento
+								// venga sovrascritto
+
 			commento = commentiRepository.save(commento);
-			
+
 			Commento commentoSalvato = null;
+
+			// check text
+			commento.setApproved(mediationParserImpl.localValidationComment(
+					commento.getTesto(), commento.getId().intValue(), userId, token));
+
+			commento.setData_inserimento(String.valueOf(System.currentTimeMillis()));
+			
+			// se il commento viene approvato dal primo filtro allora lo passo
+			// al portale
+			// if(commento.isApproved()){
+			// commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
+			// }
+
+			logger.info("APPROVED=" + commento.isApproved());
 			
 			
-			//check text		
-			commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
-			
-			// se il commento viene approvato dal primo filtro allora lo passo al portale
-//			if(commento.isApproved()){
-//				commento.setApproved(mediationParserImpl.localValidationComment(commento.getTesto(),commento.getId(),userId,token));
-//			}
-			
-			logger.info("APPROVED="+ commento.isApproved());
-			
-			
-			
+			if(commento.isApproved()){
+				mediationParserImpl.remoteValidationComment(commento.getTesto(), commento.getId().intValue(), userId, token);
+			}
+
 			// Controllo se il commento � gi� presente
 			if (commentoDaModificare == null) {
 				commentoSalvato = commentiRepository.saveAndFlush(commento);
@@ -459,26 +520,24 @@ public class CommentiController {
 				commentoSalvato = commentiRepository.saveAndFlush(commento);
 			}
 
-			
-			if(commentoSalvato == null){
+			if (commentoSalvato == null) {
 				return false;
-			}else{
+			} else {
 				return true;
 			}
-			
+
 		} catch (Exception e) {
 
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return false;
 		}
-		
 
 	}
 
-	
 	/**
-	 * Metodo che viene chiamato alla definizione delle entit� per la creazione nel db di dati (fake)
+	 * Metodo che viene chiamato alla definizione delle entit� per la creazione
+	 * nel db di dati (fake)
 	 */
 	@SuppressWarnings("deprecation")
 	@PostConstruct
@@ -703,7 +762,6 @@ public class CommentiController {
 		c.setId(11);
 		corsoRepository.save(c);
 
-
 		c = new Corso();
 
 		c.setNome("Elettronica");
@@ -782,7 +840,6 @@ public class CommentiController {
 		c.setId(15);
 		corsoRepository.save(c);
 
-
 		c = new Corso();
 
 		c.setNome("English C1");
@@ -834,7 +891,6 @@ public class CommentiController {
 		c.setId(18);
 		corsoRepository.save(c);
 
-
 		c = new Corso();
 
 		c.setNome("Geometria e Algebra Lineare");
@@ -847,7 +903,6 @@ public class CommentiController {
 		c.setId_corsoLaurea(2);
 		c.setId(19);
 		corsoRepository.save(c);
-
 
 		c = new Corso();
 
@@ -1191,7 +1246,6 @@ public class CommentiController {
 
 			for (Corso cors : esse3) {
 
-
 				if (z % 2 == 0) {
 					supera = supera.concat(String.valueOf(cors.getId()).concat(
 							","));
@@ -1218,23 +1272,23 @@ public class CommentiController {
 
 		}
 
-		esse3 = corsoRepository.findAll();
-		Studente stud = studenteRepository.findOne((long) 1);
-
-		for (Corso co : esse3) {
-				Commento commento = new Commento();
-				commento.setCorso(co.getId());
-				commento.setRating_carico_studio((float) 4);
-				commento.setRating_contenuto((float) 3);
-				commento.setRating_esame((float) 5);
-				commento.setRating_lezioni((float) 4);
-				commento.setRating_materiali((float) 3);
-				commento.setId_studente(stud.getId());
-				commento.setNome_studente(stud.getNome());
-				commento.setApproved(true);
-				commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
-				commentiRepository.save(commento);
-		}
+//		esse3 = corsoRepository.findAll();
+//		Studente stud = studenteRepository.findOne((long) 1);
+//
+//		for (Corso co : esse3) {
+//			Commento commento = new Commento();
+//			commento.setCorso(co.getId());
+//			commento.setRating_carico_studio((float) 4);
+//			commento.setRating_contenuto((float) 3);
+//			commento.setRating_esame((float) 5);
+//			commento.setRating_lezioni((float) 4);
+//			commento.setRating_materiali((float) 3);
+//			commento.setId_studente(stud.getId());
+//			commento.setNome_studente(stud.getNome());
+//			commento.setApproved(true);
+//			commento.setTesto("Corso molto utile e soprattutto il professore coinvolge nelle lezioni.");
+//			commentiRepository.save(commento);
+//		}
 
 		esse3 = corsoRepository.findAll();
 		for (Corso index : esse3) {
@@ -1289,7 +1343,5 @@ public class CommentiController {
 		}
 
 	}
-	
-	
 
 }

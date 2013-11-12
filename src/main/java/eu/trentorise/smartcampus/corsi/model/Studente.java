@@ -48,8 +48,8 @@ public class Studente extends BasicEntity {
 	@Column(name = "EMAIL")
 	private String email;
 
-	@Column(name = "USER_SC_ID")
-	private long userSCId;
+	@Column(name = "USER_SOCIAL_ID")
+	private long userSocialId;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "Frequenze", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "CORSO_ID"))
@@ -100,12 +100,12 @@ public class Studente extends BasicEntity {
 		this.corsi = corsi;
 	}
 
-	public long getUserSCId() {
-		return userSCId;
+	public long getUserSocialId() {
+		return userSocialId;
 	}
 
-	public void setUserSCId(long userSCId) {
-		this.userSCId = userSCId;
+	public void setUserSocialId(long userSocialId) {
+		this.userSocialId = userSocialId;
 	}
 
 	public long getId() {

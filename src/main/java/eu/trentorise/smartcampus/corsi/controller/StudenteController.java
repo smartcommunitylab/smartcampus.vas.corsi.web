@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -27,6 +28,8 @@ import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
+import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
+import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
 
 @Controller("studenteController")
 public class StudenteController {
@@ -43,6 +46,17 @@ public class StudenteController {
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
+
+	@Autowired
+	@Value("${url.studente.service}")
+	private String URLStudenteService;
+
+	private StudentInfoService studentInfoService;
+
+	@PostConstruct
+	private void initStudentInfoService() {
+		studentInfoService = new StudentInfoService(URLStudenteService);
+	}
 
 	
 
@@ -78,7 +92,13 @@ public class StudenteController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			StudentInfoData student = studentInfoService.getStudentData(token);
+			
 			if (studente == null) {
+				
+				
+				
+				
 				studente = new Studente();
 				studente.setId(userId);
 				studente.setNome(profile.getName());

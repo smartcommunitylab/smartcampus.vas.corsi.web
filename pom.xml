@@ -135,6 +135,12 @@
 	<version>1.0</version>
 	</dependency>
 	
+	<dependency>
+		<groupId>eu.trentorise.smartcampus</groupId>
+		<artifactId>unidataservice.client</artifactId>
+		<version>1.0</version>
+	</dependency>
+	
 		<!-- DB -->
 			<dependency>
 			<groupId>mysql</groupId>

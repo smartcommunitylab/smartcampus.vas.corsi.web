@@ -3,34 +3,32 @@ package eu.trentorise.smartcampus.corsi.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 
+
 @Entity
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @NamedQueries({
-		@NamedQuery(name = "Commento.getCommentoByCorsoApproved", query = "select c from Commento c where c.corso = ?1 and c.approved = true"), 
-		@NamedQuery(name = "Commento.getCommentoByStudenteApproved", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2 and c.approved = true"),
-		@NamedQuery(name = "Commento.getCommentoByCorsoAll", query = "select c from Commento c where c.corso = ?1"),
-		@NamedQuery(name = "Commento.getCommentoByStudenteAll", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })
-public class Commento {
-	// id del commento
-	@Id
-	@GeneratedValue
-	private int id;
+	@NamedQuery(name = "Commento.getCommentoByCorsoApproved", query = "select c from Commento c where c.corso = ?1 and c.approved = true"), 
+	@NamedQuery(name = "Commento.getCommentoByStudenteApproved", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2 and c.approved = true"),
+	@NamedQuery(name = "Commento.getCommentoByCorsoAll", query = "select c from Commento c where c.corso = ?1"),
+	@NamedQuery(name = "Commento.getCommentoByStudenteAll", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })
+public class Commento extends CommentBaseEntity {
+
+	public Commento(){
+		super();
+	}
 
 	// corso di riferimento
 	@JoinColumn(name = "CORSO_ID")
 	private long corso;
 	
-	@Column(name = "APPROVED")
-	private boolean approved;
-
 	// utente che ha scritto commento
 	@JoinColumn(name = "ID_STUDENTE")
 	private long id_studente;
@@ -38,10 +36,6 @@ public class Commento {
 	// utente che ha scritto commento
 	@Column(name = "NOME_STUDENTE")
 	private String nome_studente;
-
-	// testo del commento
-	@Column(name = "TESTO",length=2000)
-	private String testo;
 
 	// data in cui e' stato scritto commento
 	@Column(name = "DATA_INSERIMENTO")
@@ -67,16 +61,15 @@ public class Commento {
 	@Column(name = "RATING_ESAME")
 	private Float rating_esame;
 
-	public Commento() {
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
+//	@Override
+//    @Id  
+//	public Long getId() {
+//		return id;
+//	}
+//
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
 
 	public long getId_studente() {
 		return id_studente;
@@ -94,13 +87,13 @@ public class Commento {
 		this.id_studente = id_studente;
 	}
 
-	public String getTesto() {
-		return testo;
-	}
-
-	public void setTesto(String testo) {
-		this.testo = testo;
-	}
+//	public String getTesto() {
+//		return testo;
+//	}
+//
+//	public void setTesto(String testo) {
+//		this.testo = testo;
+//	}
 
 	public String getData_inserimento() {
 		return data_inserimento;
@@ -150,13 +143,15 @@ public class Commento {
 		this.rating_esame = rating_esame;
 	}
 
-	public boolean isApproved() {
-		return approved;
-	}
-
-	public void setApproved(boolean approved) {
-		this.approved = approved;
-	}
+//	@Override
+//	public boolean isApproved() {
+//		return approved;
+//	}
+//
+//	@Override
+//	public void setApproved(boolean approved) {
+//		this.approved = approved;
+//	}
 
 	public String getNome_studente() {
 		return nome_studente;
