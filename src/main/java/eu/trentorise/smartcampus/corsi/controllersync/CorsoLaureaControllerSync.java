@@ -10,21 +10,24 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
+import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
+import eu.trentorise.smartcampus.corsi.util.UniCourseDegreeMapper;
 import eu.trentorise.smartcampus.corsi.util.UniDepartmentMapper;
 import eu.trentorise.smartcampus.unidataservice.UniversityPlannerService;
+import eu.trentorise.smartcampus.unidataservice.model.CdsData;
 import eu.trentorise.smartcampus.unidataservice.model.FacoltaData;
 
-@Controller("dipartimentoControllerSync")
-public class DipartimentoControllerSync {
-	
+@Controller("corsoLaureaControllerSync")
+public class CorsoLaureaControllerSync {
 	private static final Logger logger = Logger
 			.getLogger(DipartimentoControllerSync.class);
 	/*
@@ -46,12 +49,17 @@ public class DipartimentoControllerSync {
 	private String appName;
 
 	@Autowired
+	private CorsoLaureaRepository corsoLaureaRepository;
+	
+	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
+	Dipartimento dipartimento;
+	List<CorsoLaurea> corsiDiLaurea;
+	
 	String client_auth_token = "6d6ed274-4db7-4d9c-8c78-0a519ff33625";
 	
-	List<Dipartimento> dipartimenti;
-
+	
 	/**
 	 * 
 	 * @param request
@@ -63,37 +71,39 @@ public class DipartimentoControllerSync {
 	 *             Restituisce la lista dei dipartimenti soltanto se sono da sincronizzare
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/sync/dipartimento/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/sync/corsolaurea/{id_dipartimento}/all")
 	public @ResponseBody
-	List<Dipartimento> getDipartimentoSync(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
+	List<CorsoLaurea> getDipartimentoSync(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_dipartimento") Long id_dipartimento)
 
 	throws IOException {
 		try {
-			logger.info("/sync/dipartimento/all");
+			logger.info("/sync/corsolaurea/{id_dipartimento}/all");
 
-			dipartimenti = dipartimentoRepository.findAll();
+			dipartimento = dipartimentoRepository.findOne(id_dipartimento);
 			
 			// se la lista dei dipartimenti è già stata scaricata ritorno null
-			if(dipartimenti != null)
+			if(dipartimento == null)
 				return null;
+			
 
 			// prendo i dati da unidata e li mappo
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
 			
-			List<FacoltaData> dataDepartmentsUni = uniConnector.getFacoltaData(client_auth_token);
+			List<CdsData> dataCdsUni = uniConnector.getCdsData(client_auth_token, String.valueOf(id_dipartimento));
 			
-			if (dataDepartmentsUni == null)
+			if (dataCdsUni == null)
 				return null;
 
-			UniDepartmentMapper departmentMapper = new UniDepartmentMapper();
-			dipartimenti = departmentMapper.convert(dataDepartmentsUni, client_auth_token);
+			UniCourseDegreeMapper cdsMapper = new UniCourseDegreeMapper();
+			corsiDiLaurea = cdsMapper.convert(dataCdsUni, client_auth_token);
 			
 
-			dipartimenti = dipartimentoRepository.save(dipartimenti);
+			corsiDiLaurea = corsoLaureaRepository.save(corsiDiLaurea);
 
-			return dipartimenti;
+			return corsiDiLaurea;
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -102,19 +112,4 @@ public class DipartimentoControllerSync {
 		}
 		return null;
 	}
-	
-	
-	/**
-	 * 
-	 * @param request
-	 * @return String
-	 * 
-	 *         Ottiene il token riferito alla request
-	 * 
-	 */
-	private String getToken(HttpServletRequest request) {
-		return (String) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-	}
-
 }

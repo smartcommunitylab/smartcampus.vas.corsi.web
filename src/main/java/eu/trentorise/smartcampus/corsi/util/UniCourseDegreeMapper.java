@@ -38,7 +38,7 @@ public class UniCourseDegreeMapper {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected List<CorsoLaurea> _convert(List<CdsData> dataCds, String token)
+	public List<CorsoLaurea> convert(List<CdsData> dataCds, String token)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
@@ -76,7 +76,7 @@ public class UniCourseDegreeMapper {
 
 	}
 
-	protected CorsoLaurea _convert(CdsData dataCds, String token)
+	public CorsoLaurea convert(CdsData dataCds, String token)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
