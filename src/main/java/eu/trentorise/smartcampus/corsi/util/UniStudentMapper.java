@@ -101,6 +101,7 @@ public class UniStudentMapper {
 			CorsoLite corsoSuperato = new CorsoLite();
 			corso.setId(Long.valueOf(exam.getId()));
 			corso.setNome(exam.getName());
+			corsi.add(corso);
 			if (exam.getResult() != null) {
 				corsoSuperato.setId(Long.valueOf(exam.getId()));
 				corsoSuperato.setNome(exam.getName());
@@ -119,7 +120,7 @@ public class UniStudentMapper {
 	 * 
 	 * @param fromStudentExams
 	 * @param token
-	 * @return Converto gli esami in esse3
+	 * @return Converto gli esami presenti in esse3
 	 * @throws IllegalArgumentException
 	 * @throws SecurityException
 	 * @throws ProfileServiceException
@@ -146,8 +147,81 @@ public class UniStudentMapper {
 			corsi.add(corso);
 		}
 
-
 		return corsi;
+
+	}
+
+	/**
+	 * 
+	 * @param fromStudentExams
+	 * @param token
+	 * @return Converto gli esami superati presenti in esse3
+	 * @throws IllegalArgumentException
+	 * @throws SecurityException
+	 * @throws ProfileServiceException
+	 */
+	public List<CorsoLite> convertCoursesPassedStudent(
+			StudentInfoExams fromStudentExams, String token)
+			throws IllegalArgumentException, SecurityException,
+			ProfileServiceException {
+
+		BasicProfileService service = new BasicProfileService(profileaddress);
+
+		// recupero i dati del profilo dell'utente
+		basicProfile = service.getBasicProfile(token);
+
+		// informazioni esami
+		ArrayList<CorsoLite> corsiSuperati = new ArrayList<CorsoLite>();
+		fromListExams = fromStudentExams.getExams();
+		
+		for (StudentInfoExam exam : fromListExams) {
+			CorsoLite corsoSuperato = new CorsoLite();
+			if (exam.getResult() != null) {
+				corsoSuperato.setId(Long.valueOf(exam.getId()));
+				corsoSuperato.setNome(exam.getName());
+				corsiSuperati.add(corsoSuperato);
+			}
+		}
+
+		return corsiSuperati;
+
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param fromStudentExams
+	 * @param token
+	 * @return Converto gli esami superati presenti in esse3
+	 * @throws IllegalArgumentException
+	 * @throws SecurityException
+	 * @throws ProfileServiceException
+	 */
+	public List<CorsoLite> convertCoursesAllStudent(
+			StudentInfoExams fromStudentExams, String token)
+			throws IllegalArgumentException, SecurityException,
+			ProfileServiceException {
+
+		BasicProfileService service = new BasicProfileService(profileaddress);
+
+		// recupero i dati del profilo dell'utente
+		basicProfile = service.getBasicProfile(token);
+
+		// informazioni esami
+		ArrayList<CorsoLite> corsiSuperati = new ArrayList<CorsoLite>();
+		fromListExams = fromStudentExams.getExams();
+		
+		for (StudentInfoExam exam : fromListExams) {
+			CorsoLite corsoSuperato = new CorsoLite();
+			if (exam.getResult() != null) {
+				corsoSuperato.setId(Long.valueOf(exam.getId()));
+				corsoSuperato.setNome(exam.getName());
+				corsiSuperati.add(corsoSuperato);
+			}
+		}
+
+		return corsiSuperati;
 
 	}
 
