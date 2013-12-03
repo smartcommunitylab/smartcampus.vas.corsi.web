@@ -43,7 +43,7 @@ public class UniDepartmentMapper {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected List<Dipartimento> _convert(List<FacoltaData> dataFacolta, String token)
+	public List<Dipartimento> convert(List<FacoltaData> dataFacolta, String token)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
@@ -72,7 +72,7 @@ public class UniDepartmentMapper {
 
 	}
 	
-	protected Dipartimento _convert(FacoltaData dataFacolta, String token)
+	protected Dipartimento convert(FacoltaData dataFacolta, String token)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 

@@ -36,7 +36,7 @@ import eu.trentorise.smartcampuse.unidataservice.Constants;
 public class StudenteControllerSync {
 
 	private static final Logger logger = Logger
-			.getLogger(CorsiController.class);
+			.getLogger(StudenteControllerSync.class);
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */
@@ -51,6 +51,7 @@ public class StudenteControllerSync {
 	@Autowired
 	@Value("${url.studente.service}")
 	private String unidataaddress;
+	
 
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
