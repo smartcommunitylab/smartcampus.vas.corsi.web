@@ -1,5 +1,6 @@
 package eu.trentorise.smartcampus.corsi.util;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
@@ -22,16 +24,18 @@ import eu.trentorise.smartcampus.profileservice.model.AccountProfile;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.profileservice.model.ExtendedProfile;
 import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
+import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExam;
+import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExams;
 
 public class UniStudentMapper {
 
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
-	
+
 	@Autowired
 	private StudenteRepository studenteRepository;
-	
+
 	@Autowired
 	private CorsoRepository corsoRepository;
 
@@ -41,13 +45,17 @@ public class UniStudentMapper {
 	private String token;
 
 	private Studente studente;
-	private StudentInfoData fromStudent;
+	private StudentInfoData fromStudentInfo;
+	private StudentInfoExams fromStudentExams;
+
+	private List<StudentInfoExam> fromListExams;
 
 	public UniStudentMapper() {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected Studente _convert(StudentInfoData fromStudent, String token)
+	public Studente convert(StudentInfoData fromStudentInfo,
+			StudentInfoExams fromStudentExams, String token)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
@@ -55,7 +63,6 @@ public class UniStudentMapper {
 
 		// recupero i dati del profilo dell'utente
 		basicProfile = service.getBasicProfile(token);
-		service.getAccountProfile(token);
 		accountProfile = service.getAccountProfile(token);
 
 		// recupero i dati principali dal BasicProfile e AccountProfile
@@ -72,60 +79,75 @@ public class UniStudentMapper {
 		}
 		String email = attributesAccount.get("openid.ext1.value.email");
 
+		// wrappo i dati dello studente
 		studente = new Studente();
 
+		// informazioni generali
 		studente.setId(userId);
 		studente.setNome(name);
 		studente.setCognome(surname);
 		studente.setUserSocialId(socialId);
 		studente.setEmail(email);
 
-		studente.setAnno_corso(fromStudent.getAcademicYear());
-		studente.setCorso_laurea(fromStudent.getCds());
+		studente.setAnno_corso(fromStudentInfo.getAcademicYear());
+		studente.setCorso_laurea(fromStudentInfo.getCds());
 
-		// studente.setDipartimento()
-
-		
-
-		// studente = studenteRepository.save(studente);
-
-		// TODO caricare corsi da esse3
-		// Creare associazione su frequenze
-
-		// TEST
-		List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-		String supera = null;
-		String interesse = null;
-		int z = 0;
-		supera = new String();
-		interesse = new String();
-
-		for (Corso cors : corsiEsse3) {
-
-			if (z % 2 == 0) {
-				supera = supera
-						.concat(String.valueOf(cors.getId()).concat(","));
+		// informazioni esami
+		ArrayList<Corso> corsi = new ArrayList<Corso>();
+		ArrayList<CorsoLite> corsiSuperati = new ArrayList<CorsoLite>();
+		fromListExams = fromStudentExams.getExams();
+		for (StudentInfoExam exam : fromListExams) {
+			Corso corso = new Corso();
+			CorsoLite corsoSuperato = new CorsoLite();
+			corso.setId(Long.valueOf(exam.getId()));
+			corso.setNome(exam.getName());
+			if (exam.getResult() != null) {
+				corsoSuperato.setId(Long.valueOf(exam.getId()));
+				corsoSuperato.setNome(exam.getName());
+				corsiSuperati.add(corsoSuperato);
 			}
-
-			if (z % 4 == 0) {
-				interesse = interesse.concat(String.valueOf(cors.getId())
-						.concat(","));
-			}
-
-			z++;
 		}
 
-		// Set corso follwed by studente
-		studente.setCorsi(corsiEsse3);
-		studente = studenteRepository.save(studente);
+		studente.setCorsi(corsi);
+		studente.setCorsiSuperati(corsiSuperati);
 
-		// Set corsi superati
-		studente.setIdsCorsiSuperati(supera);
-		studente.setIdsCorsiInteresse(interesse);
+		return studente;
 
-		return studente = studenteRepository.save(studente);
+	}
 
+	/**
+	 * 
+	 * @param fromStudentExams
+	 * @param token
+	 * @return Converto gli esami in esse3
+	 * @throws IllegalArgumentException
+	 * @throws SecurityException
+	 * @throws ProfileServiceException
+	 */
+	public List<Corso> convertCoursesEsse3Student(
+			StudentInfoExams fromStudentExams, String token)
+			throws IllegalArgumentException, SecurityException,
+			ProfileServiceException {
+
+		BasicProfileService service = new BasicProfileService(profileaddress);
+
+		// recupero i dati del profilo dell'utente
+		basicProfile = service.getBasicProfile(token);
+		// informazioni esami
+		ArrayList<Corso> corsi = new ArrayList<Corso>();
+		ArrayList<CorsoLite> corsiSuperati = new ArrayList<CorsoLite>();
+
+		fromListExams = fromStudentExams.getExams();
+
+		for (StudentInfoExam exam : fromListExams) {
+			Corso corso = new Corso();
+			corso.setId(Long.valueOf(exam.getId()));
+			corso.setNome(exam.getName());
+			corsi.add(corso);
+		}
+
+
+		return corsi;
 
 	}
 

@@ -178,6 +178,15 @@ public class Studente extends BasicEntity {
 
 	public void setCorsiSuperati(List<CorsoLite> corsiSuperati) {
 		this.corsiSuperati = corsiSuperati;
+		
+		// re inizializzo gli id per il db
+		this.setIdsCorsiSuperati("");
+		
+		for (Corso corso : corsi) {
+			long idCorso = corso.getId();
+			addCorsoSuperato(this, idCorso);
+		}
+		
 	}
 
 	public String getIdsCorsiInteresse() {
@@ -194,6 +203,19 @@ public class Studente extends BasicEntity {
 
 	public void setCorsiInteresse(List<CorsoLite> corsiInteresse) {
 		this.corsiInteresse = corsiInteresse;
+		
+		// re inizializzo gli id per il db
+		this.setIdsCorsiInteresse("");
+		
+		for (Corso corso : corsi) {
+			long idCorso = corso.getId();
+			addCorsoInteresse(this, idCorso);
+		}
+	}
+	
+	public void addCorsoSuperato(Studente stud, long idCorsoDaAggiungere) {
+		// TODO Auto-generated method stub
+		stud.setIdsCorsiInteresse(stud.getIdsCorsiSuperati()+String.valueOf(idCorsoDaAggiungere)+",");		
 	}
 
 	public void addCorsoInteresse(Studente stud, long idCorsoDaAggiungere) {
