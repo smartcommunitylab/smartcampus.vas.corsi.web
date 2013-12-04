@@ -55,15 +55,15 @@ public class UniStudentMapper {
 	}
 
 	public Studente convert(StudentInfoData fromStudentInfo,
-			StudentInfoExams fromStudentExams, String token)
+			StudentInfoExams fromStudentExams, String tokenUser)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
 		BasicProfileService service = new BasicProfileService(profileaddress);
 
 		// recupero i dati del profilo dell'utente
-		basicProfile = service.getBasicProfile(token);
-		accountProfile = service.getAccountProfile(token);
+		basicProfile = service.getBasicProfile(tokenUser);
+		accountProfile = service.getAccountProfile(tokenUser);
 
 		// recupero i dati principali dal BasicProfile e AccountProfile
 		Long userId = Long.valueOf(basicProfile.getUserId());
