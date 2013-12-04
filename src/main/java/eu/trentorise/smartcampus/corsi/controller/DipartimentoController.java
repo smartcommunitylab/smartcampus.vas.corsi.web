@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.corsi.controllersync.DipartimentoControllerSync;
+import eu.trentorise.smartcampus.corsi.controllersync.StudenteControllerSync;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 
@@ -27,7 +29,9 @@ public class DipartimentoController {
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
-	
+	@Autowired
+	private DipartimentoControllerSync controllerSyncDipartimento;
+
 	/**
 	 * 
 	 * @param request
@@ -36,7 +40,7 @@ public class DipartimentoController {
 	 * @return List<Dipartimento>
 	 * @throws IOException
 	 * 
-	 * Restituisce la lista di tutti i dipartimenti
+	 *             Restituisce la lista di tutti i dipartimenti
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/dipartimento/all")
@@ -48,6 +52,22 @@ public class DipartimentoController {
 		try {
 
 			List<Dipartimento> getDip = dipartimentoRepository.findAll();
+
+			// se non ci sono db in locale li prendo da unidaa e li salvo
+			if (getDip == null) {
+				List<Dipartimento> dipartimentiSync;
+				dipartimentiSync = controllerSyncDipartimento
+						.getDipartimentoSync(request, response, session);
+
+				if (dipartimentiSync == null)
+					return null;
+
+				dipartimentiSync = dipartimentoRepository
+						.save(dipartimentiSync);
+
+				return dipartimentiSync;
+
+			}
 
 			return getDip;
 
@@ -62,7 +82,7 @@ public class DipartimentoController {
 	/*
 	 * Ritorna tutti i corsi di laurea associati al dipartimento
 	 */
-	
+
 	/**
 	 * 
 	 * @param request
@@ -72,7 +92,7 @@ public class DipartimentoController {
 	 * @return Dipartimento
 	 * @throws IOException
 	 * 
-	 * Restituisce le informazioni di un dipartimento dato l'id
+	 *             Restituisce le informazioni di un dipartimento dato l'id
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/dipartimento/{id_dipartimento}")
@@ -87,6 +107,25 @@ public class DipartimentoController {
 			Dipartimento getDip = dipartimentoRepository
 					.findOne(id_dipartimento);
 
+			// se non ci sono db in locale li prendo da unidaa e li salvo
+			if (getDip == null) {
+				List<Dipartimento> dipartimentiSync;
+				dipartimentiSync = controllerSyncDipartimento
+						.getDipartimentoSync(request, response, session);
+
+				dipartimentiSync = dipartimentoRepository
+						.save(dipartimentiSync);
+
+				if (dipartimentiSync == null)
+					return null;
+				
+				getDip = dipartimentoRepository
+						.findOne(id_dipartimento);
+				
+				return getDip;
+
+			}
+
 			return getDip;
 
 		} catch (Exception e) {
@@ -96,6 +135,5 @@ public class DipartimentoController {
 		}
 		return null;
 	}
-
 
 }

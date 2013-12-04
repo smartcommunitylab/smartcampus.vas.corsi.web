@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.corsi.controllersync.StudenteControllerSync;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Studente;
@@ -58,7 +59,8 @@ public class StudenteController {
 		studentInfoService = new StudentInfoService(URLStudenteService);
 	}
 
-	
+	@Autowired
+	private StudenteControllerSync controllerSyncStudente;
 
 	/*
 	 * Ritorna tutti i corsi in versione lite
@@ -92,56 +94,21 @@ public class StudenteController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			Studente studenteAggiornato = null;
 			
+			// se lo studente è null vado a prendere i dati da unidata
 			if (studente == null) {
 				
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(
-								cors.getId()).concat(","));
-					}
-
-					z++;
-				}
-
-				// TEST
-
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
+				studente = controllerSyncStudente.getStudenteByIdSync(request, response, session, userId);
+				studenteAggiornato = studenteRepository.save(studente);
+				
+				return studenteAggiornato;
+				
 			}
-
-			Studente stud = studenteRepository.save(studente);
+			
+			
 			// stud.setCorsiSuperati(assignCorsi(stud));
-			return stud;
+			return studente;
 
 		} catch (Exception e) {
 			e.printStackTrace();
