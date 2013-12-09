@@ -1,4 +1,4 @@
-package eu.trentorise.smartcampus.corsi.controllersync;
+package eu.trentorise.smartcampus.corsi.servicesync;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,8 +11,11 @@ import org.apache.derby.iapi.sql.compile.AccessPath;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,11 +37,13 @@ import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
 import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExams;
 import eu.trentorise.smartcampuse.unidataservice.Constants;
 
-@Controller("studenteControllerSync")
-public class StudenteControllerSync {
+@Service("studenteServiceSync")
+@Configuration
+@ComponentScan("eu.trentorise.smartcampus.corsi.servicesync")
+public class StudenteServiceSync {
 
 	private static final Logger logger = Logger
-			.getLogger(StudenteControllerSync.class);
+			.getLogger(StudenteServiceSync.class);
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */

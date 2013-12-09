@@ -540,7 +540,7 @@ public class CommentiController {
 	 * nel db di dati (fake)
 	 */
 	@SuppressWarnings("deprecation")
-	//@PostConstruct
+	@PostConstruct
 	private void initCommenti() {
 
 		Dipartimento d = new Dipartimento();

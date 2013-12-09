@@ -48,6 +48,9 @@ public class CorsoLaureaController {
 		try {
 
 			List<CorsoLaurea> getCorsiLaurea = corsoLaureaRepository.findAll();
+			
+			if(getCorsiLaurea == null)
+				
 
 			return getCorsiLaurea;
 

@@ -16,7 +16,7 @@
 
 	<dependencies>
 
-	
+
 
 		<!-- Spring security -->
 		<dependency>
@@ -122,27 +122,27 @@
 			<artifactId>socialservice.client</artifactId>
 			<version>2.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
-	<artifactId>smartcampus.client.commons</artifactId>
-	<version>2.0</version>
+			<artifactId>smartcampus.client.commons</artifactId>
+			<version>2.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
-	<artifactId>mediation.api</artifactId>
-	<version>1.0</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>eu.trentorise.smartcampus</groupId>
-		<artifactId>unidataservice.client</artifactId>
-		<version>1.0</version>
-	</dependency>
-	
+			<artifactId>mediation.api</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>unidataservice.client</artifactId>
+			<version>1.0</version>
+		</dependency>
+
 		<!-- DB -->
-			<dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.24</version>
@@ -182,25 +182,25 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-      
-            
-            
-<dependency>
-	<groupId>org.slf4j</groupId>
-	<artifactId>slf4j-log4j12</artifactId>
-	<version>1.7.5</version>
-</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.5</version>
+		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
@@ -211,8 +211,8 @@
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
-		</dependency>			
-		
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -238,11 +238,11 @@
 
 		<finalName>studymate</finalName>
 	</build>
-    <repositories>
-        <repository>
-            <id>SmartCampus</id>
-            <url>http://repository.smartcampuslab.it/content/groups/public</url>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>SmartCampus</id>
+			<url>http://repository.smartcampuslab.it/content/groups/public</url>
+		</repository>
+	</repositories>
 
 </project>

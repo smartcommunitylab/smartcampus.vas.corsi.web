@@ -15,23 +15,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.corsi.controllersync.DipartimentoControllerSync;
-import eu.trentorise.smartcampus.corsi.controllersync.StudenteControllerSync;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
+import eu.trentorise.smartcampus.corsi.servicesync.DipartimentoServiceSync;
 
 @Controller("dipartmentoController")
 public class DipartimentoController {
 
 	private static final Logger logger = Logger
-			.getLogger(CorsiController.class);
+			.getLogger(DipartimentoController.class);
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
 	@Autowired
-	private DipartimentoControllerSync controllerSyncDipartimento;
+	private DipartimentoServiceSync controllerSyncDipartimento;
 
+	
 	/**
 	 * 
 	 * @param request
@@ -54,8 +54,9 @@ public class DipartimentoController {
 			List<Dipartimento> getDip = dipartimentoRepository.findAll();
 
 			// se non ci sono db in locale li prendo da unidaa e li salvo
-			if (getDip == null) {
+			if (getDip.size() == 0) {
 				List<Dipartimento> dipartimentiSync;
+				
 				dipartimentiSync = controllerSyncDipartimento
 						.getDipartimentoSync(request, response, session);
 

@@ -47,14 +47,6 @@ public class UniDepartmentMapper {
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
-		BasicProfileService service = new BasicProfileService(profileaddress);
-
-		// recupero i dati del profilo dell'utente
-		basicProfile = service.getBasicProfile(token);
-		
-		if(basicProfile == null)
-			return null;
-
 		dipartimenti = new ArrayList<Dipartimento>();
 		
 		for (FacoltaData facolta : dataFacolta) {
@@ -75,14 +67,6 @@ public class UniDepartmentMapper {
 	protected Dipartimento convert(FacoltaData dataFacolta, String token)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
-
-		BasicProfileService service = new BasicProfileService(profileaddress);
-
-		// recupero i dati del profilo dell'utente
-		basicProfile = service.getBasicProfile(token);
-		
-		if(basicProfile == null)
-			return null;
 
 			// wrappo i dati dei dipartimenti
 			Dipartimento dipartimento = new Dipartimento();
