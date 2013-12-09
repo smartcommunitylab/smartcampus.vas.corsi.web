@@ -54,7 +54,18 @@ public class DipartimentoServiceSync {
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
-	String client_auth_token = "6d6ed274-4db7-4d9c-8c78-0a519ff33625";
+	// client id studymate
+	@Autowired
+	@Value("${studymate.client.id}")
+	private String client_id;
+	
+	// client secret studymate
+	@Autowired
+	@Value("${studymate.client.secret}")
+	private String client_secret;
+	
+	
+	private String client_auth_token;
 	
 	List<Dipartimento> dipartimenti;
 
@@ -88,7 +99,7 @@ public class DipartimentoServiceSync {
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
 			
-			EasyTokenManger clientTokenManager = new EasyTokenManger("b8fcb94d-b4cf-438f-802a-c0a560734c88", "536560ac-cb74-4e1b-86a1-ef2c06c3313a", profileaddress);
+			EasyTokenManger clientTokenManager = new EasyTokenManger(client_id, client_secret, profileaddress);
 			client_auth_token = clientTokenManager.getClientSmartCampusToken();
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector.getFacoltaData(client_auth_token);
