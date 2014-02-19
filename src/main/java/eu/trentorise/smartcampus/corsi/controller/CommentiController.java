@@ -1,12 +1,20 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
 import java.awt.color.CMMException;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +24,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.aac.AACException;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
@@ -39,10 +49,12 @@ import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
+import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
+
 
 @Controller("commentiController")
 public class CommentiController {
@@ -56,6 +68,14 @@ public class CommentiController {
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
+	
+	@Autowired
+	@Value("${studymate.client.id}")
+	private String clientId;
+	
+	@Autowired
+	@Value("${studymate.client.secret}")
+	private String clientSecret;
 
 	@Autowired
 	private CommentiRepository commentiRepository;
@@ -88,6 +108,47 @@ public class CommentiController {
 
 	@Autowired
 	private EventoRepository eventoRepository;
+	
+	private eu.trentorise.smartcampus.corsi.util.EasyTokenManger tkm;
+	
+	@PostConstruct
+	private void init() {
+		tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
+
+		Properties prop = new Properties();
+		
+		try {
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();     
+			InputStream streamIn = loader.getResourceAsStream("/corsi.properties");
+			prop.load(streamIn);
+			prop.setProperty("url.file.resource.keywords",
+					CommentiController.class.getResource("/bad-words/keywords")
+							.toString());
+			
+			prop.store(new FileWriter("corsi.properties"), null);
+			
+			loader = Thread.currentThread().getContextClassLoader();  
+
+			prop.load(streamIn);
+			
+			String mediationService = prop.getProperty("url.mediation.services");
+			String webappName = prop.getProperty("webapp.name");
+			String urlResourceKW = prop.getProperty("url.file.resource.keywords");
+			
+			mediationParserImpl = new MediationParserImpl(mediationService, webappName, new URL(urlResourceKW));
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	
+	
 
 	/**
 	 * 
@@ -186,10 +247,6 @@ public class CommentiController {
 			logger.info("/corso/{id_corso}/commento/all");
 			if (id_corso == null)
 				return null;
-
-
-
-			synchronizeApprovationComments(id_corso,request);
 			
 			commentiAggiornati = commentiRepository
 					.getCommentoByCorsoApproved(corsoRepository.findOne(
@@ -279,54 +336,93 @@ public class CommentiController {
 		return null;
 	}
 
-	private void synchronizeApprovationComments(Long id_corso, HttpServletRequest request) {
-		
-		List<Commento> commenti = commentiRepository.getCommentoByCorsoApproved(corsoRepository.findOne(
-				id_corso).getId());
-				
-		
-		if(commenti.size() == 0)
-			return;
-
-		// costruisco la lista di CommentBaseEntity da mandare al mediatore
-		List<CommentBaseEntity> commentiEntity = new ArrayList<CommentBaseEntity>();
-		for (Commento commento : commenti) {
-			CommentBaseEntity commentMediator = new CommentBaseEntity();
-			commentMediator.setId(commento.getId());
-			commentMediator.setTesto(commento.getTesto());
-			commentMediator.setApproved(commento.isApproved());
-			commentiEntity.add(commentMediator);
-		}
-
-		Collection<CommentBaseEntity> commentiEntityAggiornata = new ArrayList<CommentBaseEntity>();
-
-		// aggiorno i commenti con il mediatore
-		commentiEntityAggiornata = mediationParserImpl
-				.updateCommentToMediationService(commentiEntity,
-						getToken(request));
-		
-		
-		
-		
-		for (CommentBaseEntity commentoMediatoreAggiornato : commentiEntityAggiornata) {
-			Commento commentoDB = commentiRepository.findOne(commentoMediatoreAggiornato.getId());
-			commentoDB.setId(commentoMediatoreAggiornato.getId());
-			commentoDB.setTesto(commentoMediatoreAggiornato.getTesto());
-			commentoDB.setApproved(commentoMediatoreAggiornato.isApproved());
-			
-			commentiRepository.save(commentoDB);
-
-		}
-		
+//	private void synchronizeApprovationComments(Long id_corso, HttpServletRequest request) {
+//		
+//		List<Commento> commenti = commentiRepository.getCommentoByCorsoApproved(corsoRepository.findOne(
+//				id_corso).getId());
+//				
+//		
+//		if(commenti.size() == 0)
+//			return;
+//
 //		// costruisco la lista di CommentBaseEntity da mandare al mediatore
-//		Collection<CommentBaseEntity> commentiEntity = new ArrayList<CommentBaseEntity>();
+//		List<CommentBaseEntity> commentiEntity = new ArrayList<CommentBaseEntity>();
+//		for (Commento commento : commenti) {
+//			CommentBaseEntity commentMediator = new CommentBaseEntity();
+//			commentMediator.setId(commento.getId());
+//			commentMediator.setTesto(commento.getTesto());
+//			commentMediator.setApproved(commento.isApproved());
+//			commentiEntity.add(commentMediator);
+//		}
+//
+//		Collection<CommentBaseEntity> commentiEntityAggiornata = new ArrayList<CommentBaseEntity>();
+//
+//		// aggiorno i commenti con il mediatore
+//		commentiEntityAggiornata = mediationParserImpl.updateComment(0, Calendar.getInstance().getTimeInMillis(), tkm.getClientSmartCampusToken());
+//
 //		
-//		commentiEntity = mediationParserImpl
-//				.updateCommentToMediationService((List<CommentBaseEntity>)commenti,
-//						getToken(request));
 //		
-		
+//		
+//		
+//		for (CommentBaseEntity commentoMediatoreAggiornato : commentiEntityAggiornata) {
+//			Commento commentoDB = commentiRepository.findOne(commentoMediatoreAggiornato.getId());
+//			commentoDB.setId(commentoMediatoreAggiornato.getId());
+//			commentoDB.setTesto(commentoMediatoreAggiornato.getTesto());
+//			commentoDB.setApproved(commentoMediatoreAggiornato.isApproved());
+//			
+//			commentiRepository.save(commentoDB);
+//
+//		}
+//		
+////		// costruisco la lista di CommentBaseEntity da mandare al mediatore
+////		Collection<CommentBaseEntity> commentiEntity = new ArrayList<CommentBaseEntity>();
+////		
+////		commentiEntity = mediationParserImpl
+////				.updateCommentToMediationService((List<CommentBaseEntity>)commenti,
+////						getToken(request));
+////		
+//		
+//	}
+	
+	
+	
+	
+	
+	@Scheduled(fixedDelay = 900000)
+	// 15min
+	public void updateRemoteComment() throws AACException {
+		logger.debug("Update comment in local");
+		// aggiorno i commenti
+		// MediationParserImpl mediationParserImpl = new MediationParserImpl();
+		Map<String, Boolean> updatedCommentList = mediationParserImpl
+				.updateComment(0, System.currentTimeMillis(),
+						tkm.getClientSmartCampusToken());
+		if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
+			Iterator iterator = updatedCommentList.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry mapEntry = (Map.Entry) iterator.next();
+
+				Commento c = commentiRepository.findOne(Long
+						.parseLong(mapEntry.getKey().toString()));
+
+				if (c != null) {
+					c.setApproved((Boolean) mapEntry.getValue());
+					commentiRepository.saveAndFlush(c);
+					logger.info("Scheduled Synchronization comments... "+updatedCommentList.size()+" comments updated");
+				}
+			}
+		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * 
@@ -423,7 +519,8 @@ public class CommentiController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			// sincronizzo le keyword tra il portale e studymate
-			mediationParserImpl.updateKeyWord(token);
+			mediationParserImpl.initKeywords(
+					tkm.getClientSmartCampusToken());
 
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
@@ -494,8 +591,9 @@ public class CommentiController {
 			Commento commentoSalvato = null;
 
 			// check text
+			
 			commento.setApproved(mediationParserImpl.localValidationComment(
-					commento.getTesto(), commento.getId().intValue(), userId, token));
+					commento.getTesto(), commento.getId().toString(), userId, tkm.getClientSmartCampusToken()));
 
 			commento.setData_inserimento(String.valueOf(System.currentTimeMillis()));
 			
@@ -509,10 +607,10 @@ public class CommentiController {
 			
 			
 			if(commento.isApproved()){
-				mediationParserImpl.remoteValidationComment(commento.getTesto(), commento.getId().intValue(), userId, token);
+				mediationParserImpl.remoteValidationComment(commento.getTesto(), commento.getId().toString(), userId, token);
 			}
 
-			// Controllo se il commento � gi� presente
+			// Controllo se il commento è già presente
 			if (commentoDaModificare == null) {
 				commentoSalvato = commentiRepository.saveAndFlush(commento);
 			} else {

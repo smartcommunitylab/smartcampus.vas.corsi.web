@@ -17,7 +17,6 @@ public class CorsoLaurea extends BasicProfile {
 	private static final long serialVersionUID = 8681730600984301605L;
 
 	@Id
-	@GeneratedValue
 	private long id;
 
 	@Column(name = "NOME")

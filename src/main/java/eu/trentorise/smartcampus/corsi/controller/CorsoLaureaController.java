@@ -2,9 +2,11 @@ package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,9 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
+import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
+import eu.trentorise.smartcampus.corsi.servicesync.CorsoLaureaServiceSync;
+import eu.trentorise.smartcampus.corsi.servicesync.DipartimentoServiceSync;
 
 @Controller("corsoLaureaController")
 public class CorsoLaureaController {
@@ -28,6 +34,9 @@ public class CorsoLaureaController {
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
+	@Autowired
+	private CorsoLaureaServiceSync controllerSyncCorsoLaurea;
+
 	/**
 	 * 
 	 * @param request
@@ -36,7 +45,7 @@ public class CorsoLaureaController {
 	 * @return List<CorsoLaurea>
 	 * @throws IOException
 	 * 
-	 * Restituisce tutti i corsi di laurea
+	 *             Restituisce tutti i corsi di laurea
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsolaurea/all")
@@ -48,11 +57,10 @@ public class CorsoLaureaController {
 		try {
 
 			List<CorsoLaurea> getCorsiLaurea = corsoLaureaRepository.findAll();
-			
-			if(getCorsiLaurea == null)
-				
 
-			return getCorsiLaurea;
+			if (getCorsiLaurea == null)
+
+				return getCorsiLaurea;
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -65,7 +73,7 @@ public class CorsoLaureaController {
 	/*
 	 * Ritorna tutti i corsi di laurea di un dipartimento dato
 	 */
-	
+
 	/**
 	 * 
 	 * @param request
@@ -75,7 +83,7 @@ public class CorsoLaureaController {
 	 * @return List<CorsoLaurea>
 	 * @throws IOException
 	 * 
-	 * Restituisce tutti i corsi di laurea dato un dipartimento
+	 *             Restituisce tutti i corsi di laurea dato un dipartimento
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsolaurea/{id_dipartimento}")
@@ -90,9 +98,28 @@ public class CorsoLaureaController {
 			if (id_dipartimento == null)
 				return null;
 
-			return corsoLaureaRepository
+			List<CorsoLaurea> getCds = corsoLaureaRepository
 					.getCorsiLaureaByDipartimento(dipartimentoRepository
 							.findOne(id_dipartimento));
+
+			// se non ci sono db in locale li prendo da unidaa e li salvo
+			if (getCds.size() == 0) {
+				List<CorsoLaurea> listCdsSync;
+				listCdsSync = controllerSyncCorsoLaurea.getCdsSync(request,
+						response, session, id_dipartimento);
+
+				listCdsSync = corsoLaureaRepository.save(listCdsSync);
+
+				if (listCdsSync == null)
+					return null;
+
+				getCds = corsoLaureaRepository
+						.getCorsiLaureaByDipartimento(dipartimentoRepository
+								.findOne(id_dipartimento));
+
+			}
+
+			return getCds;
 
 		} catch (Exception e) {
 			e.printStackTrace();

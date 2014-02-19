@@ -40,9 +40,9 @@
 
 	<bean id="MediationParserImpl"
 		class="eu.trentorise.smartcampus.mediation.engine.MediationParserImpl">
-		<property name="dataSource" ref="dataSource" />	
-		<property name="urlServermediation" value="${url.mediation.services}"/>
-		<property name="webappname" value="${webapp.name}"/>
+		<property name="urlServermediation" value="${url.mediation.services}" />
+		<property name="webappname" value="${webapp.name}" />
+		
 	</bean>
 	
 </beans>

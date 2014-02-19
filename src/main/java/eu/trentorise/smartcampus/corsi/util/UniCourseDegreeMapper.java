@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
@@ -16,6 +19,9 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.model.CdsData;
 import eu.trentorise.smartcampus.unidataservice.model.FacoltaData;
 
+@Service
+@Configuration
+@ComponentScan("eu.trentorise.smartcampus.corsi.utils")
 public class UniCourseDegreeMapper {
 
 	@Autowired
@@ -41,14 +47,6 @@ public class UniCourseDegreeMapper {
 	public List<CorsoLaurea> convert(List<CdsData> dataCds, String token)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
-
-		BasicProfileService service = new BasicProfileService(profileaddress);
-
-		// recupero i dati del profilo dell'utente
-		basicProfile = service.getBasicProfile(token);
-
-		if (basicProfile == null)
-			return null;
 
 		corsiLaurea = new ArrayList<CorsoLaurea>();
 

@@ -23,6 +23,7 @@ import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
+import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.corsi.util.UniCourseDegreeMapper;
 import eu.trentorise.smartcampus.corsi.util.UniDepartmentMapper;
 import eu.trentorise.smartcampus.unidataservice.UniversityPlannerService;
@@ -59,10 +60,20 @@ public class CorsoLaureaServiceSync {
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
-	Dipartimento dipartimento;
-	List<CorsoLaurea> corsiDiLaurea;
+	private Dipartimento dipartimento;
+	private List<CorsoLaurea> corsiDiLaurea;
 	
-	String client_auth_token = "6d6ed274-4db7-4d9c-8c78-0a519ff33625";
+	// client id studymate
+	@Autowired
+	@Value("${studymate.client.id}")
+	private String client_id;
+	
+	// client secret studymate
+	@Autowired
+	@Value("${studymate.client.secret}")
+	private String client_secret;
+	
+	String client_auth_token;
 	
 	
 	/**
@@ -78,7 +89,7 @@ public class CorsoLaureaServiceSync {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/sync/corsolaurea/{id_dipartimento}/all")
 	public @ResponseBody
-	List<CorsoLaurea> getDipartimentoSync(HttpServletRequest request,
+	List<CorsoLaurea> getCdsSync(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("id_dipartimento") Long id_dipartimento)
 
@@ -96,6 +107,10 @@ public class CorsoLaureaServiceSync {
 			// prendo i dati da unidata e li mappo
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
+			
+			EasyTokenManger clientTokenManager = new EasyTokenManger(client_id, client_secret, profileaddress);
+			client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			System.out.println("Client auth token: " + client_auth_token);
 			
 			List<CdsData> dataCdsUni = uniConnector.getCdsData(client_auth_token, String.valueOf(id_dipartimento));
 			

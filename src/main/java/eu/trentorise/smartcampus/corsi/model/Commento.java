@@ -3,12 +3,12 @@ package eu.trentorise.smartcampus.corsi.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 
 
@@ -162,5 +162,10 @@ public class Commento extends CommentBaseEntity {
 	}
 	
 	
+	public String setTesto(String testo){
+		super.setTesto(testo);
+	}
+		
+	}
 
 }

@@ -11,7 +11,6 @@ public class Dipartimento extends BasicEntity {
 	private static final long serialVersionUID = 8681710690984301605L;
 
 	@Id
-	@GeneratedValue
 	private long id;
 
 	@Column(name = "NOME")
