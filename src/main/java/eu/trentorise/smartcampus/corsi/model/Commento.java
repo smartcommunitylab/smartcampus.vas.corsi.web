@@ -160,12 +160,5 @@ public class Commento extends CommentBaseEntity {
 	public void setNome_studente(String nome_studente) {
 		this.nome_studente = nome_studente;
 	}
-	
-	
-	public String setTesto(String testo){
-		super.setTesto(testo);
-	}
-		
-	}
 
 }

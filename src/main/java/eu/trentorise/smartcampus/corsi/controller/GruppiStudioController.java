@@ -62,9 +62,18 @@ public class GruppiStudioController {
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */
+
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
+	
+	@Autowired
+	@Value("${studymate.client.id}")
+	private String clientId;
+	
+	@Autowired
+	@Value("${studymate.client.secret}")
+	private String clientSecret;
 
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
@@ -86,7 +95,7 @@ public class GruppiStudioController {
 	@Autowired
 	private CorsoRepository corsoRepository;
 
-	
+	private eu.trentorise.smartcampus.corsi.util.EasyTokenManger tkm;
 	
 	
 	///////////////////////////////////////////////////////////////////////////
@@ -444,9 +453,8 @@ public class GruppiStudioController {
 			
 			
 			//ottengo il client token
-			EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID, CLIENT_SECRET, profileaddress);
-			
-			communicatorConnector.sendAppNotification(n, appName, users, tManager.getClientSmartCampusToken());
+			tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
+			communicatorConnector.sendAppNotification(n, appName, users, tkm.getClientSmartCampusToken());
 			
 			
 			gruppodistudio.setId(-1); // setto l'id a -1 per evitare che il commento venga sovrascritto

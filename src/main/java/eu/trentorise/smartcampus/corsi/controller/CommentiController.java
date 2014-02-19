@@ -87,7 +87,7 @@ public class CommentiController {
 	@Autowired
 	private CorsoRepository corsoRepository;
 
-	@Autowired
+
 	private MediationParserImpl mediationParserImpl;
 
 	/*
@@ -108,6 +108,9 @@ public class CommentiController {
 
 	@Autowired
 	private EventoRepository eventoRepository;
+	
+	@Autowired
+	private GruppoDiStudioRepository gdsRepository;
 	
 	private eu.trentorise.smartcampus.corsi.util.EasyTokenManger tkm;
 	
@@ -638,7 +641,7 @@ public class CommentiController {
 	 * nel db di dati (fake)
 	 */
 	@SuppressWarnings("deprecation")
-//	@PostConstruct
+	@PostConstruct
 	private void initCommenti() {
 
 		Dipartimento d = new Dipartimento();
@@ -1388,6 +1391,19 @@ public class CommentiController {
 			commentiRepository.save(commento);
 		}
 
+		
+		GruppoDiStudio gds = new GruppoDiStudio();
+		gds.setCorso(1);
+		gds.setNome("gruppo cervelloni");
+		gds.setVisible(true);
+		gdsRepository.save(gds);
+		
+		GruppoDiStudio gds2 = new GruppoDiStudio();
+		gds.setCorso(2);
+		gds.setNome("gruppo prova");
+		gds.setVisible(true);
+		gdsRepository.save(gds2);
+		
 		esse3 = corsoRepository.findAll();
 		for (Corso index : esse3) {
 			for (int i1 = 0; i1 < 2; i1++) {
@@ -1437,8 +1453,12 @@ public class CommentiController {
 						("2013/09/0" + String.valueOf(i1 + 1)).toString()));
 				attivita.setStart(new Time(15, 0, 0));
 				attivita.setStop(new Time(17, 0, 0));
+				attivita.setGruppo(i1);
 			}
 		}
+		
+
+		
 
 	}
 
