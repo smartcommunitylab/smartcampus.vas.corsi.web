@@ -648,7 +648,7 @@ public class GruppiStudioController {
 	@RequestMapping(method = RequestMethod.DELETE, value = "/gruppodistudio/delete/me")
 	public @ResponseBody
 	boolean deleteMeByGds(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
+			HttpServletResponse response, HttpSession session, @RequestBody long idGruppodistudio)
 
 	throws IOException {
 		try {
@@ -712,7 +712,7 @@ public class GruppiStudioController {
 			if (userId == null)
 				return false;
 			
-			GruppoDiStudio gdsFromDB = gruppidistudioRepository.findOne(gruppodistudio.getId());
+			GruppoDiStudio gdsFromDB = gruppidistudioRepository.findOne(idGruppodistudio);
 
 			gdsFromDB.removeStudenteGruppo(userId);
 			gdsFromDB.setIfVisibleFromNumMembers();
