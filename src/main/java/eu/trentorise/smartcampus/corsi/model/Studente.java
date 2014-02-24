@@ -34,13 +34,15 @@ public class Studente extends BasicEntity {
 	@Column(name = "COGNOME")
 	private String cognome;
 
-	@Column(name = "CORSO_LAUREA")
-	private String corso_laurea;
-
-	// @Column(name = "DIPARTIMENTO")
+	//@Column(name = "CORSO_LAUREA")
 	@ManyToOne
-	@JoinColumn(name = "ID_DIPARTIMENTO")
-	private Dipartimento dipartimento;
+	@JoinColumn(name = "ID_CORSOLAUREA")
+	private CorsoLaurea corso_laurea;
+
+	//@Column(name = "DIPARTIMENTO")
+//	@ManyToOne
+//	@JoinColumn(name = "ID_DIPARTIMENTO")
+	//private Dipartimento dipartimento;
 
 	@Column(name = "ANNO_CORSO")
 	private String anno_corso;
@@ -132,20 +134,12 @@ public class Studente extends BasicEntity {
 		this.cognome = cognome;
 	}
 
-	public String getCorso_laurea() {
+	public CorsoLaurea getCorso_laurea() {
 		return corso_laurea;
 	}
 
-	public void setCorso_laurea(String corso_laurea) {
+	public void setCorso_laurea(CorsoLaurea corso_laurea) {
 		this.corso_laurea = corso_laurea;
-	}
-
-	public Dipartimento getDipartimento() {
-		return dipartimento;
-	}
-
-	public void setDipartimento(Dipartimento dipartimento) {
-		this.dipartimento = dipartimento;
 	}
 
 	public String getAnno_corso() {

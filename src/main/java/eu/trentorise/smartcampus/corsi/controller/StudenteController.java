@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
@@ -96,10 +97,14 @@ public class StudenteController {
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			Studente studenteAggiornato = null;
 			
-			// se lo studente è null vado a prendere i dati da unidata
+			// se lo studente ï¿½ null vado a prendere i dati da unidata
 			if (studente == null) {
 				
 				studente = controllerSyncStudente.getStudenteByIdSync(request, response, session, userId);
+				CorsoLaurea cl = new CorsoLaurea();
+				cl.setId(2);
+				cl.setNome("Algoritmi");
+				studente.setCorso_laurea(cl);
 				studenteAggiornato = studenteRepository.save(studente);
 				
 				return studenteAggiornato;

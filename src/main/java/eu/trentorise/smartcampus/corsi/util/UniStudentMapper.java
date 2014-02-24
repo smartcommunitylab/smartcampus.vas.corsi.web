@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
@@ -90,7 +91,9 @@ public class UniStudentMapper {
 		studente.setEmail(email);
 
 		studente.setAnno_corso(fromStudentInfo.getAcademicYear());
-		studente.setCorso_laurea(fromStudentInfo.getCds());
+		CorsoLaurea cl = new CorsoLaurea();
+		cl.setNome(fromStudentInfo.getCds());
+		studente.setCorso_laurea(cl);
 
 		// informazioni esami
 		ArrayList<Corso> corsi = new ArrayList<Corso>();
