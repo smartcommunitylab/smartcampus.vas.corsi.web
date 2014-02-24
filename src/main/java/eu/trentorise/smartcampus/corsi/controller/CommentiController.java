@@ -566,6 +566,19 @@ public class CommentiController {
 				
 				commentoDaModificare = commentiRepository.save(commentoDaModificare);
 				
+				if(commentoDaModificare.isApproved()){
+					commentoDaModificare = commentiRepository.save(commentoDaModificare);
+					if(commentoDaModificare != null){
+						return true;
+					}
+					else{
+						return false;
+					}
+				}else{
+					commentiRepository.delete(commentoDaModificare);
+					return false;
+				}
+				
 				// se il commento è nuovo
 			}else{
 				
@@ -627,8 +640,6 @@ public class CommentiController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return false;
 		}
-
-		return false;
 	}
 
 	/**
