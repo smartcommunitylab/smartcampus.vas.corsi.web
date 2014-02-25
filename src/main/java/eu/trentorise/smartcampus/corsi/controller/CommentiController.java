@@ -55,7 +55,6 @@ import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
-
 @Controller("commentiController")
 public class CommentiController {
 
@@ -68,11 +67,11 @@ public class CommentiController {
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
-	
+
 	@Autowired
 	@Value("${studymate.client.id}")
 	private String clientId;
-	
+
 	@Autowired
 	@Value("${studymate.client.secret}")
 	private String clientSecret;
@@ -86,7 +85,6 @@ public class CommentiController {
 
 	@Autowired
 	private CorsoRepository corsoRepository;
-
 
 	private MediationParserImpl mediationParserImpl;
 
@@ -108,37 +106,41 @@ public class CommentiController {
 
 	@Autowired
 	private EventoRepository eventoRepository;
-	
+
 	@Autowired
 	private GruppoDiStudioRepository gdsRepository;
-	
+
 	private eu.trentorise.smartcampus.corsi.util.EasyTokenManger tkm;
-	
+
 	@PostConstruct
 	private void init() {
 		tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
 
 		Properties prop = new Properties();
-		
+
 		try {
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();     
-			InputStream streamIn = loader.getResourceAsStream("/corsi.properties");
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			InputStream streamIn = loader
+					.getResourceAsStream("/corsi.properties");
 			prop.load(streamIn);
 			prop.setProperty("url.file.resource.keywords",
 					CommentiController.class.getResource("/bad-words/keywords")
 							.toString());
-			
+
 			prop.store(new FileWriter("corsi.properties"), null);
-			
-			loader = Thread.currentThread().getContextClassLoader();  
+
+			loader = Thread.currentThread().getContextClassLoader();
 
 			prop.load(streamIn);
-			
-			String mediationService = prop.getProperty("url.mediation.services");
+
+			String mediationService = prop
+					.getProperty("url.mediation.services");
 			String webappName = prop.getProperty("webapp.name");
-			String urlResourceKW = prop.getProperty("url.file.resource.keywords");
-			
-			mediationParserImpl = new MediationParserImpl(mediationService, webappName, new URL(urlResourceKW));
+			String urlResourceKW = prop
+					.getProperty("url.file.resource.keywords");
+
+			mediationParserImpl = new MediationParserImpl(mediationService,
+					webappName, new URL(urlResourceKW));
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -149,9 +151,6 @@ public class CommentiController {
 		}
 
 	}
-
-	
-	
 
 	/**
 	 * 
@@ -250,13 +249,14 @@ public class CommentiController {
 			logger.info("/corso/{id_corso}/commento/all");
 			if (id_corso == null)
 				return null;
-			
+
 			commentiAggiornati = commentiRepository
 					.getCommentoByCorsoApproved(corsoRepository.findOne(
 							id_corso).getId());
 
 			if (commentiAggiornati.size() != 0) {
-				commentiAggiornati = commentiRepository.save(commentiAggiornati);
+				commentiAggiornati = commentiRepository
+						.save(commentiAggiornati);
 				return commentiAggiornati;
 			} else {
 				Corso corso = corsoRepository.findOne(id_corso);
@@ -326,7 +326,6 @@ public class CommentiController {
 				commento.setData_inserimento(null);
 
 				commentiAggiornati.add(commento);
-				
 
 				return commentiAggiornati;
 
@@ -339,8 +338,6 @@ public class CommentiController {
 		return null;
 	}
 
-
-	
 	@Scheduled(fixedDelay = 900000)
 	// 15min
 	public void updateRemoteComment() throws AACException {
@@ -355,27 +352,18 @@ public class CommentiController {
 			while (iterator.hasNext()) {
 				Map.Entry mapEntry = (Map.Entry) iterator.next();
 
-				Commento c = commentiRepository.findOne(Long
-						.parseLong(mapEntry.getKey().toString()));
+				Commento c = commentiRepository.findOne(Long.parseLong(mapEntry
+						.getKey().toString()));
 
 				if (c != null) {
 					c.setApproved((Boolean) mapEntry.getValue());
 					commentiRepository.saveAndFlush(c);
-					logger.info("Scheduled Synchronization comments... "+updatedCommentList.size()+" comments updated");
+					logger.info("Scheduled Synchronization comments... "
+							+ updatedCommentList.size() + " comments updated");
 				}
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	/**
 	 * 
@@ -472,8 +460,7 @@ public class CommentiController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			// sincronizzo le keyword tra il portale e studymate
-			mediationParserImpl.initKeywords(
-					tkm.getClientSmartCampusToken());
+			mediationParserImpl.initKeywords(tkm.getClientSmartCampusToken());
 
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
@@ -528,110 +515,116 @@ public class CommentiController {
 			// cerco nel db se il commento dello studente per questo corso c'�
 			// gi�
 			// presente
-			Commento commentoDaModificare = commentiRepository
-					.getCommentoByStudenteApproved(studenteRepository
-							.findOne(userId).getId(),
-							corsoRepository.findOne(commento.getCorso())
-									.getId());
-			
-			
-			
-			// gestisco il commento nel caso sia già presente
-			
-			if(commentoDaModificare != null){
-				commentoDaModificare.setId_studente(userId);
-				commentoDaModificare.setNome_studente(profile.getName());
-				
-				commentoDaModificare.setCorso(commento.getCorso());
-				commentoDaModificare.setRating_carico_studio(commento.getRating_carico_studio());
-				commentoDaModificare.setRating_contenuto(commento.getRating_contenuto());
-				commentoDaModificare.setRating_esame(commento.getRating_esame());
-				commentoDaModificare.setRating_lezioni(commento.getRating_esame());
-				commentoDaModificare.setRating_materiali(commento.getRating_materiali());
-				commentoDaModificare.setTesto(commento.getTesto());
 
-				commentoDaModificare.setData_inserimento(String.valueOf(new Date(System.currentTimeMillis())));
-				commentoDaModificare.setNome_studente(profile.getName());
-				commentoDaModificare.setApproved(mediationParserImpl
-						.localValidationComment(
-								commentoDaModificare.getTesto(), commentoDaModificare
-										.getId().toString(), userId,
-								tkm.getClientSmartCampusToken()));
-				
-				
-				if(commentoDaModificare.isApproved()){
-					//mediationParserImpl.remoteValidationComment(commentoDaModificare.getTesto(), commentoDaModificare.getId().toString(), userId, token);
-				}
-				
-				
-				commentoDaModificare = commentiRepository.save(commentoDaModificare);
-				
-				if(commentoDaModificare.isApproved()){
-					commentoDaModificare = commentiRepository.save(commentoDaModificare);
-					if(commentoDaModificare != null){
-						return true;
+			if (profile != null) {
+
+				Commento commentoDaModificare = commentiRepository
+						.getCommentoByStudenteApproved(studenteRepository
+								.findOne(userId).getId(), corsoRepository
+								.findOne(commento.getCorso()).getId());
+
+				// gestisco il commento nel caso sia già presente
+
+				if (commentoDaModificare != null) {
+					commentoDaModificare.setId_studente(userId);
+					commentoDaModificare.setNome_studente(profile.getName());
+
+					commentoDaModificare.setCorso(commento.getCorso());
+					commentoDaModificare.setRating_carico_studio(commento
+							.getRating_carico_studio());
+					commentoDaModificare.setRating_contenuto(commento
+							.getRating_contenuto());
+					commentoDaModificare.setRating_esame(commento
+							.getRating_esame());
+					commentoDaModificare.setRating_lezioni(commento
+							.getRating_esame());
+					commentoDaModificare.setRating_materiali(commento
+							.getRating_materiali());
+					commentoDaModificare.setTesto(commento.getTesto());
+					commentoDaModificare.setData_inserimento(String
+							.valueOf(new Date(System.currentTimeMillis())));
+					commentoDaModificare.setNome_studente(profile.getName());
+					commentoDaModificare.setApproved(mediationParserImpl
+							.localValidationComment(
+									commentoDaModificare.getTesto(),
+									commentoDaModificare.getId().toString(),
+									userId, tkm.getClientSmartCampusToken()));
+					
+
+					if (commentoDaModificare.isApproved()) {
+						mediationParserImpl.remoteValidationComment(
+								commentoDaModificare.getTesto(),
+								commentoDaModificare.getId().toString(),
+								userId, tkm.getClientSmartCampusToken());
 					}
-					else{
+
+
+					if (commentoDaModificare.isApproved()) {
+						commentoDaModificare = commentiRepository
+								.save(commentoDaModificare);
+						if (commentoDaModificare != null) {
+							return true;
+						} else {
+							return false;
+						}
+					} else {
+						commentiRepository.delete(commentoDaModificare);
 						return false;
 					}
-				}else{
-					commentiRepository.delete(commentoDaModificare);
-					return false;
-				}
-				
-				// se il commento è nuovo
-			}else{
-				
-				Commento commentoNuovo = new Commento();
-				
-				commentoNuovo.setId_studente(userId);
-				commentoNuovo.setNome_studente(profile.getName());
-				commentoNuovo.setId((long) -1); // setto l'id a -1 per evitare che il commento venga sovrascritto
-									
 
-				commentoNuovo.setData_inserimento(String.valueOf(new Date(System.currentTimeMillis())));
-				commentoNuovo.setCorso(commento.getCorso());
-				commentoNuovo.setRating_carico_studio(commento.getRating_carico_studio());
-				commentoNuovo.setRating_contenuto(commento.getRating_contenuto());
-				commentoNuovo.setRating_esame(commento.getRating_esame());
-				commentoNuovo.setRating_lezioni(commento.getRating_esame());
-				commentoNuovo.setRating_materiali(commento.getRating_materiali());
-				commentoNuovo.setTesto(commento.getTesto());
-				
-				commentoNuovo.setApproved(true);
-				
-				
-				//salvo il commento
-				commentoNuovo = commentiRepository.save(commentoNuovo);
-				
-				
-				commentoNuovo.setApproved(mediationParserImpl
-						.localValidationComment(
-								commentoNuovo.getTesto(), commentoNuovo
-										.getId().toString(), userId,
-								tkm.getClientSmartCampusToken()));
-				
-				//salvo il commento
-				commentoNuovo = commentiRepository.save(commentoNuovo);
-				
-				if(commentoNuovo.isApproved()){
-					//mediationParserImpl.remoteValidationComment(commentoNuovo.getTesto(), commentoNuovo.getId().toString(), userId, token);
-				}
-				
-				
-				if(commentoNuovo.isApproved()){
+					// se il commento è nuovo
+				} else {
+
+					Commento commentoNuovo = new Commento();
+
+					commentoNuovo.setId_studente(userId);
+					commentoNuovo.setNome_studente(profile.getName());
+
+					commentoNuovo.setData_inserimento(String.valueOf(new Date(
+							System.currentTimeMillis())));
+					commentoNuovo.setCorso(commento.getCorso());
+					commentoNuovo.setRating_carico_studio(commento
+							.getRating_carico_studio());
+					commentoNuovo.setRating_contenuto(commento
+							.getRating_contenuto());
+					commentoNuovo.setRating_esame(commento.getRating_esame());
+					commentoNuovo.setRating_lezioni(commento.getRating_esame());
+					commentoNuovo.setRating_materiali(commento
+							.getRating_materiali());
+					commentoNuovo.setTesto(commento.getTesto());
+
+					commentoNuovo.setApproved(true);
+
+					// salvo il commento
 					commentoNuovo = commentiRepository.save(commentoNuovo);
-					if(commentoNuovo != null){
-						return true;
+
+					commentoNuovo.setApproved(mediationParserImpl
+							.localValidationComment(commentoNuovo.getTesto(),
+									commentoNuovo.getId().toString(), userId,
+									tkm.getClientSmartCampusToken()));
+
+					// salvo il commento
+					commentoNuovo = commentiRepository.save(commentoNuovo);
+
+					if (commentoNuovo.isApproved()) {
+						mediationParserImpl.remoteValidationComment(
+								commentoNuovo.getTesto(), commentoNuovo.getId()
+										.toString(), userId, tkm.getClientSmartCampusToken());
 					}
-					else{
+
+					if (commentoNuovo.isApproved()) {
+						commentoNuovo = commentiRepository.save(commentoNuovo);
+						if (commentoNuovo != null) {
+							return true;
+						} else {
+							return false;
+						}
+					} else {
+						commentiRepository.delete(commentoNuovo);
 						return false;
 					}
-				}else{
-					commentiRepository.delete(commentoNuovo);
-					return false;
+
 				}
-				
 			}
 
 		} catch (Exception e) {
@@ -640,6 +633,7 @@ public class CommentiController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -647,7 +641,7 @@ public class CommentiController {
 	 * nel db di dati (fake)
 	 */
 	@SuppressWarnings("deprecation")
-//	@PostConstruct
+	// @PostConstruct
 	private void initCommenti() {
 
 		Dipartimento d = new Dipartimento();
@@ -1396,19 +1390,18 @@ public class CommentiController {
 			commentiRepository.save(commento);
 		}
 
-		
 		GruppoDiStudio gds = new GruppoDiStudio();
 		gds.setCorso(1);
 		gds.setNome("gruppo cervelloni");
 		gds.setVisible(true);
 		gdsRepository.save(gds);
-		
+
 		GruppoDiStudio gds2 = new GruppoDiStudio();
 		gds.setCorso(2);
 		gds.setNome("gruppo prova");
 		gds.setVisible(true);
 		gdsRepository.save(gds2);
-		
+
 		esse3 = corsoRepository.findAll();
 		for (Corso index : esse3) {
 			for (int i1 = 0; i1 < 2; i1++) {
@@ -1461,9 +1454,6 @@ public class CommentiController {
 				attivita.setGruppo(i1);
 			}
 		}
-		
-
-		
 
 	}
 
