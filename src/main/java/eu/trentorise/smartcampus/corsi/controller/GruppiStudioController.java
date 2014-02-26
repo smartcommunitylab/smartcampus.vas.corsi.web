@@ -473,8 +473,7 @@ public class GruppiStudioController {
 			EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
 					CLIENT_SECRET, profileaddress);
 
-//			communicatorConnector.sendAppNotification(n, appName, users,
-//					tManager.getClientSmartCampusToken());
+			//communicatorConnector.sendAppNotification(n, appName, users,tManager.getClientSmartCampusToken());
 
 			gruppodistudio.setId(-1); // setto l'id a -1 per evitare che il
 										// commento venga sovrascritto
@@ -639,8 +638,7 @@ public class GruppiStudioController {
 					EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
 							CLIENT_SECRET, profileaddress);
 
-//					communicatorConnector.sendAppNotification(n, appName,
-//							users, tManager.getClientSmartCampusToken());
+					//communicatorConnector.sendAppNotification(n, appName, users, tManager.getClientSmartCampusToken());
 
 				}
 			}

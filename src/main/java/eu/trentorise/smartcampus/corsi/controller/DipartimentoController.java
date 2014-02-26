@@ -108,7 +108,7 @@ public class DipartimentoController {
 			Dipartimento getDip = dipartimentoRepository
 					.findOne(id_dipartimento);
 
-			// se non ci sono db in locale li prendo da unidaa e li salvo
+			// se non ci sono db in locale li prendo da unidata e li salvo
 			if (getDip == null) {
 				List<Dipartimento> dipartimentiSync;
 				dipartimentiSync = controllerSyncDipartimento
