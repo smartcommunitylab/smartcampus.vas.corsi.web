@@ -94,7 +94,7 @@ public class StudenteServiceSync {
 	 * @return Studente
 	 * @throws IOException
 	 * 
-	 *             Restituisce lo studente soltanto se c'è bisogno di
+	 *             Restituisce lo studente soltanto se c'ï¿½ bisogno di
 	 *             sincronizzare
 	 * 
 	 */
@@ -115,11 +115,6 @@ public class StudenteServiceSync {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studenteDB = studenteRepository.findOne(userId);
-
-			// se lo studenteDB non è presente nel DB di studymate, sincronizzo
-			// i dati. Altrimenti ritorno null
-			if (studenteDB != null)
-				return null;
 
 			// prendo i dati da unidata e li mappo
 			StudentInfoService studentConnector = new StudentInfoService(
@@ -165,7 +160,7 @@ public class StudenteServiceSync {
 	 * @return Studente
 	 * @throws IOException
 	 * 
-	 *             Restituisce lo studente soltanto se c'è bisogno di
+	 *             Restituisce lo studente soltanto se c'ï¿½ bisogno di
 	 *             sincronizzare
 	 * 
 	 */
@@ -184,7 +179,7 @@ public class StudenteServiceSync {
 
 			Studente studenteDB = studenteRepository.findOne(id_studente);
 
-			// se lo studenteDB non è presente nel DB di studymate, sincronizzo
+			// se lo studenteDB non ï¿½ presente nel DB di studymate, sincronizzo
 			// i dati. Altrimenti ritorno null
 			if (studenteDB != null)
 				return null;
@@ -257,7 +252,7 @@ public class StudenteServiceSync {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
-			// se lo studenteDB non è presente nel DB di studymate, non posso
+			// se lo studenteDB non ï¿½ presente nel DB di studymate, non posso
 			// sincronizzare gli esami.
 			if (studenteDB == null)
 				return null;

@@ -47,6 +47,48 @@ public class Studente extends BasicEntity {
 	@Column(name = "ANNO_CORSO")
 	private String anno_corso;
 
+	@Column(name = "ENROLLMENT_YEAR")
+	private String enrollmentYear;
+	
+	@Column(name = "NATION")
+	private String nation;
+	
+	@Column(name = "ACADEMIC_YEAR")
+	private String academicYear;
+	
+	@Column(name = "SUPLEMENTARY_YEAR")
+	private String suplementaryYear;
+	
+	@Column(name = "CFU")
+	private String cfu;
+	
+	@Column(name = "CFU_TOTAL")
+	private String cfuTotal;
+	
+	@Column(name = "MARKS_NUMBER")
+	private String marksNumber;
+	
+	@Column(name = "MARKS_AVERAGE")
+	private String marksAverage;
+	
+	@Column(name = "GENDER")
+	private String gender;
+	
+	@Column(name = "DATE_BIRTH")
+	private String dateOfBirth;
+	
+	@Column(name = "PHONE")
+	private String phone;
+	
+	@Column(name = "MOBILE")
+	private String mobile;
+	
+	@Column(name = "ADDRESS")
+	private String address;
+	
+	@Column(name = "CDS")
+	private String cds;
+
 	@Column(name = "EMAIL")
 	private String email;
 

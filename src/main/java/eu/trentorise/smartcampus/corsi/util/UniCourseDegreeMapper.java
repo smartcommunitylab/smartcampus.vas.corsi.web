@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
+import eu.trentorise.smartcampus.corsi.model.PianoStudi;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
@@ -18,6 +19,7 @@ import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.model.CdsData;
 import eu.trentorise.smartcampus.unidataservice.model.FacoltaData;
+import eu.trentorise.smartcampus.unidataservice.model.PdsData;
 
 @Service
 @Configuration
@@ -31,9 +33,6 @@ public class UniCourseDegreeMapper {
 	@Autowired
 	private CorsoLaureaRepository corsoLaureaRepository;
 
-	@Autowired
-	private DipartimentoRepository dipartimentoRepository;
-
 	private BasicProfile basicProfile;
 
 	private String token;
@@ -44,7 +43,7 @@ public class UniCourseDegreeMapper {
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<CorsoLaurea> convert(List<CdsData> dataCds, String token)
+	public List<CorsoLaurea> convert(List<CdsData> dataCds, String token, DipartimentoRepository dipartimentoRepository)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
@@ -55,7 +54,22 @@ public class UniCourseDegreeMapper {
 			CorsoLaurea corsoLaurea = new CorsoLaurea();
 
 			corsoLaurea.setId(Long.valueOf(cds.getCdsId()));
-			corsoLaurea.setNome(cds.getDescription());
+			corsoLaurea.setCdsCod(cds.getCdsCod());
+			corsoLaurea.setFacId(cds.getFacId());
+			corsoLaurea.setDescripion(cds.getDescription());
+			corsoLaurea.setDurata(cds.getDurata());
+			corsoLaurea.setAaOrd(cds.getAaOrd());
+			
+			List<PianoStudi> pdsList = new ArrayList<PianoStudi>();
+			for (PdsData pdsData : cds.getPds()) {
+				PianoStudi pds = new PianoStudi();
+				pds.setPdsId(corsoLaurea);
+				pds.setPdsCod(pdsData.getPdsCod());
+				pdsList.add(pds);
+				
+			}
+			
+			corsoLaurea.setName(cds.getDescription());
 
 			Dipartimento dip = dipartimentoRepository.findOne(Long.valueOf(cds
 					.getFacId()));
@@ -74,7 +88,7 @@ public class UniCourseDegreeMapper {
 
 	}
 
-	public CorsoLaurea convert(CdsData dataCds, String token)
+	public CorsoLaurea convert(CdsData dataCds, String token, DipartimentoRepository dipartimentoRepository)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 

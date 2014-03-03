@@ -646,7 +646,7 @@ public class CommentiController {
 
 		Dipartimento d = new Dipartimento();
 
-		d.setNome("Ingegneria e Scienza Dell'Informazione");
+		d.setDescription("Ingegneria e Scienza Dell'Informazione");
 		d.setId(1);
 
 		dipartimentoRepository.save(d);
@@ -655,7 +655,7 @@ public class CommentiController {
 
 		d = new Dipartimento();
 
-		d.setNome("Psicologia e scienze cognitive");
+		d.setDescription("Psicologia e scienze cognitive");
 
 		dipartimentoRepository.save(d);
 
@@ -663,7 +663,7 @@ public class CommentiController {
 
 		d = new Dipartimento();
 
-		d.setNome("Fisica");
+		d.setDescription("Fisica");
 
 		dipartimentoRepository.save(d);
 

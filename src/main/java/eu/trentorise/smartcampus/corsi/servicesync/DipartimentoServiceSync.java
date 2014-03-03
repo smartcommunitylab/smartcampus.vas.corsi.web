@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -89,13 +90,8 @@ public class DipartimentoServiceSync {
 		try {
 			logger.info("/sync/dipartimento/all");
 
-			dipartimenti = dipartimentoRepository.findAll();
 			
-			// se la lista dei dipartimenti è già stata scaricata ritorno null
-			if(dipartimenti.size() > 0)
-				return null;
 
-			// prendo i dati da unidata e li mappo
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
 			

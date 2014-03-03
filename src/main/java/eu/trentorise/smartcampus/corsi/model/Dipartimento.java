@@ -11,25 +11,25 @@ public class Dipartimento extends BasicEntity {
 	private static final long serialVersionUID = 8681710690984301605L;
 
 	@Id
-	private long id;
+	private long facId;
 
-	@Column(name = "NOME")
-	private String nome;
+	@Column(name = "DESCRIPTION")
+	private String description;
 
 	public long getId() {
-		return id;
+		return facId;
 	}
 
 	public void setId(long id) {
-		this.id = id;
+		this.facId = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public static long getSerialversionuid() {

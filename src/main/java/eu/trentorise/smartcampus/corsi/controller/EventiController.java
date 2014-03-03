@@ -149,8 +149,8 @@ public class EventiController {
 				n.setTimestamp(System.currentTimeMillis());
 				n.setDescription("Creazione Evento");
 
-				communicatorConnector.sendAppNotification(n, appName, users,
-						token);
+//				communicatorConnector.sendAppNotification(n, appName, users,
+//						token);
 
 				return eventoRepository.save(evento);
 			} else

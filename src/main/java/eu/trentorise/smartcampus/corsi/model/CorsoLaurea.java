@@ -1,12 +1,17 @@
 package eu.trentorise.smartcampus.corsi.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
@@ -17,29 +22,49 @@ public class CorsoLaurea extends BasicProfile {
 	private static final long serialVersionUID = 8681730600984301605L;
 
 	@Id
-	private long id;
+	@Column(name = "CDS_ID")
+	private long cdsId;
+	
+	@Column(name = "CDS_COD")
+	private String cdsCod;
+	
+	@Column(name = "FAC_ID")
+	private String facId;
+	
+	@Column(name = "DESCRIPTION")
+	private String descripion;
+	
+	@Column(name = "DURATA")
+	private String durata;
+	
+	@Column(name = "AA_ORD")
+	private String aaOrd;
+	
+	@OneToMany(mappedBy="pdsId")
+	@Column(name = "PDS")
+	private List<PianoStudi> pds;
 
-	@Column(name = "NOME")
-	private String nome;
+	@Column(name = "NAME")
+	private String name;
 
 	@ManyToOne
 	@JoinColumn(name = "DIPARTIMENTO_ID")
 	private Dipartimento dipartimento;
 
 	public long getId() {
-		return id;
+		return cdsId;
 	}
 
 	public void setId(long id) {
-		this.id = id;
+		this.cdsId = id;
 	}
 
 	public String getNome() {
-		return nome;
+		return name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setNome(String name) {
+		this.name = name;
 	}
 
 	public Dipartimento getDipartimento() {
@@ -54,4 +79,69 @@ public class CorsoLaurea extends BasicProfile {
 		return serialVersionUID;
 	}
 
+	public long getCdsId() {
+		return cdsId;
+	}
+
+	public void setCdsId(long cdsId) {
+		this.cdsId = cdsId;
+	}
+
+	public String getCdsCod() {
+		return cdsCod;
+	}
+
+	public void setCdsCod(String cdsCod) {
+		this.cdsCod = cdsCod;
+	}
+
+	public String getFacId() {
+		return facId;
+	}
+
+	public void setFacId(String facId) {
+		this.facId = facId;
+	}
+
+	public String getDescripion() {
+		return descripion;
+	}
+
+	public void setDescripion(String descripion) {
+		this.descripion = descripion;
+	}
+
+	public String getDurata() {
+		return durata;
+	}
+
+	public void setDurata(String durata) {
+		this.durata = durata;
+	}
+
+	public String getAaOrd() {
+		return aaOrd;
+	}
+
+	public void setAaOrd(String aaOrd) {
+		this.aaOrd = aaOrd;
+	}
+
+	public List<PianoStudi> getPds() {
+		return pds;
+	}
+
+	public void setPds(List<PianoStudi> pds) {
+		this.pds = pds;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	
 }

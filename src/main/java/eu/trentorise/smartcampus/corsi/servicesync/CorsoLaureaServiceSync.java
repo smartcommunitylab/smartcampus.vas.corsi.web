@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,11 @@ import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.corsi.util.UniCourseDegreeMapper;
 import eu.trentorise.smartcampus.corsi.util.UniDepartmentMapper;
+import eu.trentorise.smartcampus.moderatorservice.model.KeyWord;
+import eu.trentorise.smartcampus.moderatoservice.exception.ModeratorServiceException;
+import eu.trentorise.smartcampus.network.JsonUtils;
+import eu.trentorise.smartcampus.network.RemoteConnector;
+import eu.trentorise.smartcampus.network.RemoteException;
 import eu.trentorise.smartcampus.unidataservice.UniversityPlannerService;
 import eu.trentorise.smartcampus.unidataservice.model.CdsData;
 import eu.trentorise.smartcampus.unidataservice.model.FacoltaData;
@@ -87,6 +93,8 @@ public class CorsoLaureaServiceSync {
 	 *             Restituisce la lista dei dipartimenti soltanto se sono da sincronizzare
 	 * 
 	 */
+
+
 	@RequestMapping(method = RequestMethod.GET, value = "/sync/corsolaurea/{id_dipartimento}/all")
 	public @ResponseBody
 	List<CorsoLaurea> getCdsSync(HttpServletRequest request,
@@ -99,10 +107,10 @@ public class CorsoLaureaServiceSync {
 
 			dipartimento = dipartimentoRepository.findOne(id_dipartimento);
 			
-			// se la lista dei dipartimenti è già stata scaricata ritorno null
-			if(dipartimento == null)
+			// se la lista dei dipartimenti ï¿½ giï¿½ stata scaricata ritorno null
+			if(dipartimento == null){
 				return null;
-			
+			}
 
 			// prendo i dati da unidata e li mappo
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
@@ -118,7 +126,7 @@ public class CorsoLaureaServiceSync {
 				return null;
 
 			UniCourseDegreeMapper cdsMapper = new UniCourseDegreeMapper();
-			corsiDiLaurea = cdsMapper.convert(dataCdsUni, client_auth_token);
+			corsiDiLaurea = cdsMapper.convert(dataCdsUni, client_auth_token, dipartimentoRepository);
 			
 
 			corsiDiLaurea = corsoLaureaRepository.save(corsiDiLaurea);

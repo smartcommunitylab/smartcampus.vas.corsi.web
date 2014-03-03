@@ -54,7 +54,7 @@ public class UniDepartmentMapper {
 			Dipartimento dipartimento = new Dipartimento();
 
 			dipartimento.setId(Long.valueOf(facolta.getFacId()));
-			dipartimento.setNome(facolta.getDescription());
+			dipartimento.setDescription(facolta.getDescription());
 
 			dipartimenti.add(dipartimento);
 		}
@@ -72,7 +72,7 @@ public class UniDepartmentMapper {
 			Dipartimento dipartimento = new Dipartimento();
 
 			dipartimento.setId(Long.valueOf(dataFacolta.getFacId()));
-			dipartimento.setNome(dataFacolta.getDescription());
+			dipartimento.setDescription(dataFacolta.getDescription());
 
 		
 		return dipartimento;
