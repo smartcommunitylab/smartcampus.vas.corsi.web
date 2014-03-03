@@ -35,9 +35,9 @@ public class Studente extends BasicEntity {
 	private String cognome;
 
 	//@Column(name = "CORSO_LAUREA")
-	@ManyToOne
-	@JoinColumn(name = "ID_CORSOLAUREA")
-	private CorsoLaurea corso_laurea;
+//	@ManyToOne
+//	@JoinColumn(name = "ID_CORSOLAUREA")
+//	private CorsoLaurea corso_laurea;
 
 	//@Column(name = "DIPARTIMENTO")
 //	@ManyToOne
@@ -95,9 +95,9 @@ public class Studente extends BasicEntity {
 	@Column(name = "USER_SOCIAL_ID")
 	private long userSocialId;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "Frequenze", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "CORSO_ID"))
-	private Collection<Corso> corsi;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "Carriera", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "CORSOCARRIERA_ID"))
+	private Collection<CorsoCarriera> corsi;
 
 	@Column(name = "ESAMI_SUPERATI")
 	private String idsCorsiSuperati;
@@ -136,11 +136,11 @@ public class Studente extends BasicEntity {
 		this.gruppiDiStudio = gruppiDiStudio;
 	}
 
-	public Collection<Corso> getCorsi() {
+	public Collection<CorsoCarriera> getCorsi() {
 		return corsi;
 	}
 
-	public void setCorsi(Collection<Corso> corsi) {
+	public void setCorsi(Collection<CorsoCarriera> corsi) {
 		this.corsi = corsi;
 	}
 
@@ -176,13 +176,13 @@ public class Studente extends BasicEntity {
 		this.cognome = cognome;
 	}
 
-	public CorsoLaurea getCorso_laurea() {
-		return corso_laurea;
-	}
-
-	public void setCorso_laurea(CorsoLaurea corso_laurea) {
-		this.corso_laurea = corso_laurea;
-	}
+//	public CorsoLaurea getCorso_laurea() {
+//		return corso_laurea;
+//	}
+//
+//	public void setCorso_laurea(CorsoLaurea corso_laurea) {
+//		this.corso_laurea = corso_laurea;
+//	}
 
 	public String getAnno_corso() {
 		return anno_corso;
@@ -218,7 +218,7 @@ public class Studente extends BasicEntity {
 		// re inizializzo gli id per il db
 		this.setIdsCorsiSuperati("");
 		
-		for (Corso corso : corsi) {
+		for (CorsoCarriera corso : corsi) {
 			long idCorso = corso.getId();
 			addCorsoSuperato(this, idCorso);
 		}
@@ -243,7 +243,7 @@ public class Studente extends BasicEntity {
 		// re inizializzo gli id per il db
 		this.setIdsCorsiInteresse("");
 		
-		for (Corso corso : corsi) {
+		for (CorsoCarriera corso : corsi) {
 			long idCorso = corso.getId();
 			addCorsoInteresse(this, idCorso);
 		}
@@ -296,6 +296,118 @@ public class Studente extends BasicEntity {
 			}
 		}
 		studente.setIdsGruppiDiStudio(studenteGruppoAggiornato);
+	}
+
+	public String getEnrollmentYear() {
+		return enrollmentYear;
+	}
+
+	public void setEnrollmentYear(String enrollmentYear) {
+		this.enrollmentYear = enrollmentYear;
+	}
+
+	public String getNation() {
+		return nation;
+	}
+
+	public void setNation(String nation) {
+		this.nation = nation;
+	}
+
+	public String getAcademicYear() {
+		return academicYear;
+	}
+
+	public void setAcademicYear(String academicYear) {
+		this.academicYear = academicYear;
+	}
+
+	public String getSuplementaryYear() {
+		return suplementaryYear;
+	}
+
+	public void setSuplementaryYear(String suplementaryYear) {
+		this.suplementaryYear = suplementaryYear;
+	}
+
+	public String getCfu() {
+		return cfu;
+	}
+
+	public void setCfu(String cfu) {
+		this.cfu = cfu;
+	}
+
+	public String getCfuTotal() {
+		return cfuTotal;
+	}
+
+	public void setCfuTotal(String cfuTotal) {
+		this.cfuTotal = cfuTotal;
+	}
+
+	public String getMarksNumber() {
+		return marksNumber;
+	}
+
+	public void setMarksNumber(String marksNumber) {
+		this.marksNumber = marksNumber;
+	}
+
+	public String getMarksAverage() {
+		return marksAverage;
+	}
+
+	public void setMarksAverage(String marksAverage) {
+		this.marksAverage = marksAverage;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getCds() {
+		return cds;
+	}
+
+	public void setCds(String cds) {
+		this.cds = cds;
 	}
 
 	

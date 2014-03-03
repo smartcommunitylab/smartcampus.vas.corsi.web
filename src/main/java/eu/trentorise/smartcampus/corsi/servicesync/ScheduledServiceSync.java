@@ -110,9 +110,8 @@ public class ScheduledServiceSync {
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(client_id,
 					client_secret, profileaddress);
-			// client_auth_token =
-			clientTokenManager.getClientSmartCampusToken();
-			//client_auth_token = "a3c659a3-16c8-456e-8982-f1943c56f247";
+			//client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			client_auth_token = "5a2ff6ef-94e6-4d59-962b-5ae9d10e23c2";
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector
 					.getFacoltaData(client_auth_token);

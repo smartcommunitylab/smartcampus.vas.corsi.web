@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
@@ -222,7 +223,7 @@ public class CorsiController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corso/me")
 	public @ResponseBody
-	Collection<Corso> getCorsoByMe(HttpServletRequest request,
+	Collection<CorsoCarriera> getCorsoByMe(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
@@ -237,53 +238,7 @@ public class CorsiController {
 
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					z++;
-				}
-				
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
-				
-				studente = studenteRepository.save(studente);
-			}
-
+			
 			return studente.getCorsi();
 
 		} catch (Exception e) {
@@ -325,54 +280,6 @@ public class CorsiController {
 
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					z++;
-				}
-
-				// TEST
-
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
-				
-				studente = studenteRepository.save(studente);
-			}
 
 			studente = studenteRepository.save(studente);
 
@@ -539,50 +446,6 @@ public class CorsiController {
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-				// Aggiunta dati fake //////////////////////////////////////////
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					z++;
-				}
-				///////////////////////////////////////////////////////
-				
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				// Set corsi interesse
-				studente.setIdsCorsiInteresse(interesse);
-				
-				studente = studenteRepository.save(studente);
-			}
-
 			// //////////////////////////////////////////////////////////////////////////////////////////////
 			studente = studenteRepository.save(studente);
 			
@@ -644,52 +507,6 @@ public class CorsiController {
 
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
-			
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-					
-					z++;
-				}
-
-				// TEST
-
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				// Set corsi interesse
-				studente.setIdsCorsiInteresse(interesse);
-				
-				studente = studenteRepository.save(studente);
-			}
 			
 
 			// TODO control valid field
@@ -769,51 +586,6 @@ public class CorsiController {
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			
-			if (studente == null) {
-				
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(
-								cors.getId()).concat(","));
-					}
-
-					z++;
-				}
-
-				// TEST
-
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				// Set corsi interesse
-				studente.setIdsCorsiInteresse(interesse);
-
-			}
 
 			studente = studenteRepository.save(studente);
 

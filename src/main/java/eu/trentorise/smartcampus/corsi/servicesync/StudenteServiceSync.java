@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.corsi.controller.CorsiController;
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
@@ -134,7 +135,7 @@ public class StudenteServiceSync {
 			if (studentUniData == null)
 				return null;
 
-			UniStudentMapper studentMapper = new UniStudentMapper();
+			UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
 
 			// converto e salvo nel db lo studente aggiornato
 			Studente convertedStudent = studentMapper.convert(studentUniData,
@@ -202,7 +203,7 @@ public class StudenteServiceSync {
 			if (studentUniData == null)
 				return null;
 
-			UniStudentMapper studentMapper = new UniStudentMapper();
+			UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
 			
 			String token = getToken(request);
 
@@ -271,9 +272,9 @@ public class StudenteServiceSync {
 			if (studentUniData == null)
 				return null;
 
-			UniStudentMapper studentMapper = new UniStudentMapper();
+			UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
 
-			List<Corso> convertedEsse3Courses = studentMapper
+			List<CorsoCarriera> convertedEsse3Courses = studentMapper
 					.convertCoursesEsse3Student(studentExamsUniData, token);
 
 			studenteRepository.delete(studenteDB);

@@ -69,8 +69,6 @@ public class UniCourseDegreeMapper {
 				
 			}
 			
-			corsoLaurea.setName(cds.getDescription());
-
 			Dipartimento dip = dipartimentoRepository.findOne(Long.valueOf(cds
 					.getFacId()));
 
@@ -104,7 +102,7 @@ public class UniCourseDegreeMapper {
 		CorsoLaurea corsoLaurea = new CorsoLaurea();
 
 		corsoLaurea.setId(Long.valueOf(dataCds.getCdsId()));
-		corsoLaurea.setNome(dataCds.getDescription());
+		corsoLaurea.setDescripion(dataCds.getDescription());
 
 		Dipartimento dip = dipartimentoRepository.findOne(Long.valueOf(dataCds
 				.getFacId()));

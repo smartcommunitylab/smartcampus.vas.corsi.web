@@ -44,9 +44,6 @@ public class CorsoLaurea extends BasicProfile {
 	@Column(name = "PDS")
 	private List<PianoStudi> pds;
 
-	@Column(name = "NAME")
-	private String name;
-
 	@ManyToOne
 	@JoinColumn(name = "DIPARTIMENTO_ID")
 	private Dipartimento dipartimento;
@@ -57,14 +54,6 @@ public class CorsoLaurea extends BasicProfile {
 
 	public void setId(long id) {
 		this.cdsId = id;
-	}
-
-	public String getNome() {
-		return name;
-	}
-
-	public void setNome(String name) {
-		this.name = name;
 	}
 
 	public Dipartimento getDipartimento() {
@@ -133,14 +122,6 @@ public class CorsoLaurea extends BasicProfile {
 
 	public void setPds(List<PianoStudi> pds) {
 		this.pds = pds;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	

@@ -124,5 +124,4 @@ public class EasyTokenManger {
 		ConnManagerParams.setTimeout(params, HTTP_REQUEST_TIMEOUT_MS);
 		return httpClient;
 	}
-
 }

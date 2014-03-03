@@ -178,60 +178,6 @@ public class GruppiStudioController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findOne(userId);
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				
-				studente = studenteRepository.save(studente);
-				
-				CorsoLaurea cl = new CorsoLaurea();
-				cl = corsoLaureaRepository.findOne((long) 1);
-				studente.setCorso_laurea(cl);
-				
-				
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(
-								cors.getId()).concat(","));
-					}
-
-					z++;
-				}
-
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
-				
-				
-
-				studente = studenteRepository.save(studente);
-			}
 
 			if (userId == null)
 				return null;
@@ -379,55 +325,6 @@ public class GruppiStudioController {
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-				CorsoLaurea cl = new CorsoLaurea();
-				cl.setId(1);
-				cl.setNome("nome corsolaurea");
-				studente.setCorso_laurea(cl);
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(
-								cors.getId()).concat(","));
-					}
-
-					z++;
-				}
-
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
-
-				studente = studenteRepository.save(studente);
-			}
 
 			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
 					communicatoraddress, appName);
@@ -533,52 +430,6 @@ public class GruppiStudioController {
 			// controllo se lo studente � presente nel db
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(
-								cors.getId()).concat(","));
-					}
-
-					z++;
-				}
-
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
-
-				studente = studenteRepository.save(studente);
-			}
 
 			GruppoDiStudio gdsFromDB = gruppidistudioRepository
 					.findOne(gruppodistudio.getId());
@@ -690,52 +541,6 @@ public class GruppiStudioController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findOne(userId);
-			if (studente == null) {
-				studente = new Studente();
-				studente.setId(userId);
-				studente.setNome(profile.getName());
-				studente.setCognome(profile.getSurname());
-				studente = studenteRepository.save(studente);
-
-				// studente = studenteRepository.save(studente);
-
-				// TODO caricare corsi da esse3
-				// Creare associazione su frequenze
-
-				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
-
-				String supera = null;
-				String interesse = null;
-				int z = 0;
-				supera = new String();
-				interesse = new String();
-
-				for (Corso cors : corsiEsse3) {
-
-					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
-								.concat(","));
-					}
-
-					if (z % 4 == 0) {
-						interesse = interesse.concat(String.valueOf(
-								cors.getId()).concat(","));
-					}
-
-					z++;
-				}
-
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
-
-				studente = studenteRepository.save(studente);
-			}
 
 			if (userId == null)
 				return false;

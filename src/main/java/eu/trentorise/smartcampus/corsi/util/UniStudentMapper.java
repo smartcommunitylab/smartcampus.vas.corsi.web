@@ -1,5 +1,6 @@
 package eu.trentorise.smartcampus.corsi.util;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import eu.trentorise.smartcampus.corsi.model.Corso;
+import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Studente;
@@ -30,8 +32,6 @@ import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExams;
 
 public class UniStudentMapper {
 
-	@Autowired
-	@Value("${profile.address}")
 	private String profileaddress;
 
 	@Autowired
@@ -51,8 +51,8 @@ public class UniStudentMapper {
 
 	private List<StudentInfoExam> fromListExams;
 
-	public UniStudentMapper() {
-		// TODO Auto-generated constructor stub
+	public UniStudentMapper(String profileaddress) {
+		this.profileaddress = profileaddress;
 	}
 
 	public Studente convert(StudentInfoData fromStudentInfo,
@@ -61,7 +61,7 @@ public class UniStudentMapper {
 			ProfileServiceException {
 
 		BasicProfileService service = new BasicProfileService(profileaddress);
-
+		tokenUser = "b1931a7e-66a4-4136-907a-907bfbca893d";
 		// recupero i dati del profilo dell'utente
 		basicProfile = service.getBasicProfile(tokenUser);
 		accountProfile = service.getAccountProfile(tokenUser);
@@ -91,25 +91,38 @@ public class UniStudentMapper {
 		studente.setEmail(email);
 
 		studente.setAnno_corso(fromStudentInfo.getAcademicYear());
-		CorsoLaurea cl = new CorsoLaurea();
-		cl.setNome(fromStudentInfo.getCds());
-		studente.setCorso_laurea(cl);
+		studente.setAddress(fromStudentInfo.getAddress());
+		studente.setCds(fromStudentInfo.getCds());
+		studente.setCfu(fromStudentInfo.getCfu());
+		studente.setCfuTotal(fromStudentInfo.getCfuTotal());
+		studente.setDateOfBirth(fromStudentInfo.getDateOfBirth());
+		studente.setEnrollmentYear(fromStudentInfo.getEnrollmentYear());
+		studente.setGender(fromStudentInfo.getGender());
+		studente.setMobile(fromStudentInfo.getMobile());
+		studente.setNation(fromStudentInfo.getNation());
+		studente.setPhone(fromStudentInfo.getPhone());
+		studente.setSuplementaryYear(fromStudentInfo.getSupplementaryYears());
+		studente.setMarksAverage(fromStudentInfo.getMarksAverage());
+		studente.setMarksNumber(fromStudentInfo.getMarksNumber());
+//		CorsoLaurea cl = new CorsoLaurea();
+//		cl.setDescripion(fromStudentInfo.getCds());
+//		cl.setId(Long.valueOf(fromStudentInfo.getCds()));
+//		studente.setCorso_laurea(cl);
 
 		// informazioni esami
-		ArrayList<Corso> corsi = new ArrayList<Corso>();
+		ArrayList<CorsoCarriera> corsi = new ArrayList<CorsoCarriera>();
 		ArrayList<CorsoLite> corsiSuperati = new ArrayList<CorsoLite>();
 		fromListExams = fromStudentExams.getExams();
 		for (StudentInfoExam exam : fromListExams) {
-			Corso corso = new Corso();
-			CorsoLite corsoSuperato = new CorsoLite();
+			CorsoCarriera corso = new CorsoCarriera();
 			corso.setId(Long.valueOf(exam.getId()));
-			corso.setNome(exam.getName());
+			corso.setName(exam.getName());
+			corso.setCod(exam.getCod());
+			corso.setDate(new Date(exam.getDate()));
+			corso.setResult(exam.getResult());
+			corso.setLode(exam.isLode());
+			corso.setWeight(exam.getWeight());
 			corsi.add(corso);
-			if (exam.getResult() != null) {
-				corsoSuperato.setId(Long.valueOf(exam.getId()));
-				corsoSuperato.setNome(exam.getName());
-				corsiSuperati.add(corsoSuperato);
-			}
 		}
 
 		studente.setCorsi(corsi);
@@ -128,7 +141,7 @@ public class UniStudentMapper {
 	 * @throws SecurityException
 	 * @throws ProfileServiceException
 	 */
-	public List<Corso> convertCoursesEsse3Student(
+	public List<CorsoCarriera> convertCoursesEsse3Student(
 			StudentInfoExams fromStudentExams, String token)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
@@ -138,15 +151,20 @@ public class UniStudentMapper {
 		// recupero i dati del profilo dell'utente
 		basicProfile = service.getBasicProfile(token);
 		// informazioni esami
-		ArrayList<Corso> corsi = new ArrayList<Corso>();
-		ArrayList<CorsoLite> corsiSuperati = new ArrayList<CorsoLite>();
+		ArrayList<CorsoCarriera> corsi = new ArrayList<CorsoCarriera>();
+		ArrayList<CorsoCarriera> corsiSuperati = new ArrayList<CorsoCarriera>();
 
 		fromListExams = fromStudentExams.getExams();
 
 		for (StudentInfoExam exam : fromListExams) {
-			Corso corso = new Corso();
+			CorsoCarriera corso = new CorsoCarriera();
 			corso.setId(Long.valueOf(exam.getId()));
-			corso.setNome(exam.getName());
+			corso.setName(exam.getName());
+			corso.setCod(exam.getCod());
+			corso.setDate(new Date(exam.getDate()));
+			corso.setResult(exam.getResult());
+			corso.setLode(exam.isLode());
+			corso.setWeight(exam.getWeight());
 			corsi.add(corso);
 		}
 
