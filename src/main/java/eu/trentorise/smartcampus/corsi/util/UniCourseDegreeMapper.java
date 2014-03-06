@@ -15,6 +15,7 @@ import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.PianoStudi;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
+import eu.trentorise.smartcampus.corsi.repository.PianoStudiRepository;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
@@ -33,6 +34,9 @@ public class UniCourseDegreeMapper {
 
 	@Autowired
 	private CorsoLaureaRepository corsoLaureaRepository;
+	
+	@Autowired
+	private PianoStudiRepository pianoStudiRepository;
 
 	private BasicProfile basicProfile;
 
@@ -73,6 +77,10 @@ public class UniCourseDegreeMapper {
 
 				}
 
+				corsoLaurea.setPds(pdsList);
+				
+				pianoStudiRepository.save(pdsList);
+				
 				Dipartimento dip = dipartimentoRepository.findOne(Long
 						.valueOf(cds.getFacId()));
 

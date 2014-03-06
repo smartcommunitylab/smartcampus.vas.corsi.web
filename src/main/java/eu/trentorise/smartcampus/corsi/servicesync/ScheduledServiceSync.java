@@ -1,6 +1,7 @@
 package eu.trentorise.smartcampus.corsi.servicesync;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +70,7 @@ public class ScheduledServiceSync {
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
-	
+
 	@Autowired
 	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 
@@ -103,15 +104,15 @@ public class ScheduledServiceSync {
 
 	throws IOException {
 		try {
-			logger.info("sync scheduled");
+			logger.info("sync departments, courses degree, courses from unidata service");
 
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
 
-			EasyTokenManger clientTokenManager = new EasyTokenManger(profileaddress, client_id,
-					client_secret);
+			EasyTokenManger clientTokenManager = new EasyTokenManger(
+					profileaddress, client_id, client_secret);
 			client_auth_token = clientTokenManager.getClientSmartCampusToken();
-			//client_auth_token = "5a2ff6ef-94e6-4d59-962b-5ae9d10e23c2";
+
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector
 					.getFacoltaData(client_auth_token);
@@ -131,6 +132,8 @@ public class ScheduledServiceSync {
 			}
 
 			for (Dipartimento dip : dipartimenti) {
+				
+				corsiDiLaurea = new ArrayList<CorsoLaurea>();
 
 				List<CdsData> dataCdsUni = uniConnector.getCdsData(
 						client_auth_token, String.valueOf(dip.getId()));
@@ -138,7 +141,6 @@ public class ScheduledServiceSync {
 				if (dataCdsUni == null)
 					return;
 
-				corsiDiLaurea = null;
 				UniCourseDegreeMapper cdsMapper = new UniCourseDegreeMapper();
 				corsiDiLaurea = cdsMapper.convert(dataCdsUni,
 						client_auth_token, dipartimentoRepository);
@@ -160,15 +162,18 @@ public class ScheduledServiceSync {
 			if (month < MONTH_NEW_OFF) {
 				year--;
 			}
-			
+
 			AttivitaDidatticaMapper adMapper = new AttivitaDidatticaMapper();
 			for (CorsoLaurea cds : cdsListDB) {
 				List<AdData> attDidatticheList = uniConnector.getAdData(
 						client_auth_token, String.valueOf(cds.getCdsId()),
 						cds.getAaOrd(), String.valueOf(year));
-				
-				List<AttivitaDidattica> attivitaDidatticaList = adMapper.convert(attDidatticheList, cds.getCdsId(), cds.getAaOrd(), String.valueOf(year),client_auth_token);
-				
+
+				List<AttivitaDidattica> attivitaDidatticaList = adMapper
+						.convert(attDidatticheList, cds.getCdsId(),
+								cds.getAaOrd(), String.valueOf(year),
+								client_auth_token);
+
 				attivitaDidatticaRepository.save(attivitaDidatticaList);
 			}
 

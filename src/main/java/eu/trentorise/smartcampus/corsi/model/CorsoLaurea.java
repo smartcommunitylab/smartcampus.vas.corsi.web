@@ -19,7 +19,6 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 @NamedQuery(name = "CorsoLaurea.getCorsiLaureaByDipartimento", query = "select cl from CorsoLaurea cl where cl.dipartimento = ?1")
 public class CorsoLaurea extends BasicProfile {
 
-	private static final long serialVersionUID = 8681730600984301605L;
 
 	@Id
 	@Column(name = "CDS_ID")
@@ -62,10 +61,6 @@ public class CorsoLaurea extends BasicProfile {
 
 	public void setDipartimento(Dipartimento dipartimento) {
 		this.dipartimento = dipartimento;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	public long getCdsId() {
