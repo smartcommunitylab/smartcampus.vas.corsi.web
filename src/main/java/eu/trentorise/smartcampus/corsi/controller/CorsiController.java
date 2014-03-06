@@ -221,78 +221,78 @@ public class CorsiController {
 	 * Restituisce tutti i corsi (corsi da libretto) dello studente che manda la richiesta get
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corso/me")
-	public @ResponseBody
-	Collection<CorsoCarriera> getCorsoByMe(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-
-	throws IOException {
-		try {
-			logger.info("/corso/me");
-
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
-
-			// test
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
-			return studente.getCorsi();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
+//	@RequestMapping(method = RequestMethod.GET, value = "/corso/me")
+//	public @ResponseBody
+//	Collection<CorsoCarriera> getCorsoByMe(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session)
+//
+//	throws IOException {
+//		try {
+//			logger.info("/corso/me");
+//
+//			String token = getToken(request);
+//			BasicProfileService service = new BasicProfileService(
+//					profileaddress);
+//			BasicProfile profile = service.getBasicProfile(token);
+//			Long userId = Long.valueOf(profile.getUserId());
+//
+//			// test
+//			Studente studente = studenteRepository.findStudenteByUserId(userId);
+//			
+//			return studente.getCorsi();
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
+//
+//	
 	
 	
-	
-	
-	/**
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @return Collection<CorsoLite>
-	 * @throws IOException
-	 * 
-	 * Ritorna tutti i corsi che lo studente che ha fatto la richiesta, ha superato, quindi che pu� votare
-	 * 
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corso/superati/me")
-	public @ResponseBody
-	Collection<CorsoLite> getCorsiSuperatiByMe(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-
-	throws IOException {
-		try {
-			logger.info("/corso/superati/me");
-
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
-
-			// test
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-
-			studente = studenteRepository.save(studente);
-
-			return assignCorsiSuperati(studente);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
-	
+//	
+//	/**
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @return Collection<CorsoLite>
+//	 * @throws IOException
+//	 * 
+//	 * Ritorna tutti i corsi che lo studente che ha fatto la richiesta, ha superato, quindi che pu� votare
+//	 * 
+//	 */
+//	@RequestMapping(method = RequestMethod.GET, value = "/corso/superati/me")
+//	public @ResponseBody
+//	Collection<CorsoLite> getCorsiSuperatiByMe(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session)
+//
+//	throws IOException {
+//		try {
+//			logger.info("/corso/superati/me");
+//
+//			String token = getToken(request);
+//			BasicProfileService service = new BasicProfileService(
+//					profileaddress);
+//			BasicProfile profile = service.getBasicProfile(token);
+//			Long userId = Long.valueOf(profile.getUserId());
+//
+//			// test
+//			Studente studente = studenteRepository.findStudenteByUserId(userId);
+//
+//			studente = studenteRepository.save(studente);
+//
+//			return assignCorsiSuperati(studente);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
+//
+//	
 	
 	
 	
@@ -305,18 +305,18 @@ public class CorsiController {
 	 * Metodo che dato lo studente setta la lista dei corsi superati dalla stringa degli ids
 	 * 
 	 */
-	private List<CorsoLite> assignCorsiSuperati(Studente stud) {
-		// TODO Auto-generated method stub
-
-		String[] listS = stud.getIdsCorsiSuperati().split(",");
-
-		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
-		for (String s : listS) {
-			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
-		}
-
-		return reurList;
-	}
+//	private List<CorsoLite> assignCorsiSuperati(Studente stud) {
+//		// TODO Auto-generated method stub
+//
+//		String[] listS = stud.getIdsCorsiSuperati().split(",");
+//
+//		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
+//		for (String s : listS) {
+//			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
+//		}
+//
+//		return reurList;
+//	}
 
 	
 	/**
@@ -327,18 +327,18 @@ public class CorsiController {
 	 * metodo che dato lo studente setta la lista dei corsi di interesse dalla stringa degli ids
 	 * 
 	 */
-	private List<CorsoLite> assignCorsiInteresse(Studente stud) {
-		// TODO Auto-generated method stub
-
-		String[] listS = stud.getIdsCorsiInteresse().split(",");
-
-		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
-		for (String s : listS) {
-			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
-		}
-
-		return reurList;
-	}
+//	private List<CorsoLite> assignCorsiInteresse(Studente stud) {
+//		// TODO Auto-generated method stub
+//
+//		String[] listS = stud.getIdsCorsiInteresse().split(",");
+//
+//		List<CorsoLite> reurList = new ArrayList<CorsoLite>();
+//		for (String s : listS) {
+//			reurList.add(corsoRepository.findOne(Long.valueOf(s)));
+//		}
+//
+//		return reurList;
+//	}
 	
 	
 	/**
@@ -416,187 +416,187 @@ public class CorsiController {
 	 */
 	
 	
-	/**
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @param id_corso
-	 * @return Boolean
-	 * @throws IOException
-	 * 
-	 * Metodo che dato un id_corso ritorna al client true se il corso � stato superato, false altrimenti
-	 * 
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corso/superato/{id_corso}")
-	public @ResponseBody
-	Boolean isMyCourseSuperato(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_corso") Long id_corso)
-
-	throws IOException {
-		try {
-			logger.info("/corso/superato/" + id_corso.toString());
-
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
-
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-
-			// //////////////////////////////////////////////////////////////////////////////////////////////
-			studente = studenteRepository.save(studente);
-			
-			
-			
-			studente = studenteRepository.save(studente);
-
-			Boolean isSuperato = new Boolean(false);
-
-			List<CorsoLite> corsiSuperati = assignCorsiSuperati(studente);
-
-			for (CorsoLite corso : corsiSuperati) {
-				if (corso.getId() == id_corso)
-					isSuperato = true;
-			}
-
-			return isSuperato;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
+//	/**
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @param id_corso
+//	 * @return Boolean
+//	 * @throws IOException
+//	 * 
+//	 * Metodo che dato un id_corso ritorna al client true se il corso � stato superato, false altrimenti
+//	 * 
+//	 */
+//	@RequestMapping(method = RequestMethod.GET, value = "/corso/superato/{id_corso}")
+//	public @ResponseBody
+//	Boolean isMyCourseSuperato(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session,
+//			@PathVariable("id_corso") Long id_corso)
+//
+//	throws IOException {
+//		try {
+//			logger.info("/corso/superato/" + id_corso.toString());
+//
+//			String token = getToken(request);
+//			BasicProfileService service = new BasicProfileService(
+//					profileaddress);
+//			BasicProfile profile = service.getBasicProfile(token);
+//			Long userId = Long.valueOf(profile.getUserId());
+//
+//			Studente studente = studenteRepository.findStudenteByUserId(userId);
+//
+//			// //////////////////////////////////////////////////////////////////////////////////////////////
+//			studente = studenteRepository.save(studente);
+//			
+//			
+//			
+//			studente = studenteRepository.save(studente);
+//
+//			Boolean isSuperato = new Boolean(false);
+//
+//			List<CorsoLite> corsiSuperati = assignCorsiSuperati(studente);
+//
+//			for (CorsoLite corso : corsiSuperati) {
+//				if (corso.getId() == id_corso)
+//					isSuperato = true;
+//			}
+//
+//			return isSuperato;
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
 
 	/*
 	 * Riceve oggetto Corso e lo salva come corso che seguo
 	 */
 	
-	/**
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @param corso
-	 * @return boolean
-	 * @throws IOException
-	 * 
-	 * Dato un corso restituisce al client true se il corso � di interesse dello studente altrimenti false 
-	 * 
-	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/corso/seguo")
-	//
-	public @ResponseBody
-	boolean setCorsoAsFollowUnflollow(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@RequestBody Corso corso)
+//	/**
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @param corso
+//	 * @return boolean
+//	 * @throws IOException
+//	 * 
+//	 * Dato un corso restituisce al client true se il corso � di interesse dello studente altrimenti false 
+//	 * 
+//	 */
+//	@RequestMapping(method = RequestMethod.POST, value = "/corso/seguo")
+//	//
+//	public @ResponseBody
+//	boolean setCorsoAsFollowUnflollow(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session,
+//			@RequestBody Corso corso)
+//
+//	throws IOException {
+//		try {
+//			
+//			logger.info("/corso/seguo");
+//			
+//			String token = getToken(request);
+//			BasicProfileService service = new BasicProfileService(
+//					profileaddress);
+//			BasicProfile profile = service.getBasicProfile(token);
+//			Long userId = Long.valueOf(profile.getUserId());
+//
+//			// test
+//			Studente studente = studenteRepository.findStudenteByUserId(userId);
+//			
+//
+//			// TODO control valid field
+//			if (corso == null)
+//				return false;
+//
+//			Corso corsoDaSeguire = corsoRepository.findOne(corso.getId());
+//
+//			if (corsoDaSeguire != null) {
+//				List<CorsoLite> corsiInteresse = assignCorsiInteresse(studente);
+//				boolean isSeguito = false;
+//				
+//				// controllo se il corso lo seguo gia o no
+//				for(CorsoLite c: corsiInteresse){
+//					if(c.getId() == corsoDaSeguire.getId()){
+//						isSeguito = true;
+//						break;
+//					}
+//				}
+//				
+//				Studente studenteAggiornato = null;
+//				 
+//				if(isSeguito){
+//					studente.removeCorsoInteresse(studente, corsoDaSeguire.getId());
+//					studenteAggiornato = studenteRepository.save(studente);
+//				}else{
+//				
+//				
+//					studente.addCorsoInteresse(studente, corsoDaSeguire.getId());
+//					studenteAggiornato = studenteRepository.save(studente);
+//				
+//				
+//				}
+//				if(studenteAggiornato == null){
+//					return false;
+//				}else{
+//					return true;
+//				}
+//
+//			} else
+//				return false;
+//		} catch (Exception e) {
+//
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//			return false;
+//		}
+//
+//	}
 
-	throws IOException {
-		try {
-			
-			logger.info("/corso/seguo");
-			
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
-
-			// test
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
-
-			// TODO control valid field
-			if (corso == null)
-				return false;
-
-			Corso corsoDaSeguire = corsoRepository.findOne(corso.getId());
-
-			if (corsoDaSeguire != null) {
-				List<CorsoLite> corsiInteresse = assignCorsiInteresse(studente);
-				boolean isSeguito = false;
-				
-				// controllo se il corso lo seguo gia o no
-				for(CorsoLite c: corsiInteresse){
-					if(c.getId() == corsoDaSeguire.getId()){
-						isSeguito = true;
-						break;
-					}
-				}
-				
-				Studente studenteAggiornato = null;
-				 
-				if(isSeguito){
-					studente.removeCorsoInteresse(studente, corsoDaSeguire.getId());
-					studenteAggiornato = studenteRepository.save(studente);
-				}else{
-				
-				
-					studente.addCorsoInteresse(studente, corsoDaSeguire.getId());
-					studenteAggiornato = studenteRepository.save(studente);
-				
-				
-				}
-				if(studenteAggiornato == null){
-					return false;
-				}else{
-					return true;
-				}
-
-			} else
-				return false;
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return false;
-		}
-
-	}
-
-	/**
-	 * 
-	 * @param request
-	 * @param response
-	 * @param session
-	 * @return Collection<CorsoLite>
-	 * @throws IOException
-	 * 
-	 * Ritorna tutti i corsi che lo studente sta seguendo
-	 * 
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corso/interesse/me")
-	public @ResponseBody
-	Collection<CorsoLite> getCorsiInteresseByMe(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-
-	throws IOException {
-		try {
-			logger.info("/corso/interesse/me");
-
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
-
-			// test
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
-
-			studente = studenteRepository.save(studente);
-
-			return assignCorsiInteresse(studente);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
+//	/**
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @return Collection<CorsoLite>
+//	 * @throws IOException
+//	 * 
+//	 * Ritorna tutti i corsi che lo studente sta seguendo
+//	 * 
+//	 */
+//	@RequestMapping(method = RequestMethod.GET, value = "/corso/interesse/me")
+//	public @ResponseBody
+//	Collection<CorsoLite> getCorsiInteresseByMe(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session)
+//
+//	throws IOException {
+//		try {
+//			logger.info("/corso/interesse/me");
+//
+//			String token = getToken(request);
+//			BasicProfileService service = new BasicProfileService(
+//					profileaddress);
+//			BasicProfile profile = service.getBasicProfile(token);
+//			Long userId = Long.valueOf(profile.getUserId());
+//
+//			// test
+//			Studente studente = studenteRepository.findStudenteByUserId(userId);
+//			
+//
+//			studente = studenteRepository.save(studente);
+//
+//			return assignCorsiInteresse(studente);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
 
 	
 }

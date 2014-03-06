@@ -95,23 +95,6 @@ public class Studente extends BasicEntity {
 
 	@Column(name = "USER_SOCIAL_ID")
 	private long userSocialId;
-
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "Carriera", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "CORSOCARRIERA_ID"))
-	private List<CorsoCarriera> corsi;
-
-	@Column(name = "ESAMI_SUPERATI")
-	private String idsCorsiSuperati;
-	
-	@Transient
-	private List<CorsoLite> corsiSuperati;
-	
-	
-	@Column(name = "ESAMI_INTERESSE")
-	private String idsCorsiInteresse;
-	
-	@Transient
-	private List<CorsoLite> corsiInteresse;
 	
 	
 	@Column(name = "GRUPPI_DI_STUDIO")
@@ -135,14 +118,6 @@ public class Studente extends BasicEntity {
 
 	public void setGruppiDiStudio(List<GruppoDiStudio> gruppiDiStudio) {
 		this.gruppiDiStudio = gruppiDiStudio;
-	}
-
-	public List<CorsoCarriera> getCorsi() {
-		return corsi;
-	}
-
-	public void setCorsi(List<CorsoCarriera> corsi) {
-		this.corsi = corsi;
 	}
 
 	public long getUserSocialId() {
@@ -199,82 +174,6 @@ public class Studente extends BasicEntity {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getIdsCorsiSuperati() {
-		return idsCorsiSuperati;
-	}
-
-	public void setIdsCorsiSuperati(String idsCorsiSuperati) {
-		this.idsCorsiSuperati = idsCorsiSuperati;
-	}
-
-	public List<CorsoLite> getCorsiSuperati() {
-		return corsiSuperati;
-	}
-
-	public void setCorsiSuperati(List<CorsoLite> corsiSuperati) {
-		this.corsiSuperati = corsiSuperati;
-		
-		// re inizializzo gli id per il db
-		this.setIdsCorsiSuperati("");
-		
-		for (CorsoCarriera corso : corsi) {
-			long idCorso = corso.getId();
-			addCorsoSuperato(this, idCorso);
-		}
-		
-	}
-
-	public String getIdsCorsiInteresse() {
-		return idsCorsiInteresse;
-	}
-
-	public void setIdsCorsiInteresse(String idsCorsiInteresse) {
-		this.idsCorsiInteresse = idsCorsiInteresse;
-	}
-
-	public List<CorsoLite> getCorsiInteresse() {
-		return corsiInteresse;
-	}
-
-	public void setCorsiInteresse(List<CorsoLite> corsiInteresse) {
-		this.corsiInteresse = corsiInteresse;
-		
-		// re inizializzo gli id per il db
-		this.setIdsCorsiInteresse("");
-		
-		for (CorsoCarriera corso : corsi) {
-			long idCorso = corso.getId();
-			addCorsoInteresse(this, idCorso);
-		}
-	}
-	
-	public void addCorsoSuperato(Studente stud, long idCorsoDaAggiungere) {
-		// TODO Auto-generated method stub
-		stud.setIdsCorsiInteresse(stud.getIdsCorsiSuperati()+String.valueOf(idCorsoDaAggiungere)+",");		
-	}
-
-	public void addCorsoInteresse(Studente stud, long idCorsoDaAggiungere) {
-		// TODO Auto-generated method stub
-		stud.setIdsCorsiInteresse(stud.getIdsCorsiInteresse()+String.valueOf(idCorsoDaAggiungere)+",");		
-	}
-
-	public void removeCorsoInteresse(Studente studente, long id2) {
-		// TODO Auto-generated method stub
-		String corsiInteresse = null;
-		corsiInteresse = studente.getIdsCorsiInteresse();
-		
-		String[] listS = corsiInteresse.split(",");
-		
-		String corsiInteresseAggiornata = "";
-		
-		for (String s : listS) {
-			if(!s.equals(String.valueOf(id2))){
-				corsiInteresseAggiornata = corsiInteresseAggiornata.concat(s.toString()+",");
-			}
-		}
-		studente.setIdsCorsiInteresse(corsiInteresseAggiornata);
 	}
 
 	public void addGruppoStudente(Studente studente, long idGruppoDaAggiungere) {

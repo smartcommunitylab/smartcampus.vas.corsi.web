@@ -55,12 +55,11 @@ public class CorsoLaureaController {
 
 	throws IOException {
 		try {
-
+			logger.info("/corsolaurea/all");
 			List<CorsoLaurea> getCorsiLaurea = corsoLaureaRepository.findAll();
-
-			if (getCorsiLaurea == null)
-
-				return getCorsiLaurea;
+			logger.info(corsoLaureaRepository);
+			logger.info(getCorsiLaurea);
+			return getCorsiLaurea;
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -102,22 +101,6 @@ public class CorsoLaureaController {
 					.getCorsiLaureaByDipartimento(dipartimentoRepository
 							.findOne(id_dipartimento));
 
-			// se non ci sono db in locale li prendo da unidata e li salvo
-			if (getCds.size() == 0) {
-				List<CorsoLaurea> listCdsSync;
-				listCdsSync = controllerSyncCorsoLaurea.getCdsSync(request,
-						response, session, id_dipartimento);
-
-				listCdsSync = corsoLaureaRepository.save(listCdsSync);
-
-				if (listCdsSync == null)
-					return null;
-
-				getCds = corsoLaureaRepository
-						.getCorsiLaureaByDipartimento(dipartimentoRepository
-								.findOne(id_dipartimento));
-
-			}
 
 			return getCds;
 

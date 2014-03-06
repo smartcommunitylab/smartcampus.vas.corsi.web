@@ -28,6 +28,7 @@ import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.servicesync.StudenteServiceSync;
+import eu.trentorise.smartcampus.corsi.util.CorsoCarrieraMapper;
 import eu.trentorise.smartcampus.corsi.util.UniStudentMapper;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
@@ -165,15 +166,6 @@ public class StudenteController {
 			StudentInfoService studentConnector = new StudentInfoService(
 					unidataaddress);
 
-			/*
-			 * Da rivedere la gestione della sincronizzazione degli esami:
-			 * adesso sincronizza sempre
-			 */
-			token = getToken(request);
-			//token = "9a554546-dc69-4282-a169-358a3ece5487";
-			StudentInfoExams studentExamsUniData = studentConnector
-					.getStudentExams(token);
-
 			// ottengo da unidata lo studente
 			StudentInfoData studentUniData = studentConnector
 					.getStudentData(token);
@@ -184,8 +176,7 @@ public class StudenteController {
 			UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
 
 			// converto e salvo nel db lo studente aggiornato
-			Studente convertedStudent = studentMapper.convert(studentUniData,
-					studentExamsUniData, token);
+			Studente convertedStudent = studentMapper.convert(studentUniData, token);
 
 			convertedStudent = studenteRepository.save(convertedStudent);
 
@@ -199,6 +190,74 @@ public class StudenteController {
 		return null;
 	}
 	
+//	/**
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param session
+//	 * @return Studente
+//	 * @throws IOException
+//	 * 
+//	 *             Restituisce lo studente soltanto se c'� bisogno di
+//	 *             sincronizzare
+//	 * 
+//	 */
+//	@RequestMapping(method = RequestMethod.GET, value = "/sync/studente/me")
+//	public @ResponseBody
+//	Studente getStudenteSync(HttpServletRequest request,
+//			HttpServletResponse response, HttpSession session)
+//
+//	throws IOException {
+//		try {
+//			logger.info("/sync/studente/me");
+//
+//			String token = getToken(request);
+//			BasicProfileService service = new BasicProfileService(
+//					profileaddress);
+//
+//			BasicProfile profile = service.getBasicProfile(token);
+//			Long userId = Long.valueOf(profile.getUserId());
+//
+//			Studente studenteDB = studenteRepository.findOne(userId);
+//
+//			// prendo i dati da unidata e li mappo
+//			StudentInfoService studentConnector = new StudentInfoService(
+//					unidataaddress);
+//
+//			/*
+//			 * Da rivedere la gestione della sincronizzazione degli esami:
+//			 * adesso sincronizza sempre
+//			 */
+//			token = getToken(request);
+//			//token = "9a554546-dc69-4282-a169-358a3ece5487";
+//			StudentInfoExams studentExamsUniData = studentConnector
+//					.getStudentExams(token);
+//
+//			// ottengo da unidata lo studente
+//			StudentInfoData studentUniData = studentConnector
+//					.getStudentData(token);
+//
+//			if (studentUniData == null)
+//				return null;
+//
+//			UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
+//
+//			// converto e salvo nel db lo studente aggiornato
+//			Studente convertedStudent = studentMapper.convert(studentUniData,
+//					studentExamsUniData, token);
+//
+//			convertedStudent = studenteRepository.save(convertedStudent);
+//
+//			return convertedStudent;
+//
+//		} catch (Exception e) {
+//			logger.error(e.getMessage());
+//			e.printStackTrace();
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+//		}
+//		return null;
+//	}
+//	
 	
 
 	/**

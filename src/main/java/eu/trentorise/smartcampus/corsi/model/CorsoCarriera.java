@@ -5,12 +5,16 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
 public class CorsoCarriera extends BasicEntity {
 
+		
+	
 		@Id
 		@Column(name = "ID")
 		private long id;
@@ -32,6 +36,9 @@ public class CorsoCarriera extends BasicEntity {
 		
 		@Column(name = "DATE")
 		private Date date;
+		
+		@Column(name = "STUDENTE_ID")
+		private long studenteId;
 
 		public long getId() {
 			return id;
@@ -88,7 +95,15 @@ public class CorsoCarriera extends BasicEntity {
 		public void setDate(Date date) {
 			this.date = date;
 		}
-		
+
+		public long getStudente() {
+			return studenteId;
+		}
+
+		public void setStudente(long studenteId) {
+			this.studenteId = studenteId;
+		}
+
 		
 		
 	

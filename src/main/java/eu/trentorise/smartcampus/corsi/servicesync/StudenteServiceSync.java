@@ -29,6 +29,7 @@ import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
+import eu.trentorise.smartcampus.corsi.util.CorsoCarrieraMapper;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.corsi.util.UniStudentMapper;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
@@ -121,13 +122,6 @@ public class StudenteServiceSync {
 			StudentInfoService studentConnector = new StudentInfoService(
 					unidataaddress);
 
-			/*
-			 * Da rivedere la gestione della sincronizzazione degli esami:
-			 * adesso sincronizza sempre
-			 */
-			StudentInfoExams studentExamsUniData = studentConnector
-					.getStudentExams(token);
-
 			// ottengo da unidata lo studente
 			StudentInfoData studentUniData = studentConnector
 					.getStudentData(token);
@@ -138,10 +132,21 @@ public class StudenteServiceSync {
 			UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
 
 			// converto e salvo nel db lo studente aggiornato
-			Studente convertedStudent = studentMapper.convert(studentUniData,
-					studentExamsUniData, token);
+			Studente convertedStudent = studentMapper.convert(studentUniData, token);
 
 			convertedStudent = studenteRepository.save(convertedStudent);
+			
+			/*
+			 * Da rivedere la gestione della sincronizzazione degli esami:
+			 * adesso sincronizza sempre
+			 */
+			StudentInfoExams studentExamsCareer = studentConnector
+					.getStudentExams(token);
+			
+			CorsoCarrieraMapper cc = new CorsoCarrieraMapper();
+			
+			cc.convert(convertedStudent.getId(), studentExamsCareer, token);
+
 
 			return convertedStudent;
 
@@ -208,8 +213,7 @@ public class StudenteServiceSync {
 			String token = getToken(request);
 
 			// converto e salvo nel db lo studente aggiornato
-			Studente convertedStudent = studentMapper.convert(studentUniData,
-					studentExamsUniData, token);
+			Studente convertedStudent = studentMapper.convert(studentUniData, token);
 
 			convertedStudent = studenteRepository.save(convertedStudent);
 
@@ -280,7 +284,6 @@ public class StudenteServiceSync {
 			studenteRepository.delete(studenteDB);
 
 			// sincronizzo i corsi da libretto dello studente
-			studenteDB.setCorsi(convertedEsse3Courses);
 			studenteDB = studenteRepository.saveAndFlush(studenteDB);
 
 			return studenteDB;

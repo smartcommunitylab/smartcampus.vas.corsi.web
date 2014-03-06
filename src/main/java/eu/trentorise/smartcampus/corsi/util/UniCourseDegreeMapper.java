@@ -3,6 +3,7 @@ package eu.trentorise.smartcampus.corsi.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
@@ -43,50 +44,57 @@ public class UniCourseDegreeMapper {
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<CorsoLaurea> convert(List<CdsData> dataCds, String token, DipartimentoRepository dipartimentoRepository)
+	public List<CorsoLaurea> convert(List<CdsData> dataCds, String token,
+			DipartimentoRepository dipartimentoRepository)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
 		corsiLaurea = new ArrayList<CorsoLaurea>();
 
-		for (CdsData cds : dataCds) {
-			// wrappo i dati dei dipartimenti
-			CorsoLaurea corsoLaurea = new CorsoLaurea();
+		try {
 
-			corsoLaurea.setId(Long.valueOf(cds.getCdsId()));
-			corsoLaurea.setCdsCod(cds.getCdsCod());
-			corsoLaurea.setFacId(cds.getFacId());
-			corsoLaurea.setDescripion(cds.getDescription());
-			corsoLaurea.setDurata(cds.getDurata());
-			corsoLaurea.setAaOrd(cds.getAaOrd());
-			
-			List<PianoStudi> pdsList = new ArrayList<PianoStudi>();
-			for (PdsData pdsData : cds.getPds()) {
-				PianoStudi pds = new PianoStudi();
-				pds.setPdsId(corsoLaurea);
-				pds.setPdsCod(pdsData.getPdsCod());
-				pdsList.add(pds);
-				
+			for (CdsData cds : dataCds) {
+				// wrappo i dati dei dipartimenti
+				CorsoLaurea corsoLaurea = new CorsoLaurea();
+
+				corsoLaurea.setId(Long.valueOf(cds.getCdsId()));
+				corsoLaurea.setCdsCod(cds.getCdsCod());
+				corsoLaurea.setFacId(cds.getFacId());
+				corsoLaurea.setDescripion(cds.getDescription());
+				corsoLaurea.setDurata(cds.getDurata());
+				corsoLaurea.setAaOrd(cds.getAaOrd());
+
+				List<PianoStudi> pdsList = new ArrayList<PianoStudi>();
+				for (PdsData pdsData : cds.getPds()) {
+					PianoStudi pds = new PianoStudi();
+					pds.setPdsId(corsoLaurea);
+					pds.setPdsCod(pdsData.getPdsCod());
+					pdsList.add(pds);
+
+				}
+
+				Dipartimento dip = dipartimentoRepository.findOne(Long
+						.valueOf(cds.getFacId()));
+
+				// devo aggiornare prima i dipartimenti
+				if (dip == null)
+					return null;
+
+				corsoLaurea.setDipartimento(dip);
+
+				corsiLaurea.add(corsoLaurea);
+
 			}
-			
-			Dipartimento dip = dipartimentoRepository.findOne(Long.valueOf(cds
-					.getFacId()));
-
-			// devo aggiornare prima i dipartimenti
-			if (dip == null)
-				return null;
-
-			corsoLaurea.setDipartimento(dip);
-
-			corsiLaurea.add(corsoLaurea);
+		} catch (Exception e) {
+			Logger.getLogger(UniCourseDegreeMapper.class).error(e.getMessage());
+			return null;
 		}
-
-
 		return corsiLaurea;
 
 	}
 
-	public CorsoLaurea convert(CdsData dataCds, String token, DipartimentoRepository dipartimentoRepository)
+	public CorsoLaurea convert(CdsData dataCds, String token,
+			DipartimentoRepository dipartimentoRepository)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 

@@ -308,13 +308,6 @@ public class CommentiController {
 						z++;
 					}
 
-					// Set corso follwed by studente
-					studente.setCorsi(corsiEsse3);
-					studente = studenteRepository.save(studente);
-
-					// Set corsi superati
-					studente.setIdsCorsiSuperati(supera);
-					studente.setIdsCorsiInteresse(interesse);
 
 					studente = studenteRepository.save(studente);
 				}
@@ -505,14 +498,6 @@ public class CommentiController {
 
 					z++;
 				}
-
-				// Set corso follwed by studente
-				studente.setCorsi(corsiEsse3);
-				studente = studenteRepository.save(studente);
-
-				// Set corsi superati
-				studente.setIdsCorsiSuperati(supera);
-				studente.setIdsCorsiInteresse(interesse);
 
 				studente = studenteRepository.save(studente);
 			}

@@ -55,8 +55,7 @@ public class UniStudentMapper {
 		this.profileaddress = profileaddress;
 	}
 
-	public Studente convert(StudentInfoData fromStudentInfo,
-			StudentInfoExams fromStudentExams, String tokenUser)
+	public Studente convert(StudentInfoData fromStudentInfo, String tokenUser)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
@@ -105,29 +104,7 @@ public class UniStudentMapper {
 		studente.setSuplementaryYear(fromStudentInfo.getSupplementaryYears());
 		studente.setMarksAverage(fromStudentInfo.getMarksAverage());
 		studente.setMarksNumber(fromStudentInfo.getMarksNumber());
-//		CorsoLaurea cl = new CorsoLaurea();
-//		cl.setDescripion(fromStudentInfo.getCds());
-//		cl.setId(Long.valueOf(fromStudentInfo.getCds()));
-//		studente.setCorso_laurea(cl);
 
-		// informazioni esami
-		ArrayList<CorsoCarriera> corsi = new ArrayList<CorsoCarriera>();
-		ArrayList<CorsoLite> corsiSuperati = new ArrayList<CorsoLite>();
-		fromListExams = fromStudentExams.getExams();
-		for (StudentInfoExam exam : fromListExams) {
-			CorsoCarriera corso = new CorsoCarriera();
-			corso.setId(Long.valueOf(exam.getId()));
-			corso.setName(exam.getName());
-			corso.setCod(exam.getCod());
-			corso.setDate(new Date(exam.getDate()));
-			corso.setResult(exam.getResult());
-			corso.setLode(exam.isLode());
-			corso.setWeight(exam.getWeight());
-			corsi.add(corso);
-		}
-
-		studente.setCorsi(corsi);
-		studente.setCorsiSuperati(corsiSuperati);
 
 		return studente;
 
