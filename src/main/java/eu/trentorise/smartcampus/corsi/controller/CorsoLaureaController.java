@@ -102,7 +102,7 @@ public class CorsoLaureaController {
 					.getCorsiLaureaByDipartimento(dipartimentoRepository
 							.findOne(id_dipartimento));
 
-			// se non ci sono db in locale li prendo da unidaa e li salvo
+			// se non ci sono db in locale li prendo da unidata e li salvo
 			if (getCds.size() == 0) {
 				List<CorsoLaurea> listCdsSync;
 				listCdsSync = controllerSyncCorsoLaurea.getCdsSync(request,

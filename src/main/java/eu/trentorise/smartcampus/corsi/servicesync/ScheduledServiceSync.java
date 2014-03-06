@@ -108,10 +108,10 @@ public class ScheduledServiceSync {
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
 
-			EasyTokenManger clientTokenManager = new EasyTokenManger(client_id,
-					client_secret, profileaddress);
-			//client_auth_token = clientTokenManager.getClientSmartCampusToken();
-			client_auth_token = "5a2ff6ef-94e6-4d59-962b-5ae9d10e23c2";
+			EasyTokenManger clientTokenManager = new EasyTokenManger(profileaddress, client_id,
+					client_secret);
+			client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			//client_auth_token = "5a2ff6ef-94e6-4d59-962b-5ae9d10e23c2";
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector
 					.getFacoltaData(client_auth_token);

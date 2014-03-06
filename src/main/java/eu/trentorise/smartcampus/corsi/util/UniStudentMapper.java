@@ -61,7 +61,8 @@ public class UniStudentMapper {
 			ProfileServiceException {
 
 		BasicProfileService service = new BasicProfileService(profileaddress);
-		tokenUser = "b1931a7e-66a4-4136-907a-907bfbca893d";
+		//tokenUser = "b1931a7e-66a4-4136-907a-907bfbca893d";
+		
 		// recupero i dati del profilo dell'utente
 		basicProfile = service.getBasicProfile(tokenUser);
 		accountProfile = service.getAccountProfile(tokenUser);

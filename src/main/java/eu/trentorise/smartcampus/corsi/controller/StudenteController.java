@@ -169,7 +169,8 @@ public class StudenteController {
 			 * Da rivedere la gestione della sincronizzazione degli esami:
 			 * adesso sincronizza sempre
 			 */
-			token = "9a554546-dc69-4282-a169-358a3ece5487";
+			token = getToken(request);
+			//token = "9a554546-dc69-4282-a169-358a3ece5487";
 			StudentInfoExams studentExamsUniData = studentConnector
 					.getStudentExams(token);
 

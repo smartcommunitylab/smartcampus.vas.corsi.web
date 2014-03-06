@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 @Entity
@@ -95,9 +96,9 @@ public class Studente extends BasicEntity {
 	@Column(name = "USER_SOCIAL_ID")
 	private long userSocialId;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "Carriera", joinColumns = @JoinColumn(name = "STUDENTE_ID"), inverseJoinColumns = @JoinColumn(name = "CORSOCARRIERA_ID"))
-	private Collection<CorsoCarriera> corsi;
+	private List<CorsoCarriera> corsi;
 
 	@Column(name = "ESAMI_SUPERATI")
 	private String idsCorsiSuperati;
@@ -136,11 +137,11 @@ public class Studente extends BasicEntity {
 		this.gruppiDiStudio = gruppiDiStudio;
 	}
 
-	public Collection<CorsoCarriera> getCorsi() {
+	public List<CorsoCarriera> getCorsi() {
 		return corsi;
 	}
 
-	public void setCorsi(Collection<CorsoCarriera> corsi) {
+	public void setCorsi(List<CorsoCarriera> corsi) {
 		this.corsi = corsi;
 	}
 
