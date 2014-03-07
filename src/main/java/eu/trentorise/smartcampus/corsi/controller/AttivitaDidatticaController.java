@@ -16,28 +16,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
-import eu.trentorise.smartcampus.corsi.model.Dipartimento;
+import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.servicesync.CorsoLaureaServiceSync;
-import eu.trentorise.smartcampus.corsi.servicesync.DipartimentoServiceSync;
 
-@Controller("corsoLaureaController")
-public class CorsoLaureaController {
 
+@Controller("attivitaDidatticaController")
+public class AttivitaDidatticaController {
+
+	
 	private static final Logger logger = Logger
-			.getLogger(CorsoLaureaController.class);
+			.getLogger(AttivitaDidatticaController.class);
 
 	@Autowired
-	private CorsoLaureaRepository corsoLaureaRepository;
+	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
 	@Autowired
 	private CorsoLaureaServiceSync controllerSyncCorsoLaurea;
-
+	
 	/**
 	 * 
 	 * @param request
@@ -49,19 +51,19 @@ public class CorsoLaureaController {
 	 *             Restituisce tutti i corsi di laurea
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsolaurea/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/{id_cds}")
 	public @ResponseBody
-	List<CorsoLaurea> getCorsiLaureaAll(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
+	List<AttivitaDidattica> getAttivitaDidatticaByGds(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @PathVariable("id_cds") Long id_cds)
 
 	throws IOException {
 		try {
-			logger.info("/corsolaurea/all");
+			logger.info("/attivitadidattica/"+id_cds);
 			
-			List<CorsoLaurea> getCorsiLaurea = new ArrayList<CorsoLaurea>();
-			getCorsiLaurea = corsoLaureaRepository.findAll();
+			List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
+			getAttivitaDidattica = attivitaDidatticaRepository.findAttivitaDidatticaByCdsId(id_cds);
 			
-			return getCorsiLaurea;
+			return getAttivitaDidattica;
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -70,48 +72,40 @@ public class CorsoLaureaController {
 		}
 		return null;
 	}
-
-	/*
-	 * Ritorna tutti i corsi di laurea di un dipartimento dato
-	 */
-
+	
+	
+	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @param id_dipartimento
 	 * @return List<CorsoLaurea>
 	 * @throws IOException
 	 * 
-	 *             Restituisce tutti i corsi di laurea dato un dipartimento
+	 *             Restituisce tutti i corsi di laurea
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsolaurea/{id_dipartimento}")
+	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/all")
 	public @ResponseBody
-	List<CorsoLaurea> getCorsiLaureaAll(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("id_dipartimento") Long id_dipartimento)
+	List<AttivitaDidattica> getAttivitaDidatticaAll(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/corsolaurea/{id_dipartimento}");
-			if (id_dipartimento == null)
-				return null;
-
-			List<CorsoLaurea> getCds = corsoLaureaRepository
-					.getCorsiLaureaByDipartimento(dipartimentoRepository
-							.findOne(id_dipartimento));
-
-
-			return getCds;
+			logger.info("/attivitadidattica/all");
+			
+			List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
+			getAttivitaDidattica = attivitaDidatticaRepository.findAll();
+			
+			return getAttivitaDidattica;
 
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
-
 	}
 
 }

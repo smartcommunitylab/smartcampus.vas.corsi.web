@@ -5,8 +5,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByCdsId", query = "select ad from AttivitaDidattica ad where ad.cds_id = ?1") })
 public class AttivitaDidattica extends BasicEntity {
 
 	@Id
