@@ -25,13 +25,21 @@ import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
+import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
+import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
+import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
+import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
+import eu.trentorise.smartcampus.corsi.util.EventoMapper;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
+import eu.trentorise.smartcampus.unidataservice.UniversityPlannerService;
+import eu.trentorise.smartcampus.unidataservice.model.CalendarCdsData;
 
 @Controller("eventiController")
 public class EventiController {
@@ -57,7 +65,10 @@ public class EventiController {
 	private String appName;
 
 	@Autowired
-	private CorsoRepository corsoRepository;
+	private DipartimentoRepository dipartimentoRepository;
+
+	@Autowired
+	private CorsoLaureaRepository corsoLaureaRepository;
 
 	@Autowired
 	private StudenteRepository studenteRepository;
@@ -65,7 +76,22 @@ public class EventiController {
 	@Autowired
 	private EventoRepository eventoRepository;
 
-	
+	@Autowired
+	@Value("${url.studente.service}")
+	private String unidataaddress;
+
+	// client id studymate
+	@Autowired
+	@Value("${studymate.client.id}")
+	private String client_id;
+
+	// client secret studymate
+	@Autowired
+	@Value("${studymate.client.secret}")
+	private String client_secret;
+
+	String client_auth_token;
+
 	/**
 	 * 
 	 * @param request
@@ -75,25 +101,26 @@ public class EventiController {
 	 * @return List<Evento>
 	 * @throws IOException
 	 * 
-	 * Restituisce tutti gli eventi riferiti ad un corso dato
+	 *             Restituisce tutti gli eventi riferiti ad un corso dato
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/evento/{idcorso}")
+	@RequestMapping(method = RequestMethod.GET, value = "/evento/{id_cds}")
 	public @ResponseBody
 	List<Evento> getEventoByCorso(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("idcorso") Long idcorso)
+			@PathVariable("id_cds") Long id_cds)
 
 	throws IOException {
 		try {
-			logger.info("/eventi/{idcorso}");
+			logger.info("/eventi/{id_cds}");
 
-			if (idcorso == null)
+			if (id_cds == null)
 				return null;
 
-			Corso corso = corsoRepository.findOne(Long.valueOf(idcorso));
+			CorsoLaurea corso = corsoLaureaRepository.findOne(Long
+					.valueOf(id_cds));
 
-			return eventoRepository.findEventoByCorso(corso);
+			return eventoRepository.findEventoByCds(corso);
 
 		} catch (Exception e) {
 
@@ -106,9 +133,7 @@ public class EventiController {
 	/*
 	 * Riceve evento e lo salva nel db
 	 */
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -118,7 +143,8 @@ public class EventiController {
 	 * @return Evento
 	 * @throws IOException
 	 * 
-	 * Salva nel DB l'evento passato dal client e restituisce l'evento se l'operazione va a buon fine, altrimenti false
+	 *             Salva nel DB l'evento passato dal client e restituisce
+	 *             l'evento se l'operazione va a buon fine, altrimenti false
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/evento")
@@ -130,7 +156,7 @@ public class EventiController {
 		try {
 
 			// TODO controlli se campi validi
-			if (evento != null && evento.getTitolo() != "") {
+			if (evento != null && evento.getTitle() != "") {
 
 				String token = getToken(request);
 				BasicProfileService service = new BasicProfileService(
@@ -145,13 +171,13 @@ public class EventiController {
 				users.add(userId.toString());
 
 				Notification n = new Notification();
-				n.setTitle(evento.getTitolo());
+				n.setTitle(evento.getTitle());
 				n.setUser(userId.toString());
 				n.setTimestamp(System.currentTimeMillis());
 				n.setDescription("Creazione Evento");
 
-//				communicatorConnector.sendAppNotification(n, appName, users,
-//						token);
+				// communicatorConnector.sendAppNotification(n, appName, users,
+				// token);
 
 				return eventoRepository.save(evento);
 			} else
@@ -163,9 +189,6 @@ public class EventiController {
 		return null;
 	}
 
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -174,7 +197,8 @@ public class EventiController {
 	 * @return List<Evento>
 	 * @throws IOException
 	 * 
-	 * Restituisce tutti gli eventi di tutti i corsi personali riferiti allo studente
+	 *             Restituisce tutti gli eventi di tutti i corsi personali
+	 *             riferiti allo studente
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/evento/me")
@@ -193,16 +217,15 @@ public class EventiController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
 
 			List<Evento> eventiListByCorso = new ArrayList<Evento>();
 
-//			for (CorsoCarriera index : studente.getCorsi()) {
-//
-//				eventiListByCorso.addAll(eventoRepository
-//						.findEventoByCorso(index));
-//
-//			}
+			// for (CorsoCarriera index : studente.getCorsi()) {
+			//
+			// eventiListByCorso.addAll(eventoRepository
+			// .findEventoByCorso(index));
+			//
+			// }
 
 			return eventiListByCorso;
 		} catch (Exception e) {
@@ -213,13 +236,197 @@ public class EventiController {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<Evento>
+	 * @throws IOException
+	 * 
+	 *             Sincronizza gli eventi di un cds di un determinato anno
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/sync/evento/{cds}/{year}")
+	public @ResponseBody
+	List<Evento> getSyncEventoByCdsAndYear(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("cds_id") CorsoLaurea cds_id,
+			@PathVariable("year") String year)
+
+	throws IOException {
+		try {
+			logger.info("sync/evento/{cds}/{year}");
+
+			EasyTokenManger clientTokenManager = new EasyTokenManger(
+					profileaddress, client_id, client_secret);
+			 client_auth_token =
+			 clientTokenManager.getClientSmartCampusToken();
+			//client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
+			System.out.println("Client auth token: " + client_auth_token);
+
+			UniversityPlannerService uniplanner = new UniversityPlannerService(
+					unidataaddress);
+
+			List<CalendarCdsData> dataCalendarOfWeek = uniplanner
+					.getCdsCalendar(client_auth_token, String.valueOf(cds_id),
+							year);
+
+			List<Evento> eventsMapped = null;
+
+			if (dataCalendarOfWeek != null) {
+				EventoMapper mapperEvento = new EventoMapper();
+				eventsMapped = mapperEvento.convert(dataCalendarOfWeek, cds_id,
+						Integer.parseInt(year));
+			}
+
+			eventsMapped = eventoRepository.save(eventsMapped);
+
+			return eventsMapped;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<Evento>
+	 * @throws IOException
+	 * 
+	 *             Sincronizza gli eventi di un cds
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/sync/evento/{cds}/all")
+	public @ResponseBody
+	List<Evento> getSyncEventoByCdsAll(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("cds") CorsoLaurea cds)
+
+	throws IOException {
+		try {
+			logger.info("/sync/evento/{cds}/all");
+
+			UniversityPlannerService uniConnector = new UniversityPlannerService(
+					unidataaddress);
+
+			EasyTokenManger clientTokenManager = new EasyTokenManger(
+					profileaddress, client_id, client_secret);
+			 client_auth_token =
+			 clientTokenManager.getClientSmartCampusToken();
+			//client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
+			System.out.println("Client auth token: " + client_auth_token);
+
+
+			List<Evento> eventsListTotal = new ArrayList<Evento>();
+
+			for (int y = 1; y <= Integer.parseInt(cds.getDurata()); y++) { 
+				List<CalendarCdsData> dataCalendarOfWeek = uniConnector
+						.getCdsCalendar(client_auth_token,
+								String.valueOf(cds.getCdsId()),
+								String.valueOf(y));
+
+				EventoMapper mapperEvento = new EventoMapper();
+				List<Evento> eventsMapped = mapperEvento.convert(dataCalendarOfWeek, cds, y);
+				
+				eventoRepository.save(eventsMapped);
+				
+				eventsListTotal.addAll(eventsMapped);
+			}
+
+			return eventsListTotal;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<Evento>
+	 * @throws IOException
+	 * 
+	 *             Sincronizza gli eventi di di tutti i gds
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/sync/evento/all")
+	public @ResponseBody
+	boolean getSyncEventoByAll(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			logger.info("/sync/evento/all");
+
+			UniversityPlannerService uniConnector = new UniversityPlannerService(
+					unidataaddress);
+
+			EasyTokenManger clientTokenManager = new EasyTokenManger(
+					profileaddress, client_id, client_secret);
+			 client_auth_token =
+			 clientTokenManager.getClientSmartCampusToken();
+			//client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
+			System.out.println("Client auth token: " + client_auth_token);
+
+			List<Dipartimento> dipartimenti = dipartimentoRepository.findAll();
+
+			if (dipartimenti == null)
+				return false;
+			
+			List<Evento> eventsMapped = null;
+			List<CorsoLaurea> corsiDiLaurea = null;
+
+			for (Dipartimento dip : dipartimenti) {
+
+				corsiDiLaurea = new ArrayList<CorsoLaurea>();
+
+				corsiDiLaurea = corsoLaureaRepository.findAll();
+
+				for (CorsoLaurea cl : corsiDiLaurea) { // per tutti i corsi di
+														// laurea
+					for (int year = 1; year <= Integer.parseInt(cl.getDurata()); year++) { // per tutti gli anni
+						List<CalendarCdsData> dataCalendarOfWeek = uniConnector
+								.getCdsCalendar(client_auth_token,
+										String.valueOf(cl.getCdsId()),
+										String.valueOf(year));
+
+						EventoMapper mapperEvento = new EventoMapper();
+						eventsMapped = mapperEvento.convert(dataCalendarOfWeek, cl, year);
+						
+						eventoRepository.save(eventsMapped);
+					}
+				}
+
+			}
+			return true;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	
+
 	/**
 	 * 
 	 * @param request
 	 * @return String
 	 * 
-	 * Ottiene il token riferito alla request
+	 *         Ottiene il token riferito alla request
 	 * 
 	 */
 	private String getToken(HttpServletRequest request) {

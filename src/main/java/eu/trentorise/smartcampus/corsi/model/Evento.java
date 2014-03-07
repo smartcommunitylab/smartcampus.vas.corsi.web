@@ -19,7 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "Evento.findEventoByCorso", query = "select c from Evento c where c.corso = ?1") })
+@NamedQueries({ @NamedQuery(name = "Evento.findEventoByCds", query = "select c from Evento c where c.cds = ?1") })
 @Table(name="evento")
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class Evento extends BasicEntity {
@@ -30,44 +30,29 @@ public class Evento extends BasicEntity {
 
 	// id dell'evento
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
 	private long id;
 
 	// corso di riferimento
 	// @Column(name = "CORSOLITE")
 	@ManyToOne
-	@JoinColumn(name = "ID_CORSO")
-	private Corso corso;
+	@JoinColumn(name = "ID_CDS")
+	private CorsoLaurea cds;
 
-	// // mail of the owner
-	// @Column(name = "ORGANIZER")
-	// private String organizer;
-
+	@Column(name = "YEAR")
+	private int yearCds;
+	
 	// title of the event
 	@Column(name = "TITOLO")
-	private String titolo;
-
-	// where the place takes places
-	@Column(name = "LOCATION")
-	private String event_location;
+	private String title;
 
 	// the room where the place takes places
 	@Column(name = "ROOM")
 	private String room;
+	
+	// the room where the place takes places
+	@Column(name = "TEACHER")
+	private String teacher;
 
-	// the date where the place takes places
-	@Column(name = "DATA")
-	private Date data;
-
-	// the description of the event
-	@Lob
-	@Column(name = "DESCRIZIONE", length = 100000)
-	private String descrizione;
-
-	// the description of the event
-	/*
-	 * @Column(name = "NOTE") private ArrayList<Nota> note;
-	 */
 	// ora inizio
 	@Column(name = "START")
 	private Time start;
@@ -76,26 +61,8 @@ public class Evento extends BasicEntity {
 	@Column(name = "STOP")
 	private Time stop;
 
-	// true if occupies the entire day
-	@Column(name = "ALL_DAY")
-	private boolean all_day;
-
-	// If this event counts as busy time or is free time that can be scheduled
-	// over.
-	@Column(name = "AVAILABILITY")
-	private boolean availability;
-
-	// // Whether guests can modify the event.
-	// @Column(name = "CANMODIFY")
-	// private boolean guests_can_modify;
-
-	// // Whether guests can invite other guests
-	// @Column(name = "CANINVITE")
-	// private boolean guests_can_invite;
-
-	// // Whether guests can see the list of attendees
-	// @Column(name = "CANSEE")
-	// private boolean guests_can_see;
+	@Column(name = "TYPE")
+	private String type;
 
 	public long getId() {
 		return id;
@@ -105,44 +72,12 @@ public class Evento extends BasicEntity {
 		this.id = id;
 	}
 
-	public Corso getCorso() {
-		return corso;
-	}
-
-	public void setCorso(Corso corso) {
-		this.corso = corso;
-	}
-
-	public String getTitolo() {
-		return titolo;
-	}
-
-	public void setTitolo(String titolo) {
-		this.titolo = titolo;
-	}
-
-	public String getEvent_location() {
-		return event_location;
-	}
-
-	public void setEvent_location(String event_location) {
-		this.event_location = event_location;
-	}
-
 	public String getRoom() {
 		return room;
 	}
 
 	public void setRoom(String room) {
 		this.room = room;
-	}
-
-	public String getDescrizione() {
-		return descrizione;
-	}
-
-	public void setDescrizione(String descrizione) {
-		this.descrizione = descrizione;
 	}
 
 	public Time getStart() {
@@ -161,28 +96,46 @@ public class Evento extends BasicEntity {
 		this.stop = stop;
 	}
 
-	public boolean isAll_day() {
-		return all_day;
+	public CorsoLaurea getCds() {
+		return cds;
 	}
 
-	public void setAll_day(boolean all_day) {
-		this.all_day = all_day;
+	public void setCds(CorsoLaurea cds) {
+		this.cds = cds;
 	}
 
-	public boolean isAvailability() {
-		return availability;
+	public int getYearCds() {
+		return yearCds;
 	}
 
-	public void setAvailability(boolean availability) {
-		this.availability = availability;
+	public void setYearCds(int yearCds) {
+		this.yearCds = yearCds;
 	}
 
-	public Date getData() {
-		return data;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setData(Date data) {
-		this.data = data;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
+	public String getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(String teacher) {
+		this.teacher = teacher;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	
+	
 }

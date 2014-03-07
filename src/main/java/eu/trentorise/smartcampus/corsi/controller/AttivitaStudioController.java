@@ -131,7 +131,7 @@ public class AttivitaStudioController {
 			logger.info("/attivitadistudio/add");
 
 			// controllo se i campi sono validi
-			if (atDiStudio != null && atDiStudio.getTitolo() != "") {
+			if (atDiStudio != null && atDiStudio.getTitle() != "") {
 				String token = getToken(request);
 				BasicProfileService service = new BasicProfileService(
 						profileaddress);
@@ -166,7 +166,7 @@ public class AttivitaStudioController {
 							communicatoraddress, appName);
 
 					Notification n = new Notification();
-					n.setTitle(atDiStudio.getTitolo());
+					n.setTitle(atDiStudio.getTitle());
 					NotificationAuthor nAuthor = new NotificationAuthor();
 					nAuthor.setAppId(appName);
 					nAuthor.setUserId(userId.toString());
@@ -174,7 +174,7 @@ public class AttivitaStudioController {
 					n.setUser(userId.toString());
 					n.setType(TypeNotification.AVVISO.toString());
 					n.setTimestamp(System.currentTimeMillis());
-					n.setDescription("Nuova attività " + atDiStudio.getTitolo()
+					n.setDescription("Nuova attività " + atDiStudio.getTitle()
 							+ " creata da " + profile.getName() + " "
 							+ profile.getSurname() + " nel gruppo "
 							+ gruppoRefersAttivita.getNome());
@@ -262,14 +262,14 @@ public class AttivitaStudioController {
 						communicatoraddress, appName);
 
 				Notification n = new Notification();
-				n.setTitle(attivitadistudio.getTitolo());
+				n.setTitle(attivitadistudio.getTitle());
 				NotificationAuthor nAuthor = new NotificationAuthor();
 				nAuthor.setAppId(appName);
 				nAuthor.setUserId(userId.toString());
 				n.setAuthor(nAuthor);
 				n.setUser(userId.toString());
 				n.setTimestamp(System.currentTimeMillis());
-				n.setDescription("L'attività " + attivitadistudio.getTitolo()
+				n.setDescription("L'attività " + attivitadistudio.getTitle()
 						+ " è stata modificata da " + profile.getName() + " "
 						+ profile.getSurname());
 				Map<String, Object> mapAttivita = new HashMap<String, Object>();
@@ -382,14 +382,14 @@ public class AttivitaStudioController {
 						communicatoraddress, appName);
 
 				Notification n = new Notification();
-				n.setTitle(attivitadistudio.getTitolo());
+				n.setTitle(attivitadistudio.getTitle());
 				NotificationAuthor nAuthor = new NotificationAuthor();
 				nAuthor.setAppId(appName);
 				nAuthor.setUserId(userId.toString());
 				n.setAuthor(nAuthor);
 				n.setUser(userId.toString());
 				n.setTimestamp(System.currentTimeMillis());
-				n.setDescription("L'attività " + attivitadistudio.getTitolo()
+				n.setDescription("L'attività " + attivitadistudio.getTitle()
 						+ " è stata eliminata da " + profile.getName() + " "
 						+ profile.getSurname());
 				Map<String, Object> mapAttivita = new HashMap<String, Object>();
