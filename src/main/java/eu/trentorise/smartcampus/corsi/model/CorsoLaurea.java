@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -36,9 +37,8 @@ public class CorsoLaurea extends BasicProfile {
 	@Column(name = "AA_ORD")
 	private String aaOrd;
 	
-	@OneToMany(cascade={CascadeType.ALL})
-    @JoinColumn(name="PDS_ID", referencedColumnName="CDS_ID")
-	@Column(name = "PDS")
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinTable(joinColumns = @JoinColumn(name = "CDS_ID"), inverseJoinColumns = @JoinColumn(name = "PDS_ID"))
 	private List<PianoStudi> pds;
 
 	@ManyToOne

@@ -72,6 +72,7 @@ public class UniCourseDegreeMapper {
 					PianoStudi pds = new PianoStudi();
 					pds.setPdsId(Long.parseLong(pdsData.getPdsId()));
 					pds.setPdsCod(pdsData.getPdsCod());
+					//pds.setCdsId(corsoLaurea);
 					pdsList.add(pds);
 
 				}

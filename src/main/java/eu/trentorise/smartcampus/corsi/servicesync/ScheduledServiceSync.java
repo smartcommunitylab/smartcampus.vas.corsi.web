@@ -98,8 +98,8 @@ public class ScheduledServiceSync {
 	private final static int MONTH_NEW_OFF = 8;
 
 	/**
-	 * Scheduled che aggiorna da unidata le informazioni sui corsi di laurea e
-	 * dipartimenti
+	 * Scheduled che aggiorna da unidata le informazioni sui corsi di laurea,
+	 * dipartimenti e attività didattiche
 	 * 
 	 * @throws IOException
 	 */
@@ -116,7 +116,8 @@ public class ScheduledServiceSync {
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
-			client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			//client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector
 					.getFacoltaData(client_auth_token);
