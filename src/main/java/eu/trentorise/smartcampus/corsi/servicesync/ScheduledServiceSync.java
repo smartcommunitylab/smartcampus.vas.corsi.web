@@ -72,7 +72,7 @@ public class ScheduledServiceSync {
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
-	
+
 	@Autowired
 	private PianoStudiRepository pianoStudiRepository;
 
@@ -116,7 +116,8 @@ public class ScheduledServiceSync {
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
-			//client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			// client_auth_token =
+			// clientTokenManager.getClientSmartCampusToken();
 			client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector
@@ -137,7 +138,7 @@ public class ScheduledServiceSync {
 			}
 
 			for (Dipartimento dip : dipartimenti) {
-				
+
 				corsiDiLaurea = new ArrayList<CorsoLaurea>();
 
 				List<CdsData> dataCdsUni = uniConnector.getCdsData(
@@ -148,10 +149,10 @@ public class ScheduledServiceSync {
 
 				UniCourseDegreeMapper cdsMapper = new UniCourseDegreeMapper();
 				corsiDiLaurea = cdsMapper.convert(dataCdsUni,
-						client_auth_token, dipartimentoRepository, pianoStudiRepository);
+						client_auth_token, dipartimentoRepository,
+						pianoStudiRepository);
 
 				corsiDiLaurea = corsoLaureaRepository.save(corsiDiLaurea);
-				
 
 			}
 
@@ -171,9 +172,17 @@ public class ScheduledServiceSync {
 
 			AttivitaDidatticaMapper adMapper = new AttivitaDidatticaMapper();
 			for (CorsoLaurea cds : cdsListDB) {
-				List<AdData> attDidatticheList = uniConnector.getAdData(
-						client_auth_token, String.valueOf(cds.getCdsId()),
-						cds.getAaOrd(), String.valueOf(year));
+				List<AdData> attDidatticheList = null;
+				do {
+					attDidatticheList = uniConnector.getAdData(
+							client_auth_token, String.valueOf(cds.getCdsId()),
+							cds.getAaOrd(), String.valueOf(year));
+
+					if (attDidatticheList == null) {
+						year--;
+					}
+
+				} while (attDidatticheList == null && year>=2000);
 
 				List<AttivitaDidattica> attivitaDidatticaList = adMapper
 						.convert(attDidatticheList, cds.getCdsId(),
