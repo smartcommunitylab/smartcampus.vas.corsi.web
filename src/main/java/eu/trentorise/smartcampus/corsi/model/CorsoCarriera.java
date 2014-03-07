@@ -11,10 +11,15 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "CorsoCarriera.findCorsoCarrieraByStudenteId", query = "select cc from CorsoCarriera cc where cc.studenteId = ?1") })
 public class CorsoCarriera extends BasicEntity {
 
-		
-	
+		/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1306548062859361763L;
+
 		@Id
 		@Column(name = "ID")
 		private long id;

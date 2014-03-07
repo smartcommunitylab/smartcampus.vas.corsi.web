@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
+import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
@@ -51,6 +52,9 @@ public class CorsoCarrieraController {
 
 	@Autowired
 	private StudenteRepository studenteRepository;
+	
+	@Autowired
+	private CorsoCarrieraRepository corsoCarrieraRepository;
 
 	
 	@Autowired
@@ -66,13 +70,12 @@ public class CorsoCarrieraController {
 	 * @return Studente
 	 * @throws IOException
 	 * 
-	 *             Restituisce lo studente soltanto se c'� bisogno di
-	 *             sincronizzare
+	 *             Sincronizza con unidata service corsi in carriera
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/sync/corsocarriera/me")
 	public @ResponseBody
-	List<CorsoCarriera> getStudenteSync(HttpServletRequest request,
+	List<CorsoCarriera> getCorsiCarrieraSync(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
@@ -90,7 +93,6 @@ public class CorsoCarrieraController {
 			
 			
 			if(studenteDB == null){
-				logger.info("Student not stored on db... retrieving student informations...");
 				StudentInfoService studentConnector = new StudentInfoService(
 						unidataaddress);
 
@@ -104,7 +106,7 @@ public class CorsoCarrieraController {
 				UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
 
 				// converto e salvo nel db lo studente aggiornato
-				studenteDB = studentMapper.convert(studentUniData,  token);
+				studenteDB = studentMapper.convert(studentUniData, token);
 
 				studenteDB = studenteRepository.save(studenteDB);
 			}
@@ -137,6 +139,69 @@ public class CorsoCarrieraController {
 	}
 	
 	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return Studente
+	 * @throws IOException
+	 * 
+	 *             Ritorna i corsi in carriera nel db
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/me")
+	public @ResponseBody
+	List<CorsoCarriera> getCorsiCarriera(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			logger.info("/corsocarriera/me");
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			Studente studenteDB = studenteRepository.findOne(userId);
+			
+			
+			if(studenteDB == null){
+				StudentInfoService studentConnector = new StudentInfoService(
+						unidataaddress);
+
+				// ottengo da unidata lo studente
+				StudentInfoData studentUniData = studentConnector
+						.getStudentData(token);
+
+				if (studentUniData == null)
+					return null;
+
+				UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
+
+				// converto e salvo nel db lo studente aggiornato
+				studenteDB = studentMapper.convert(studentUniData, token);
+
+				studenteDB = studenteRepository.save(studenteDB);
+			}
+			
+			
+			List<CorsoCarriera> corsoCarrieraList = corsoCarrieraRepository.findCorsoCarrieraByStudenteId(studenteDB.getId());
+
+
+			return corsoCarrieraList;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
 	
 	
 

@@ -6,14 +6,13 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumns;
 
 @Entity
 public class PianoStudi extends BasicEntity {
 
 	@Id
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="PDS_ID")
-	private CorsoLaurea pdsId;
+	private long pdsId;
 	
 	@Column(name = "PDS_COD")
 	private String pdsCod;
@@ -27,13 +26,15 @@ public class PianoStudi extends BasicEntity {
 		this.pdsCod = pdsCod;
 	}
 
-	public CorsoLaurea getPdsId() {
+	public long getPdsId() {
 		return pdsId;
 	}
 
-	public void setPdsId(CorsoLaurea pdsId) {
+	public void setPdsId(long pdsId) {
 		this.pdsId = pdsId;
 	}
+
+
 	
 	
 	

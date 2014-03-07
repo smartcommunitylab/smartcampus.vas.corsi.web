@@ -24,6 +24,7 @@ import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
+import eu.trentorise.smartcampus.corsi.repository.PianoStudiRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.corsi.util.UniCourseDegreeMapper;
 import eu.trentorise.smartcampus.corsi.util.UniDepartmentMapper;
@@ -65,6 +66,10 @@ public class CorsoLaureaServiceSync {
 	
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
+	
+	@Autowired
+	private PianoStudiRepository pianoStudiRepository;
+	
 
 	private Dipartimento dipartimento;
 	private List<CorsoLaurea> corsiDiLaurea;
@@ -126,7 +131,7 @@ public class CorsoLaureaServiceSync {
 				return null;
 
 			UniCourseDegreeMapper cdsMapper = new UniCourseDegreeMapper();
-			corsiDiLaurea = cdsMapper.convert(dataCdsUni, client_auth_token, dipartimentoRepository);
+			corsiDiLaurea = cdsMapper.convert(dataCdsUni, client_auth_token, dipartimentoRepository, pianoStudiRepository);
 			
 
 			corsiDiLaurea = corsoLaureaRepository.save(corsiDiLaurea);

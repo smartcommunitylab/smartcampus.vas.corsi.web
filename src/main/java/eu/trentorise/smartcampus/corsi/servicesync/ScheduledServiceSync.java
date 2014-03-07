@@ -28,9 +28,11 @@ import eu.trentorise.smartcampus.corsi.controller.CorsiController;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
+import eu.trentorise.smartcampus.corsi.model.PianoStudi;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
+import eu.trentorise.smartcampus.corsi.repository.PianoStudiRepository;
 import eu.trentorise.smartcampus.corsi.util.AttivitaDidatticaMapper;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.corsi.util.UniCourseDegreeMapper;
@@ -70,6 +72,9 @@ public class ScheduledServiceSync {
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
+	
+	@Autowired
+	private PianoStudiRepository pianoStudiRepository;
 
 	@Autowired
 	private AttivitaDidatticaRepository attivitaDidatticaRepository;
@@ -111,8 +116,8 @@ public class ScheduledServiceSync {
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
-			client_auth_token = clientTokenManager.getClientSmartCampusToken();
-
+			//client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector
 					.getFacoltaData(client_auth_token);
@@ -143,9 +148,10 @@ public class ScheduledServiceSync {
 
 				UniCourseDegreeMapper cdsMapper = new UniCourseDegreeMapper();
 				corsiDiLaurea = cdsMapper.convert(dataCdsUni,
-						client_auth_token, dipartimentoRepository);
+						client_auth_token, dipartimentoRepository, pianoStudiRepository);
 
 				corsiDiLaurea = corsoLaureaRepository.save(corsiDiLaurea);
+				
 
 			}
 

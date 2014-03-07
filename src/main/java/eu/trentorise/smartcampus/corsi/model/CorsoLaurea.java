@@ -27,9 +27,6 @@ public class CorsoLaurea extends BasicProfile {
 	@Column(name = "CDS_COD")
 	private String cdsCod;
 	
-	@Column(name = "FAC_ID")
-	private String facId;
-	
 	@Column(name = "DESCRIPTION")
 	private String descripion;
 	
@@ -39,7 +36,8 @@ public class CorsoLaurea extends BasicProfile {
 	@Column(name = "AA_ORD")
 	private String aaOrd;
 	
-	@OneToMany(mappedBy="pdsId")
+	@OneToMany(cascade={CascadeType.ALL})
+    @JoinColumn(name="PDS_ID", referencedColumnName="CDS_ID")
 	@Column(name = "PDS")
 	private List<PianoStudi> pds;
 
@@ -79,13 +77,6 @@ public class CorsoLaurea extends BasicProfile {
 		this.cdsCod = cdsCod;
 	}
 
-	public String getFacId() {
-		return facId;
-	}
-
-	public void setFacId(String facId) {
-		this.facId = facId;
-	}
 
 	public String getDescripion() {
 		return descripion;

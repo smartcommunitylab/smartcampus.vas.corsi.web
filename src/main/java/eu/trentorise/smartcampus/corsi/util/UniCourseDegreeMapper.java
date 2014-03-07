@@ -3,6 +3,8 @@ package eu.trentorise.smartcampus.corsi.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Embeddable;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,8 +37,6 @@ public class UniCourseDegreeMapper {
 	@Autowired
 	private CorsoLaureaRepository corsoLaureaRepository;
 	
-	@Autowired
-	private PianoStudiRepository pianoStudiRepository;
 
 	private BasicProfile basicProfile;
 
@@ -49,7 +49,7 @@ public class UniCourseDegreeMapper {
 	}
 
 	public List<CorsoLaurea> convert(List<CdsData> dataCds, String token,
-			DipartimentoRepository dipartimentoRepository)
+			DipartimentoRepository dipartimentoRepository, PianoStudiRepository pianoStudiRepository)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
@@ -63,7 +63,6 @@ public class UniCourseDegreeMapper {
 
 				corsoLaurea.setId(Long.valueOf(cds.getCdsId()));
 				corsoLaurea.setCdsCod(cds.getCdsCod());
-				corsoLaurea.setFacId(cds.getFacId());
 				corsoLaurea.setDescripion(cds.getDescription());
 				corsoLaurea.setDurata(cds.getDurata());
 				corsoLaurea.setAaOrd(cds.getAaOrd());
@@ -71,7 +70,7 @@ public class UniCourseDegreeMapper {
 				List<PianoStudi> pdsList = new ArrayList<PianoStudi>();
 				for (PdsData pdsData : cds.getPds()) {
 					PianoStudi pds = new PianoStudi();
-					pds.setPdsId(corsoLaurea);
+					pds.setPdsId(Long.parseLong(pdsData.getPdsId()));
 					pds.setPdsCod(pdsData.getPdsCod());
 					pdsList.add(pds);
 
