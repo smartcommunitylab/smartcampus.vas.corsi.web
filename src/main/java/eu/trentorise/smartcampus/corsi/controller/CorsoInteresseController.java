@@ -1,9 +1,9 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -13,14 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
+import eu.trentorise.smartcampus.corsi.model.CorsoInteresse;
 import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
-import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
+import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
@@ -32,17 +37,18 @@ import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
 import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
 import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExams;
 
-@Controller("corsoCarrieraController")
-public class CorsoCarrieraController {
-	
+@Controller("corsoInteresseController")
+public class CorsoInteresseController {
+
 	private static final Logger logger = Logger
-			.getLogger(CorsoCarrieraController.class);
+			.getLogger(CorsoInteresseController.class);
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
+
 	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
 	 */
@@ -51,16 +57,17 @@ public class CorsoCarrieraController {
 	private String appName;
 
 	@Autowired
-	private StudenteRepository studenteRepository;
-	
-	@Autowired
-	private CorsoCarrieraRepository corsoCarrieraRepository;
+	private CorsoInteresseRepository corsoInteresseRepository;
 
+	@Autowired
+	private StudenteRepository studenteRepository;
+
+	@Autowired
+	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 	
 	@Autowired
 	@Value("${url.studente.service}")
 	private String unidataaddress;
-	
 	
 	/**
 	 * 
@@ -73,14 +80,14 @@ public class CorsoCarrieraController {
 	 *             Sincronizza con unidata service corsi in carriera
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/sync/corsocarriera/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/corsointeresse/me")
 	public @ResponseBody
-	List<CorsoCarriera> getCorsiCarrieraSync(HttpServletRequest request,
+	List<CorsoInteresse> getCorsiInteresseStudente(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/sync/corsocarriera/me");
+			logger.info("/corsoInteresse/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -111,27 +118,16 @@ public class CorsoCarrieraController {
 				studenteDB = studenteRepository.save(studenteDB);
 			}
 			
-			// prendo i dati da unidata e li mappo
-			StudentInfoService studentConnector = new StudentInfoService(
-					unidataaddress);
+			
+			
+			
+			List<CorsoInteresse> ci = new ArrayList<CorsoInteresse>();
+			
+			ci = corsoInteresseRepository.findCorsoInteresseByStudenteId(studenteDB.getId());
+			
+			
 
-			StudentInfoExams studentExamsCareer = studentConnector
-					.getStudentExams(token);
-
-			if (studentExamsCareer == null)
-				return null;
-			
-			
-			CorsoCarrieraMapper cc = new CorsoCarrieraMapper();
-			
-			
-			List<CorsoCarriera> corsoCarrieraList = cc.convert(studenteDB.getId(), studentExamsCareer, token);
-			
-			
-			corsoCarrieraList = corsoCarrieraRepository.save(corsoCarrieraList);
-
-
-			return corsoCarrieraList;
+			return ci;
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -139,7 +135,10 @@ public class CorsoCarrieraController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
-	}
+	}	
+	
+	
+	
 	
 	
 	
@@ -148,86 +147,69 @@ public class CorsoCarrieraController {
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return Studente
+	 * @param corso
+	 * @return boolean
 	 * @throws IOException
 	 * 
-	 *             Ritorna i corsi in carriera nel db
+	 * Dato un corso restituisce al client true se il corso � di interesse dello studente altrimenti false 
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/me")
+	@RequestMapping(method = RequestMethod.POST, value = "/corsointeresse/{adId}/seguo")
+	//
 	public @ResponseBody
-	List<CorsoCarriera> getCorsiCarriera(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
+	boolean setCorsoAsFollowUnflollow(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @PathVariable("adId") Long idAttivitaDidattica)
 
 	throws IOException {
 		try {
-			logger.info("/corsocarriera/me");
-
+			
+			logger.info("/corsointeresse/{adId}/seguo");
+			
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
-
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			Studente studenteDB = studenteRepository.findOne(userId);
+			// test
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			
 			
-			if(studenteDB == null){
-				StudentInfoService studentConnector = new StudentInfoService(
-						unidataaddress);
-
-				// ottengo da unidata lo studente
-				StudentInfoData studentUniData = studentConnector
-						.getStudentData(token);
-
-				if (studentUniData == null)
-					return null;
-
-				UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
-
-				// converto e salvo nel db lo studente aggiornato
-				studenteDB = studentMapper.convert(studentUniData, token);
-
-				studenteDB = studenteRepository.save(studenteDB);
+			
+			
+			CorsoInteresse cInteresse = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studente.getId(), idAttivitaDidattica);
+			
+			if(cInteresse == null){
+				AttivitaDidattica aDidattica = attivitaDidatticaRepository.findOne(idAttivitaDidattica);
+				if(aDidattica == null)
+					return false;
+				
+				cInteresse.setAttivitaDidattica(aDidattica);
+				cInteresse.setStudenteId(studente.getId());
+				corsoInteresseRepository.save(cInteresse);
+			}else{
+				corsoInteresseRepository.delete(cInteresse);
 			}
 			
+			return true;
 			
-			List<CorsoCarriera> corsoCarrieraList = corsoCarrieraRepository.findCorsoCarrieraByStudenteId(studenteDB.getId());
 			
-			if(corsoCarrieraList == null){
-				// prendo i dati da unidata e li mappo
-				StudentInfoService studentConnector = new StudentInfoService(
-						unidataaddress);
-
-				StudentInfoExams studentExamsCareer = studentConnector
-						.getStudentExams(token);
-
-				if (studentExamsCareer == null)
-					return null;
-				
-				
-				CorsoCarrieraMapper cc = new CorsoCarrieraMapper();
-				
-				
-				corsoCarrieraList = cc.convert(studenteDB.getId(), studentExamsCareer, token);
-				
-				corsoCarrieraList = corsoCarrieraRepository.save(corsoCarrieraList);
-			}
-
-
-			return corsoCarrieraList;
-
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-		return null;
+		return false;
 	}
 	
 	
-
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 
 	 * @param request

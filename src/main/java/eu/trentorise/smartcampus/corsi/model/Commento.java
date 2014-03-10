@@ -26,7 +26,7 @@ public class Commento extends CommentBaseEntity {
 	}
 
 	// corso di riferimento
-	@JoinColumn(name = "CORSO_ID")
+	@JoinColumn(name = "AD_ID")
 	private long corso;
 	
 	// utente che ha scritto commento

@@ -18,11 +18,15 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.hibernate.internal.util.compare.ComparableComparator;
+
 @Entity
-@NamedQueries({ @NamedQuery(name = "Evento.findEventoByCds", query = "select c from Evento c where c.cds = ?1") })
+@NamedQueries({ @NamedQuery(name = "Evento.findEventoByCds", query = "select e from Evento e where e.cds = ?1"),
+	      		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where e.id = ?1"),
+	      		@NamedQuery(name = "Evento.findEventoByAdAndYear", query = "select e from Evento e where e.id = ?1 and e.yearCds <= ?2")})
 @Table(name="evento")
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
-public class Evento extends BasicEntity {
+public class Evento {
 	/**
 	 * 
 	 */
@@ -32,8 +36,7 @@ public class Evento extends BasicEntity {
 	@Id
 	private long id;
 
-	// corso di riferimento
-	// @Column(name = "CORSOLITE")
+	// corso di laurea di riferimento
 	@Column(name = "ID_CDS")
 	private long cds;
 
@@ -145,7 +148,6 @@ public class Evento extends BasicEntity {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
 	
 	
 }

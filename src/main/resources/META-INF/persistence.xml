@@ -19,6 +19,7 @@
  		<class>eu.trentorise.smartcampus.mediation.model.CommentBaseEntity</class>
  		<class>eu.trentorise.smartcampus.corsi.model.AttivitaDidattica</class>
  		<class>eu.trentorise.smartcampus.corsi.model.CorsoCarriera</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.CorsoInteresse</class>
  		<class>eu.trentorise.smartcampus.corsi.model.PianoStudi</class>
 	</persistence-unit>
 </persistence>

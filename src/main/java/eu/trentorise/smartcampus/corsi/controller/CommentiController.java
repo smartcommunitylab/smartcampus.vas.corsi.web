@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.aac.AACException;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio;
+import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
@@ -43,6 +44,7 @@ import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
@@ -89,7 +91,7 @@ public class CommentiController {
 	private CorsoCarrieraRepository corsoCarrieraRepository;
 	
 	@Autowired
-	private CorsoRepository corsoRepository;
+	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 
 	private MediationParserImpl mediationParserImpl;
 
@@ -167,14 +169,14 @@ public class CommentiController {
 	 *         del corso
 	 * 
 	 */
-	private Corso UpdateRatingCorso(Corso corsoDaAggiornare) {
+	private AttivitaDidattica UpdateRatingCorso(AttivitaDidattica corsoDaAggiornare) {
 
 		if (corsoDaAggiornare == null)
 			return null;
 
 		// cerco la lista dei commenti
 		List<Commento> listCom = commentiRepository
-				.getCommentoByCorsoAll(corsoDaAggiornare.getId());
+				.getCommentoByCorsoAll(corsoDaAggiornare.getAdId());
 		float Rating_carico_studio = 0;
 		float Rating_contenuto = 0;
 		float Rating_esame = 0;
@@ -213,12 +215,12 @@ public class CommentiController {
 		// setto la media delle valutazioni
 		corsoDaAggiornare.setValutazione_media(sommaValutazioni / 5);
 
-		Corso corsoAggiornato = corsoRepository.saveAndFlush(corsoDaAggiornare);
+		AttivitaDidattica corsoAggiornato = attivitaDidatticaRepository.saveAndFlush(corsoDaAggiornare);
 
 		if (corsoAggiornato == null)
 			return null;
 
-		if (corsoAggiornato.getId() != corsoDaAggiornare.getId())
+		if (corsoAggiornato.getAdId() != corsoDaAggiornare.getAdId())
 			return null;
 
 		return corsoAggiornato;
@@ -249,22 +251,22 @@ public class CommentiController {
 			List<Commento> commentiAggiornati;
 
 			// Aggiorno le valutazioni del corso
-			UpdateRatingCorso(corsoRepository.findOne(id_corso));
+			UpdateRatingCorso(attivitaDidatticaRepository.findOne(id_corso));
 
 			logger.info("/corso/{id_corso}/commento/all");
 			if (id_corso == null)
 				return null;
 
 			commentiAggiornati = commentiRepository
-					.getCommentoByCorsoApproved(corsoRepository.findOne(
-							id_corso).getId());
+					.getCommentoByCorsoApproved(attivitaDidatticaRepository.findOne(
+							id_corso).getAdId());
 
 			if (commentiAggiornati.size() != 0) {
 				commentiAggiornati = commentiRepository
 						.save(commentiAggiornati);
 				return commentiAggiornati;
 			} else {
-				Corso corso = corsoRepository.findOne(id_corso);
+				AttivitaDidattica corso = attivitaDidatticaRepository.findOne(id_corso);
 				String token = getToken(request);
 				BasicProfileService service = new BasicProfileService(
 						profileaddress);
@@ -272,49 +274,9 @@ public class CommentiController {
 				Long userId = Long.valueOf(profile.getUserId());
 				Studente studente = studenteRepository.findOne(userId);
 
-				if (studente == null) {
-					studente = new Studente();
-					studente.setId(userId);
-					studente.setNome(profile.getName());
-					studente.setCognome(profile.getSurname());
-					studente = studenteRepository.save(studente);
-
-					// studente = studenteRepository.save(studente);
-
-					// TODO caricare corsi da esse3
-					// Creare associazione su frequenze
-
-					// TEST
-					List<CorsoCarriera> corsiEsse3 = corsoCarrieraRepository.findAll();
-
-					String supera = null;
-					String interesse = null;
-					int z = 0;
-					supera = new String();
-					interesse = new String();
-
-					for (CorsoCarriera cors : corsiEsse3) {
-
-						if (z % 2 == 0) {
-							supera = supera.concat(String.valueOf(cors.getId())
-									.concat(","));
-						}
-
-						if (z % 4 == 0) {
-							interesse = interesse.concat(String.valueOf(
-									cors.getId()).concat(","));
-						}
-
-						z++;
-					}
-
-
-					studente = studenteRepository.save(studente);
-				}
-
 				Commento commento = new Commento();
 				commento.setId_studente(studente.getId());
-				commento.setCorso(corso.getId());
+				commento.setCorso(corso.getAdId());
 				commento.setRating_carico_studio((float) -1);
 				commento.setRating_contenuto((float) -1);
 				commento.setRating_esame((float) -1);
@@ -411,8 +373,8 @@ public class CommentiController {
 				return null;
 
 			return commentiRepository.getCommentoByStudenteApproved(
-					studenteRepository.findOne(userId).getId(), corsoRepository
-							.findOne(id_corso).getId());
+					studenteRepository.findOne(userId).getId(), attivitaDidatticaRepository
+							.findOne(id_corso).getAdId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -510,8 +472,8 @@ public class CommentiController {
 
 				Commento commentoDaModificare = commentiRepository
 						.getCommentoByStudenteApproved(studenteRepository
-								.findOne(userId).getId(), corsoRepository
-								.findOne(commento.getCorso()).getId());
+								.findOne(userId).getId(), attivitaDidatticaRepository
+								.findOne(commento.getCorso()).getAdId());
 
 				// gestisco il commento nel caso sia già presente
 

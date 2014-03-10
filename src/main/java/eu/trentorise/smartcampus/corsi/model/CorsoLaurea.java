@@ -18,7 +18,7 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Entity
 @NamedQuery(name = "CorsoLaurea.getCorsiLaureaByDipartimento", query = "select cl from CorsoLaurea cl where cl.dipartimento = ?1")
-public class CorsoLaurea extends BasicProfile {
+public class CorsoLaurea extends BasicEntity {
 
 
 	@Id

@@ -2,6 +2,8 @@ package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
+import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
@@ -36,9 +39,15 @@ public class AttivitaDidatticaController {
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
+	
+	@Autowired
+	private CorsoLaureaRepository corsoLaureaRepository;
 
 	@Autowired
 	private CorsoLaureaServiceSync controllerSyncCorsoLaurea;
+	
+	
+	
 	
 	/**
 	 * 
@@ -51,14 +60,49 @@ public class AttivitaDidatticaController {
 	 *             Restituisce tutti i corsi di laurea
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/{id_cds}")
+	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/{id_ad}")
 	public @ResponseBody
-	List<AttivitaDidattica> getAttivitaDidatticaByGds(HttpServletRequest request,
+	AttivitaDidattica getAttivitaDidatticaById(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @PathVariable("id_ad") Long id_ad)
+
+	throws IOException {
+		try {
+			logger.info("/attivitadidattica/"+id_ad);
+			
+			AttivitaDidattica getAttivitaDidattica = new AttivitaDidattica();
+			getAttivitaDidattica = attivitaDidatticaRepository.findOne(id_ad);
+			
+			return getAttivitaDidattica;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<CorsoLaurea>
+	 * @throws IOException
+	 * 
+	 *             Restituisce tutti i corsi di laurea
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/corsolaurea/{id_cds}")
+	public @ResponseBody
+	List<AttivitaDidattica> getAttivitaDidatticaByCds(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session, @PathVariable("id_cds") Long id_cds)
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/"+id_cds);
+			logger.info("/attivitadidattica/corsolaurea/"+id_cds);
 			
 			List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
 			getAttivitaDidattica = attivitaDidatticaRepository.findAttivitaDidatticaByCdsId(id_cds);
@@ -72,6 +116,53 @@ public class AttivitaDidatticaController {
 		}
 		return null;
 	}
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<CorsoLaurea>
+	 * @throws IOException
+	 * 
+	 *             Restituisce tutti i corsi di laurea
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/dipartimento/{id_dip}")
+	public @ResponseBody
+	List<AttivitaDidattica> getAttivitaDidatticaByDipartimento(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @PathVariable("id_dip") Long id_dip)
+
+	throws IOException {
+		try {
+			logger.info("/attivitadidattica/dipartimento/"+id_dip);
+			
+			Dipartimento dipartimento = dipartimentoRepository.findOne(id_dip);
+			
+			List<CorsoLaurea> listCds = corsoLaureaRepository.getCorsiLaureaByDipartimento(dipartimento);
+			
+			List<AttivitaDidattica> attivitaAllByDip = new ArrayList<AttivitaDidattica>();
+			
+			for (CorsoLaurea corsoLaurea : listCds) {
+				List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
+				getAttivitaDidattica = attivitaDidatticaRepository.findAttivitaDidatticaByCdsId(corsoLaurea.getCdsId());
+				
+				attivitaAllByDip.addAll(getAttivitaDidattica);
+			}
+
+			
+			return attivitaAllByDip;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
 	
 	
 	

@@ -3,6 +3,8 @@ package eu.trentorise.smartcampus.corsi.controller;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
@@ -75,6 +78,9 @@ public class EventiController {
 
 	@Autowired
 	private EventoRepository eventoRepository;
+	
+	@Autowired
+	private CorsoCarrieraRepository corsoCarrieraRepository;
 
 	@Autowired
 	@Value("${url.studente.service}")
@@ -120,7 +126,7 @@ public class EventiController {
 			CorsoLaurea corso = corsoLaureaRepository.findOne(Long
 					.valueOf(id_cds));
 
-			return eventoRepository.findEventoByCds(corso);
+			return eventoRepository.findEventoByCds(corso.getCdsId());
 
 		} catch (Exception e) {
 
@@ -217,8 +223,35 @@ public class EventiController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			
+			List<CorsoCarriera> corsiCarrieraList = corsoCarrieraRepository.findCorsoCarrieraByStudenteId(studente.getId());
+			List<Evento> listEventi = new ArrayList<Evento>();
+			
+			// filtro gli eventi che interessano allo studente
+			for (CorsoCarriera corsoCarriera : corsiCarrieraList) {
+				if(corsoCarriera.getResult().equals("0")){
+					List<Evento> eventiAd = eventoRepository.findEventoByAdAndYear(corsoCarriera.getId(), Integer.parseInt(studente.getAcademicYear()));
+					listEventi.addAll(eventiAd);
+				}
+			}
+			
+			Collections.sort(listEventi, new Comparator<Evento>() {
+				  public int compare(Evento e1, Evento e2) {
+				      if (e1.getDate() == null || e2.getDate() == null)
+				        return 0;
+				      return e1.getDate().compareTo(e2.getDate());
+				  }
+				});
+			
+			Collections.sort(listEventi, new Comparator<Evento>() {
+				  public int compare(Evento e1, Evento e2) {
+				      if (e1.getStart() == null || e2.getStart() == null)
+				        return 0;
+				      return e1.getStart().compareTo(e2.getStart());
+				  }
+				});
+			
 
-			List<Evento> eventiListByCorso = new ArrayList<Evento>();
 
 			// for (CorsoCarriera index : studente.getCorsi()) {
 			//
@@ -227,7 +260,7 @@ public class EventiController {
 			//
 			// }
 
-			return eventiListByCorso;
+			return listEventi;
 		} catch (Exception e) {
 
 			e.printStackTrace();
