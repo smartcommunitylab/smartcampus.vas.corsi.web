@@ -50,11 +50,12 @@ public class EventoMapper {
 			evento.setRoom(eventCal.getRoom());
 			evento.setTeacher(eventCal.getTeacher());
 			evento.setTitle(eventCal.getTitle());
+			evento.setDate(new Date(eventCal.getFrom()));
 			evento.setStart(new Time(eventCal.getFrom()));
 			evento.setStop(new Time(eventCal.getTo()));
 			evento.setType(eventCal.getType());
 			evento.setYearCds(year);
-			evento.setCds(idCds);
+			evento.setCds(idCds.getCdsId());
 			 
 			listEvento.add(evento);
 		}

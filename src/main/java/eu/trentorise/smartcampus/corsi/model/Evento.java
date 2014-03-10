@@ -34,9 +34,8 @@ public class Evento extends BasicEntity {
 
 	// corso di riferimento
 	// @Column(name = "CORSOLITE")
-	@ManyToOne
-	@JoinColumn(name = "ID_CDS")
-	private CorsoLaurea cds;
+	@Column(name = "ID_CDS")
+	private long cds;
 
 	@Column(name = "YEAR")
 	private int yearCds;
@@ -52,6 +51,9 @@ public class Evento extends BasicEntity {
 	// the room where the place takes places
 	@Column(name = "TEACHER")
 	private String teacher;
+	
+	@Column(name = "DATE")
+	private Date date;
 
 	// ora inizio
 	@Column(name = "START")
@@ -96,14 +98,6 @@ public class Evento extends BasicEntity {
 		this.stop = stop;
 	}
 
-	public CorsoLaurea getCds() {
-		return cds;
-	}
-
-	public void setCds(CorsoLaurea cds) {
-		this.cds = cds;
-	}
-
 	public int getYearCds() {
 		return yearCds;
 	}
@@ -134,6 +128,22 @@ public class Evento extends BasicEntity {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public long getCds() {
+		return cds;
+	}
+
+	public void setCds(long cds) {
+		this.cds = cds;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	
