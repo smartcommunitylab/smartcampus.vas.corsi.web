@@ -260,7 +260,7 @@ public class ScheduledServiceSync {
 
 			}
 			
-			logger.info("Oh yeah! I am finished synchronization of events! I want a beer...");
+			logger.info("Oh yeah! I am just finished the synchronization of events! I want a beer...");
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());

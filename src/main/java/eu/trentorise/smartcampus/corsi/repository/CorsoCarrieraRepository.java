@@ -12,4 +12,6 @@ public interface CorsoCarrieraRepository extends
 		JpaRepository<CorsoCarriera, Long> {
 
 	List<CorsoCarriera> findCorsoCarrieraByStudenteId(long idStudente);
+	CorsoCarriera findCorsoCarrieraByAdCodAndStudenteId(String adId, long idStudente);
+	
 }

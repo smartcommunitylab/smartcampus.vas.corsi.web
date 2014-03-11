@@ -12,7 +12,8 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({
-	@NamedQuery(name = "CorsoCarriera.findCorsoCarrieraByStudenteId", query = "select cc from CorsoCarriera cc where cc.studenteId = ?1") })
+	@NamedQuery(name = "CorsoCarriera.findCorsoCarrieraByStudenteId", query = "select cc from CorsoCarriera cc where cc.studenteId = ?1"),
+	@NamedQuery(name = "CorsoCarriera.findCorsoCarrieraByAdCodAndStudenteId", query = "select cc from CorsoCarriera cc where cc.cod = ?1 and cc.studenteId = ?2")})
 public class CorsoCarriera extends BasicEntity {
 
 		/**

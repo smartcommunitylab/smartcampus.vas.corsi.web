@@ -22,8 +22,8 @@ import org.hibernate.internal.util.compare.ComparableComparator;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "Evento.findEventoByCds", query = "select e from Evento e where e.cds = ?1"),
-	      		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where e.id = ?1"),
-	      		@NamedQuery(name = "Evento.findEventoByAdAndYear", query = "select e from Evento e where e.id = ?1 and e.yearCds <= ?2")})
+	      		@NamedQuery(name = "Evento.findEventoByAdAndYear", query = "select e from Evento e, CorsoCarriera cc where e.title = ?1 and e.yearCds <= ?2"),
+	      		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e, CorsoCarriera cc where e.title = ?1")})
 @Table(name="evento")
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class Evento {
@@ -148,6 +148,5 @@ public class Evento {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
 	
 }

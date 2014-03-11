@@ -15,7 +15,6 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 	// List<Evento> findEventoByUser(User user);
 
 	List<Evento> findEventoByCds(long corso);
-	List<Evento> findEventoByAd(long idAttivitaDidattica);
-	List<Evento> findEventoByAdAndYear(long idAttivitaDidattica, int year);
-
+	List<Evento> findEventoByAdAndYear(String nameAd, int year);
+	List<Evento> findEventoByAd(String nameAd);
 }

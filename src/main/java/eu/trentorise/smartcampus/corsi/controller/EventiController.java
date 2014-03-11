@@ -98,6 +98,9 @@ public class EventiController {
 
 	String client_auth_token;
 
+	
+		
+	
 	/**
 	 * 
 	 * @param request
@@ -110,9 +113,9 @@ public class EventiController {
 	 *             Restituisce tutti gli eventi riferiti ad un corso dato
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/evento/{id_cds}")
+	@RequestMapping(method = RequestMethod.GET, value = "/evento/corsolaurea/{id_cds}")
 	public @ResponseBody
-	List<Evento> getEventoByCorso(HttpServletRequest request,
+	List<Evento> getEventoByCorsoLaurea(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("id_cds") Long id_cds)
 
@@ -225,14 +228,25 @@ public class EventiController {
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			
 			List<CorsoCarriera> corsiCarrieraList = corsoCarrieraRepository.findCorsoCarrieraByStudenteId(studente.getId());
+			logger.info("/evento/me --> corsiCarrieraList from db: size = "+corsiCarrieraList.size());
 			List<Evento> listEventi = new ArrayList<Evento>();
 			
 			// filtro gli eventi che interessano allo studente
 			for (CorsoCarriera corsoCarriera : corsiCarrieraList) {
-				if(corsoCarriera.getResult().equals("0")){
-					List<Evento> eventiAd = eventoRepository.findEventoByAdAndYear(corsoCarriera.getId(), Integer.parseInt(studente.getAcademicYear()));
-					listEventi.addAll(eventiAd);
-				}
+//				if(corsoCarriera.getResult().equals("0")){
+				List<Evento> eventiAd = new ArrayList<Evento>();
+					eventiAd = eventoRepository.findEventoByAd(corsoCarriera.getName());
+					logger.info("/evento/me --> eventiAd of "+corsoCarriera.getName()+" from db: size = "+eventiAd.size());
+					for (Evento evento : eventiAd) {
+						
+//						if(!(evento.getYearCds() > Integer.parseInt(studente.getAcademicYear()))){
+//							eventiAd.remove(evento);
+//						}
+						
+						listEventi.add(evento);
+					}
+					
+//				}
 			}
 			
 			Collections.sort(listEventi, new Comparator<Evento>() {
@@ -242,14 +256,7 @@ public class EventiController {
 				      return e1.getDate().compareTo(e2.getDate());
 				  }
 				});
-			
-			Collections.sort(listEventi, new Comparator<Evento>() {
-				  public int compare(Evento e1, Evento e2) {
-				      if (e1.getStart() == null || e2.getStart() == null)
-				        return 0;
-				      return e1.getStart().compareTo(e2.getStart());
-				  }
-				});
+	
 			
 
 
@@ -339,7 +346,7 @@ public class EventiController {
 	public @ResponseBody
 	List<Evento> getSyncEventoByCdsAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("cds") CorsoLaurea cds)
+			@PathVariable("cds") long cds)
 
 	throws IOException {
 		try {
@@ -357,21 +364,31 @@ public class EventiController {
 
 
 			List<Evento> eventsListTotal = new ArrayList<Evento>();
-
-			for (int y = 1; y <= Integer.parseInt(cds.getDurata()); y++) { 
+			
+			CorsoLaurea cdLaurea = corsoLaureaRepository.findOne(cds);
+			logger.info("/sync/evento/{cds}/all: corso laurea = "+cdLaurea.getDescripion());
+			
+			for (int y = 1; y <= Integer.parseInt(cdLaurea.getDurata()); y++) { 
+				logger.info("/sync/evento/{cds}/all: corso laurea = "+cdLaurea.getDescripion()+" year = "+y);
 				List<CalendarCdsData> dataCalendarOfWeek = uniConnector
 						.getCdsCalendar(client_auth_token,
-								String.valueOf(cds.getCdsId()),
+								String.valueOf(cdLaurea.getCdsId()),
 								String.valueOf(y));
 
 				EventoMapper mapperEvento = new EventoMapper();
-				List<Evento> eventsMapped = mapperEvento.convert(dataCalendarOfWeek, cds, y);
+				List<Evento> eventsMapped = mapperEvento.convert(dataCalendarOfWeek, cdLaurea, y);
 				
 				eventoRepository.save(eventsMapped);
 				
-				eventsListTotal.addAll(eventsMapped);
+				for (Evento evento : eventsMapped) {
+					eventsListTotal.add(evento);
+				}
+				
+				
 			}
 
+			
+			
 			return eventsListTotal;
 
 		} catch (Exception e) {
@@ -415,7 +432,8 @@ public class EventiController {
 
 			List<Dipartimento> dipartimenti = dipartimentoRepository.findAll();
 
-			if (dipartimenti == null)
+			logger.info("/sync/evento/all: list dipartimento size = "+dipartimenti.size());
+			if (dipartimenti.size() == 0)
 				return false;
 			
 			List<Evento> eventsMapped = null;
@@ -425,11 +443,13 @@ public class EventiController {
 
 				corsiDiLaurea = new ArrayList<CorsoLaurea>();
 
-				corsiDiLaurea = corsoLaureaRepository.findAll();
+				corsiDiLaurea = corsoLaureaRepository.getCorsiLaureaByDipartimento(dip);
+				logger.info("/sync/evento/all: list corsi laurea size = "+corsiDiLaurea.size());
 
 				for (CorsoLaurea cl : corsiDiLaurea) { // per tutti i corsi di
 														// laurea
 					for (int year = 1; year <= Integer.parseInt(cl.getDurata()); year++) { // per tutti gli anni
+						logger.info("/sync/evento/all: corsi laurea year = "+year);
 						List<CalendarCdsData> dataCalendarOfWeek = uniConnector
 								.getCdsCalendar(client_auth_token,
 										String.valueOf(cl.getCdsId()),

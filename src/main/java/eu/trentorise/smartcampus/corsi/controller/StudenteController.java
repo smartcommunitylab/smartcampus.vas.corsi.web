@@ -106,18 +106,27 @@ public class StudenteController {
 			Studente studenteAggiornato = null;
 			
 			// se lo studente � null vado a prendere i dati da unidata
-//			if (studente == null) {
-//				
-//				studente = controllerSyncStudente.getStudenteByIdSync(request, response, session, userId);
-//				CorsoLaurea cl = new CorsoLaurea();
-//				cl.setId(2);
-//				cl.setDescripion("Algoritmi");
-//				studente.setCorso_laurea(cl);
-//				studenteAggiornato = studenteRepository.save(studente);
-//				
-//				return studenteAggiornato;
-//				
-//			}
+			if(studente == null){
+				// prendo i dati da unidata e li mappo
+				StudentInfoService studentConnector = new StudentInfoService(
+						unidataaddress);
+
+				// ottengo da unidata lo studente
+				StudentInfoData studentUniData = studentConnector
+						.getStudentData(token);
+
+				if (studentUniData == null)
+					return null;
+
+				UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
+
+				// converto e salvo nel db lo studente aggiornato
+				Studente convertedStudent = studentMapper.convert(studentUniData, token);
+
+				convertedStudent = studenteRepository.save(convertedStudent);
+				
+				return convertedStudent;
+			}
 			
 			
 			// stud.setCorsiSuperati(assignCorsi(stud));

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -12,6 +13,7 @@ import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
+import eu.trentorise.smartcampus.corsi.servicesync.ScheduledServiceSync;
 import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.model.CalendarCdsData;
@@ -32,6 +34,8 @@ public class EventoMapper {
 
 	private List<Evento> listEvento;
 	
+	private static final Logger logger = Logger
+			.getLogger(EventoMapper.class);
 	
 	public EventoMapper() {
 		// TODO Auto-generated constructor stub
@@ -51,6 +55,7 @@ public class EventoMapper {
 			evento.setTeacher(eventCal.getTeacher());
 			evento.setTitle(eventCal.getTitle());
 			evento.setDate(new Date(eventCal.getFrom()));
+			logger.info("mapping evento: date = "+evento.getDate());
 			evento.setStart(new Time(eventCal.getFrom()));
 			evento.setStop(new Time(eventCal.getTo()));
 			evento.setType(eventCal.getType());
