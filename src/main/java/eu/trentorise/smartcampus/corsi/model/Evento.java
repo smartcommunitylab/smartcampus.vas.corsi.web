@@ -24,7 +24,7 @@ import org.hibernate.internal.util.compare.ComparableComparator;
 @Entity
 @NamedQueries({ @NamedQuery(name = "Evento.findEventoByCds", query = "select e from Evento e where e.cds = ?1"),
 	      		@NamedQuery(name = "Evento.findEventoByAdAndYear", query = "select e from Evento e, CorsoCarriera cc where e.title = ?1 and e.yearCds <= ?2"),
-	      		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where e.title = ?1")})
+	      		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where (e.title = ?1) and (e.idStudente = ?2 or e.idStudente = 0)")})
 @Table(name="evento")
 public class Evento {
 	/**

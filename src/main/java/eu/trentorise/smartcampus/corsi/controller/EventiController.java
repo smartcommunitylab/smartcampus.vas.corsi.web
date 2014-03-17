@@ -138,6 +138,9 @@ public class EventiController {
 		}
 		return null;
 	}
+	
+
+	
 
 	/*
 	 * Riceve evento e lo salva nel db
@@ -173,17 +176,17 @@ public class EventiController {
 				BasicProfile profile = service.getBasicProfile(token);
 				Long userId = Long.valueOf(profile.getUserId());
 
-				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-						communicatoraddress, appName);
+//				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+//						communicatoraddress, appName);
 
 				List<String> users = new ArrayList<String>();
 				users.add(userId.toString());
 
-				Notification n = new Notification();
-				n.setTitle(evento.getTitle());
-				n.setUser(userId.toString());
-				n.setTimestamp(System.currentTimeMillis());
-				n.setDescription("Creazione Evento");
+//				Notification n = new Notification();
+//				n.setTitle(evento.getTitle());
+//				n.setUser(userId.toString());
+//				n.setTimestamp(System.currentTimeMillis());
+//				n.setDescription("Creazione Evento");
 
 				// communicatorConnector.sendAppNotification(n, appName, users,
 				// token);
@@ -236,7 +239,7 @@ public class EventiController {
 			for (CorsoCarriera corsoCarriera : corsiCarrieraList) {
 //				if(corsoCarriera.getResult().equals("0")){
 				List<Evento> eventiAd = new ArrayList<Evento>();
-					eventiAd = eventoRepository.findEventoByAd(corsoCarriera.getName());
+					eventiAd = eventoRepository.findEventoByAd(corsoCarriera.getName(), userId);
 					
 					for (Evento evento : eventiAd) {
 						
@@ -249,6 +252,8 @@ public class EventiController {
 					
 //				}
 			}
+			
+			
 			
 			Collections.sort(listEventi, new Comparator<Evento>() {
 				  public int compare(Evento e1, Evento e2) {
