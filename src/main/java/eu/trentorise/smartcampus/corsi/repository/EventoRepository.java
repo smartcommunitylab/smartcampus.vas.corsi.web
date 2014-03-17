@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Evento;
+import eu.trentorise.smartcampus.corsi.model.EventoId;
 
 @Repository
-public interface EventoRepository extends JpaRepository<Evento, Long> {
+public interface EventoRepository extends JpaRepository<Evento, EventoId> {
 
 	// List<Evento> findEventoByUser(User user);
 

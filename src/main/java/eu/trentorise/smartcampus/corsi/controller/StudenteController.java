@@ -163,6 +163,7 @@ public class StudenteController {
 			logger.info("/sync/studente/me");
 
 			String token = getToken(request);
+			
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 
@@ -174,6 +175,8 @@ public class StudenteController {
 			// prendo i dati da unidata e li mappo
 			StudentInfoService studentConnector = new StudentInfoService(
 					unidataaddress);
+			
+			
 
 			// ottengo da unidata lo studente
 			StudentInfoData studentUniData = studentConnector

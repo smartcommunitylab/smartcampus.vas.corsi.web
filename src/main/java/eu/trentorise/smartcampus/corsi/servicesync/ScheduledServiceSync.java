@@ -110,7 +110,7 @@ public class ScheduledServiceSync {
 	 * 
 	 * @throws IOException
 	 */
-	@Scheduled(fixedDelay = 1296000000)
+	@Scheduled(cron="0 0 0 1 * ?")
 	public @ResponseBody
 	void getDipartimentoAndCdsSync()
 
@@ -125,7 +125,7 @@ public class ScheduledServiceSync {
 					profileaddress, client_id, client_secret);
 			client_auth_token =
 			clientTokenManager.getClientSmartCampusToken();
-			//client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
+			//client_auth_token = "c39fce2d-177a-4489-898b-c0a6924191f5";
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector
 					.getFacoltaData(client_auth_token);
@@ -212,7 +212,6 @@ public class ScheduledServiceSync {
 	 * @throws IOException
 	 */
 	@Scheduled(cron = "0 0 1 * * ?") //everyday at 1am
-	// everyday at midnight
 	public @ResponseBody
 	void getCalendar()
 
@@ -241,7 +240,7 @@ public class ScheduledServiceSync {
 
 				corsiDiLaurea = new ArrayList<CorsoLaurea>();
 
-				corsiDiLaurea = corsoLaureaRepository.findAll();
+				corsiDiLaurea = corsoLaureaRepository.getCorsiLaureaByDipartimento(dip);
 
 				for (CorsoLaurea cl : corsiDiLaurea) { // per tutti i corsi di
 														// laurea
@@ -255,6 +254,7 @@ public class ScheduledServiceSync {
 						eventsMapped = mapperEvento.convert(dataCalendarOfWeek, cl, year);
 						
 						eventoRepository.save(eventsMapped);
+						
 					}
 				}
 

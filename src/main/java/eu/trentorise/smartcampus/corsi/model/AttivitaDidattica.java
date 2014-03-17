@@ -9,8 +9,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByCdsId", query = "select ad from AttivitaDidattica ad where ad.cds_id = ?1") })
+@NamedQueries({ @NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByCdsId", query = "select ad from AttivitaDidattica ad where ad.cds_id = ?1")})
 public class AttivitaDidattica extends BasicEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8529028714305523748L;
 
 	@Id
 	@Column(name = "AD_ID")

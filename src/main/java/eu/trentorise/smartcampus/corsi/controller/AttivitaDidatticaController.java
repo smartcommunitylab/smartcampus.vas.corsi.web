@@ -244,7 +244,11 @@ public class AttivitaDidatticaController {
 				  public int compare(AttivitaDidattica e1, AttivitaDidattica e2) {
 				      if (e1.getDescription() == null || e2.getDescription() == null)
 				        return 0;
-				      return e1.getDescription().compareTo(e2.getDescription());
+				      
+				      CorsoLaurea e1Cds = corsoLaureaRepository.findOne(e1.getCds_id());
+				      CorsoLaurea e2Cds = corsoLaureaRepository.findOne(e2.getCds_id());
+				      
+				      return e1Cds.getDescripion().compareTo(e2Cds.getDescripion());
 				  }
 				});
 			

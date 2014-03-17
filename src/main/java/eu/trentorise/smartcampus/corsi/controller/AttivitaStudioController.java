@@ -299,8 +299,8 @@ public class AttivitaStudioController {
 			} else {
 				// controllo che il l'attivita aggiornata abbia lo stesso id di
 				// prima
-				if (attivitadistudioAggiornato.getId() == attivitadistudio
-						.getId())
+				if (attivitadistudioAggiornato.getEventoId() == attivitadistudio
+						.getEventoId())
 					return true;
 				else
 					return false;
@@ -412,7 +412,7 @@ public class AttivitaStudioController {
 			}
 
 			AttivitaDiStudio AttivitaFromDB = attivitastudioRepository
-					.findOne(attivitadistudio.getId());
+					.findOne(attivitadistudio.getEventoId());
 			
 			if(AttivitaFromDB==null)
 				return false;

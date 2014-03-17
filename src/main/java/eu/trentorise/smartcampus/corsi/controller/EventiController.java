@@ -220,6 +220,7 @@ public class EventiController {
 			logger.info("/evento/me");
 
 			String token = getToken(request);
+			
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
@@ -236,7 +237,7 @@ public class EventiController {
 //				if(corsoCarriera.getResult().equals("0")){
 				List<Evento> eventiAd = new ArrayList<Evento>();
 					eventiAd = eventoRepository.findEventoByAd(corsoCarriera.getName());
-					logger.info("/evento/me --> eventiAd of "+corsoCarriera.getName()+" from db: size = "+eventiAd.size());
+					
 					for (Evento evento : eventiAd) {
 						
 //						if(!(evento.getYearCds() > Integer.parseInt(studente.getAcademicYear()))){
@@ -251,9 +252,13 @@ public class EventiController {
 			
 			Collections.sort(listEventi, new Comparator<Evento>() {
 				  public int compare(Evento e1, Evento e2) {
-				      if (e1.getDate() == null || e2.getDate() == null)
+				      if (e1.getEventoId().getDate() == null || e2.getEventoId().getDate() == null)
 				        return 0;
-				      return e1.getDate().compareTo(e2.getDate());
+				      
+				      Long millisecondE1 = e1.getEventoId().getDate().getTime();
+				      Long millisecondE2 = e2.getEventoId().getDate().getTime();
+				      
+				      return millisecondE1.compareTo(millisecondE2);
 				  }
 				});
 	
@@ -427,7 +432,7 @@ public class EventiController {
 					profileaddress, client_id, client_secret);
 			 client_auth_token =
 			 clientTokenManager.getClientSmartCampusToken();
-			//client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
+			client_auth_token = "c39fce2d-177a-4489-898b-c0a6924191f5";
 			System.out.println("Client auth token: " + client_auth_token);
 
 			List<Dipartimento> dipartimenti = dipartimentoRepository.findAll();

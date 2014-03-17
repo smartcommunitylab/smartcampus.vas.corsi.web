@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,19 +24,16 @@ import org.hibernate.internal.util.compare.ComparableComparator;
 @Entity
 @NamedQueries({ @NamedQuery(name = "Evento.findEventoByCds", query = "select e from Evento e where e.cds = ?1"),
 	      		@NamedQuery(name = "Evento.findEventoByAdAndYear", query = "select e from Evento e, CorsoCarriera cc where e.title = ?1 and e.yearCds <= ?2"),
-	      		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e, CorsoCarriera cc where e.title = ?1")})
+	      		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where e.title = ?1")})
 @Table(name="evento")
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public class Evento {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4216708970101566299L;
-
-	// id dell'evento
-	@Id
-	private long id;
-
+	
+	@EmbeddedId
+	private EventoId eventoId;
+	
 	// corso di laurea di riferimento
 	@Column(name = "ID_CDS")
 	private long cds;
@@ -54,28 +52,18 @@ public class Evento {
 	// the room where the place takes places
 	@Column(name = "TEACHER")
 	private String teacher;
-	
-	@Column(name = "DATE")
-	private Date date;
 
-	// ora inizio
-	@Column(name = "START")
-	private Time start;
 
-	// ora fine
-	@Column(name = "STOP")
-	private Time stop;
 
 	@Column(name = "TYPE")
 	private String type;
+	
+	@Column(name = "STUDENTE")
+	private long idStudente;
+	
+	@Column(name = "PERSONAL_DESCRIPTION")
+	private String personalDescription;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getRoom() {
 		return room;
@@ -85,21 +73,6 @@ public class Evento {
 		this.room = room;
 	}
 
-	public Time getStart() {
-		return start;
-	}
-
-	public void setStart(Time start) {
-		this.start = start;
-	}
-
-	public Time getStop() {
-		return stop;
-	}
-
-	public void setStop(Time stop) {
-		this.stop = stop;
-	}
 
 	public int getYearCds() {
 		return yearCds;
@@ -141,12 +114,30 @@ public class Evento {
 		this.cds = cds;
 	}
 
-	public Date getDate() {
-		return date;
+	public EventoId getEventoId() {
+		return eventoId;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setEventoId(EventoId eventoId) {
+		this.eventoId = eventoId;
 	}
+
+	public long getIdStudente() {
+		return idStudente;
+	}
+
+	public void setIdStudente(long idStudente) {
+		this.idStudente = idStudente;
+	}
+
+	public String getDescription() {
+		return personalDescription;
+	}
+
+	public void setDescription(String description) {
+		this.personalDescription = description;
+	}
+	
+	
 	
 }

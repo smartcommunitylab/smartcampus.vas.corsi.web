@@ -138,6 +138,75 @@ public class CorsoInteresseController {
 	}	
 	
 	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return Studente
+	 * @throws IOException
+	 * 
+	 *             Sincronizza con unidata service corsi in carriera
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/corsointeresse/{adId}/seguito")
+	public @ResponseBody
+	boolean isCorsoInteresseSeguito(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @PathVariable("adId") long adId)
+
+	throws IOException {
+		try {
+			logger.info("/corsointeresse/{adId}/seguito");
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			Studente studenteDB = studenteRepository.findOne(userId);
+			
+			
+			if(studenteDB == null){
+				StudentInfoService studentConnector = new StudentInfoService(
+						unidataaddress);
+
+				// ottengo da unidata lo studente
+				StudentInfoData studentUniData = studentConnector
+						.getStudentData(token);
+
+				if (studentUniData == null)
+					return false;
+
+				UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
+
+				// converto e salvo nel db lo studente aggiornato
+				studenteDB = studentMapper.convert(studentUniData, token);
+
+				studenteDB = studenteRepository.save(studenteDB);
+			}
+			
+			
+			AttivitaDidattica aDidattica = attivitaDidatticaRepository.findOne(adId);
+			
+			CorsoInteresse ci = new CorsoInteresse();
+			
+			ci = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studenteDB.getId(), aDidattica);
+			
+			if(ci == null){
+				return false;
+			}else{
+				return true;
+			}
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return false;
+	}	
 	
 	
 	
@@ -174,15 +243,17 @@ public class CorsoInteresseController {
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			
+			AttivitaDidattica aDidattica = attivitaDidatticaRepository.findOne(idAttivitaDidattica);
 			
 			
-			
-			CorsoInteresse cInteresse = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studente.getId(), idAttivitaDidattica);
+			CorsoInteresse cInteresse = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studente.getId(), aDidattica);
 			
 			if(cInteresse == null){
-				AttivitaDidattica aDidattica = attivitaDidatticaRepository.findOne(idAttivitaDidattica);
+				
 				if(aDidattica == null)
 					return false;
+				
+				cInteresse = new CorsoInteresse();
 				
 				cInteresse.setAttivitaDidattica(aDidattica);
 				cInteresse.setStudenteId(studente.getId());

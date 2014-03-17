@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Evento;
+import eu.trentorise.smartcampus.corsi.model.EventoId;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.servicesync.ScheduledServiceSync;
 import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
@@ -50,14 +51,16 @@ public class EventoMapper {
 		for (CalendarCdsData eventCal : listCalendarWeek) {
 			Evento evento = new Evento();
 			
-			evento.setId(Long.parseLong(eventCal.getId()));
+			EventoId eId = new EventoId();
+			eId.setIdEventAd(Long.parseLong(eventCal.getId()));
+			eId.setDate(new Date(eventCal.getFrom()));
+			eId.setStart(new Time(eventCal.getFrom()));
+			eId.setStop(new Time(eventCal.getTo()));
+			evento.setEventoId(eId);
 			evento.setRoom(eventCal.getRoom());
 			evento.setTeacher(eventCal.getTeacher());
 			evento.setTitle(eventCal.getTitle());
-			evento.setDate(new Date(eventCal.getFrom()));
-			logger.info("mapping evento: date = "+evento.getDate());
-			evento.setStart(new Time(eventCal.getFrom()));
-			evento.setStop(new Time(eventCal.getTo()));
+
 			evento.setType(eventCal.getType());
 			evento.setYearCds(year);
 			evento.setCds(idCds.getCdsId());
