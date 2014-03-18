@@ -3,9 +3,11 @@ package eu.trentorise.smartcampus.corsi.controller;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -191,7 +193,11 @@ public class EventiController {
 				
 				evento.setIdStudente(userId);
 
-				return eventoRepository.save(evento);
+				Evento e = eventoRepository.save(evento);
+				
+				logger.info("evento : title = "+e.getTitle()+", descr = "+e.getPersonalDescription()+", id stud = "+e.getIdStudente());
+				
+				return e;
 			} else
 				return null;
 
@@ -285,8 +291,8 @@ public class EventiController {
 			
 			// filtro gli eventi che interessano allo studente
 			for (CorsoCarriera corsoCarriera : corsiCarrieraList) {
-				if(corsoCarriera.getResult().equals("0")){
-				List<Evento> eventiAd = new ArrayList<Evento>();
+				if(corsoCarriera.getResult().equals("0") || corsoCarriera.getResult().equals("")){
+					List<Evento> eventiAd = new ArrayList<Evento>();
 					eventiAd = eventoRepository.findEventoByAd(corsoCarriera.getName(), userId);
 					
 					for (Evento evento : eventiAd) {
@@ -294,8 +300,21 @@ public class EventiController {
 //						if(!(evento.getYearCds() > Integer.parseInt(studente.getAcademicYear()))){
 //							eventiAd.remove(evento);
 //						}
-						if(evento.getEventoId().getDate().getTime() >= System.currentTimeMillis())
+						
+						// today    
+						Calendar date = new GregorianCalendar();
+						// reset hour, minutes, seconds and millis
+						date.set(Calendar.HOUR_OF_DAY, 0);
+						date.set(Calendar.MINUTE, 0);
+						date.set(Calendar.SECOND, 0);
+						date.set(Calendar.MILLISECOND, 0);
+
+						// next day
+						date.add(Calendar.DAY_OF_MONTH, 1);
+
+						if(evento.getEventoId().getDate().after(date.getTime())){
 							listEventi.add(evento);
+						}
 					}
 				}
 			}

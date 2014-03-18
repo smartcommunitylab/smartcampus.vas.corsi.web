@@ -18,21 +18,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.communicator.model.Notification;
-import eu.trentorise.smartcampus.communicator.model.Notifications;
-import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
-import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.model.Notification;
+import eu.trentorise.smartcampus.corsi.model.Notifiche;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
-import eu.trentorise.smartcampus.corsi.util.UniStudentMapper;
-import eu.trentorise.smartcampus.moderatorservice.model.ContentToModeratorService;
 import eu.trentorise.smartcampus.network.JsonUtils;
 import eu.trentorise.smartcampus.network.RemoteConnector;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
-import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
 
 @Controller("notificheController")
 public class NotificheController {
@@ -90,21 +84,21 @@ public class NotificheController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-
-			
-			List<CorsoCarriera> carrieraStud = corsoCarrieraRepository.findCorsoCarrieraByStudenteId(userId);
 			
 			EasyTokenManger clientTokenManager = new EasyTokenManger(profileaddress, client_id, client_secret);
-			String client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			//String client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			
+			String client_auth_token = "6f10bd36-fb44-49d0-8c41-4cb8fdfee732";//test locale
 			
 			String json = RemoteConnector.postJSON(communicatoraddress,
 					"synctype?since=0&type=Cisca", JsonUtils.toJSON("{}"), client_auth_token);
 			
-			List<Notification> notifiche = JsonUtils.toObjectList(json, Notification.class);
+			Notifiche notifiche = JsonUtils.toObject(json, Notifiche.class);
 			
 			List<Notification> notificheFiltrate = new ArrayList<Notification>();
 			
-			for (Notification notification : notifiche) {
+			
+ 			for (Notification notification : notifiche.getUpdated().getNotifications()) {
 				if((notification.getTimestamp() >= date_from) || (notification.getUpdateTime() >= date_from)){
 					notificheFiltrate.add(notification);
 				}
