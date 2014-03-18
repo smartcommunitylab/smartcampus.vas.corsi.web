@@ -1,12 +1,15 @@
 package eu.trentorise.smartcampus.corsi.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.*;
-
-import com.mysql.jdbc.Blob;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.NamedQuery;
+import javax.persistence.Transient;
 
 @Entity
 @NamedQuery(name = "GruppoDiStudio.findGdsBycourseId", query = "select gds from GruppoDiStudio gds where gds.corso = ?1")

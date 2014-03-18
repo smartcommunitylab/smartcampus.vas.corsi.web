@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,15 +25,8 @@ import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.PianoStudiRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.corsi.util.UniCourseDegreeMapper;
-import eu.trentorise.smartcampus.corsi.util.UniDepartmentMapper;
-import eu.trentorise.smartcampus.moderatorservice.model.KeyWord;
-import eu.trentorise.smartcampus.moderatoservice.exception.ModeratorServiceException;
-import eu.trentorise.smartcampus.network.JsonUtils;
-import eu.trentorise.smartcampus.network.RemoteConnector;
-import eu.trentorise.smartcampus.network.RemoteException;
 import eu.trentorise.smartcampus.unidataservice.UniversityPlannerService;
 import eu.trentorise.smartcampus.unidataservice.model.CdsData;
-import eu.trentorise.smartcampus.unidataservice.model.FacoltaData;
 
 @Service("corsoLaureaServiceSync")
 @Configuration

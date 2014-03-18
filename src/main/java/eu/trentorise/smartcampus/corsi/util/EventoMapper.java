@@ -9,17 +9,13 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.EventoId;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
-import eu.trentorise.smartcampus.corsi.servicesync.ScheduledServiceSync;
 import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.model.CalendarCdsData;
-import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExam;
-import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExams;
 
 public class EventoMapper {
 	@Autowired

@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
-import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.model.AdData;
-import eu.trentorise.smartcampus.unidataservice.model.FacoltaData;
 
 public class AttivitaDidatticaMapper {
 	@Autowired

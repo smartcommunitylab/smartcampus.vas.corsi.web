@@ -1,25 +1,11 @@
 package eu.trentorise.smartcampus.corsi.model;
 
-import java.sql.Time;
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
-import org.hibernate.internal.util.compare.ComparableComparator;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "Evento.findEventoByCds", query = "select e from Evento e where e.cds = ?1"),
@@ -37,6 +23,9 @@ public class Evento {
 	// corso di laurea di riferimento
 	@Column(name = "ID_CDS")
 	private long cds;
+	
+	@Column(name = "AD_COD")
+	private long adCod;
 
 	@Column(name = "YEAR")
 	private int yearCds;
@@ -52,8 +41,6 @@ public class Evento {
 	// the room where the place takes places
 	@Column(name = "TEACHER")
 	private String teacher;
-
-
 
 	@Column(name = "TYPE")
 	private String type;
@@ -136,6 +123,22 @@ public class Evento {
 
 	public void setDescription(String description) {
 		this.personalDescription = description;
+	}
+
+	public long getAdCod() {
+		return adCod;
+	}
+
+	public void setAdCod(long adCod) {
+		this.adCod = adCod;
+	}
+
+	public String getPersonalDescription() {
+		return personalDescription;
+	}
+
+	public void setPersonalDescription(String personalDescription) {
+		this.personalDescription = personalDescription;
 	}
 	
 	

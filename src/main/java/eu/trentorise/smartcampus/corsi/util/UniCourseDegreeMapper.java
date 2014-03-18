@@ -3,8 +3,6 @@ package eu.trentorise.smartcampus.corsi.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Embeddable;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +20,6 @@ import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.model.CdsData;
-import eu.trentorise.smartcampus.unidataservice.model.FacoltaData;
 import eu.trentorise.smartcampus.unidataservice.model.PdsData;
 
 @Service

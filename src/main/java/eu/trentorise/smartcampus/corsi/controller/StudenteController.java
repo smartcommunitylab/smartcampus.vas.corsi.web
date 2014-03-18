@@ -20,12 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.CorsoLite;
 import eu.trentorise.smartcampus.corsi.model.Studente;
-import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.servicesync.StudenteServiceSync;
 import eu.trentorise.smartcampus.corsi.util.CorsoCarrieraMapper;
@@ -44,9 +41,6 @@ public class StudenteController {
 
 	@Autowired
 	private StudenteRepository studenteRepository;
-
-	@Autowired
-	private CorsoRepository corsoRepository;
 
 	@Autowired
 	@Value("${profile.address}")

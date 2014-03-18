@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
-import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.CorsoCarrieraMapper;
@@ -60,9 +59,6 @@ public class CorsoCarrieraServiceSync {
 	@Autowired
 	@Value("${webapp.name}")
 	private String appName;
-
-	@Autowired
-	private CorsoRepository corsoRepository;
 
 	@Autowired
 	private StudenteRepository studenteRepository;

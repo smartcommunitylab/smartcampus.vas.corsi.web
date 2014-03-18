@@ -33,14 +33,14 @@ import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.EntityObject;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
+import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.Commento;
-import eu.trentorise.smartcampus.corsi.model.Corso;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
-import eu.trentorise.smartcampus.corsi.repository.CorsoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
@@ -89,12 +89,12 @@ public class GruppiStudioController {
 
 	@Autowired
 	private GruppoDiStudioRepository gruppidistudioRepository;
+	
+	@Autowired
+	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 
 	@Autowired
 	private StudenteRepository studenteRepository;
-
-	@Autowired
-	private CorsoRepository corsoRepository;
 	
 	@Autowired
 	private CorsoLaureaRepository corsoLaureaRepository;
@@ -235,7 +235,7 @@ public class GruppiStudioController {
 				// Creare associazione su frequenze
 
 				// TEST
-				List<Corso> corsiEsse3 = corsoRepository.findAll();
+				List<AttivitaDidattica> corsiEsse3 = attivitaDidatticaRepository.findAll();
 
 				String supera = null;
 				String interesse = null;
@@ -243,16 +243,16 @@ public class GruppiStudioController {
 				supera = new String();
 				interesse = new String();
 
-				for (Corso cors : corsiEsse3) {
+				for (AttivitaDidattica cors : corsiEsse3) {
 
 					if (z % 2 == 0) {
-						supera = supera.concat(String.valueOf(cors.getId())
+						supera = supera.concat(String.valueOf(cors.getAdId())
 								.concat(","));
 					}
 
 					if (z % 4 == 0) {
 						interesse = interesse.concat(String.valueOf(
-								cors.getId()).concat(","));
+								cors.getAdId()).concat(","));
 					}
 
 					z++;

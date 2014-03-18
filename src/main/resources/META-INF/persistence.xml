@@ -5,9 +5,7 @@
 	<persistence-unit name="corsi.db">
 		<class>eu.trentorise.smartcampus.corsi.model.CorsoLite</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Commento</class>
- 		<class>eu.trentorise.smartcampus.corsi.model.Corso</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Evento</class>
- 		<class>eu.trentorise.smartcampus.corsi.model.Frequenze</class>
  		<class>eu.trentorise.smartcampus.corsi.model.CorsoLaurea</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Studente</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Allegato</class>

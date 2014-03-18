@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -95,7 +93,7 @@ public class DipartimentoServiceSync {
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
 			
-			EasyTokenManger clientTokenManager = new EasyTokenManger(client_id, client_secret, profileaddress);
+			EasyTokenManger clientTokenManager = new EasyTokenManger(profileaddress, client_id, client_secret);
 			client_auth_token = clientTokenManager.getClientSmartCampusToken();
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector.getFacoltaData(client_auth_token);
