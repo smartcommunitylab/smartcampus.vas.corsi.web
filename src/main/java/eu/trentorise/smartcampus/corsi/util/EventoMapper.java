@@ -56,7 +56,7 @@ public class EventoMapper {
 			evento.setRoom(eventCal.getRoom());
 			evento.setTeacher(eventCal.getTeacher());
 			evento.setTitle(eventCal.getTitle());
-
+			evento.setIdStudente(-1);
 			evento.setType(eventCal.getType());
 			evento.setYearCds(year);
 			evento.setCds(idCds.getCdsId());

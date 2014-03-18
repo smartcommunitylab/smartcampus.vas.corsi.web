@@ -98,7 +98,7 @@ public class NotificheController {
 			String client_auth_token = clientTokenManager.getClientSmartCampusToken();
 			
 			String json = RemoteConnector.postJSON(communicatoraddress,
-					"synctype?since=0&type=Cisca", "", client_auth_token);
+					"synctype?since=0&type=Cisca", JsonUtils.toJSON("{}"), client_auth_token);
 			
 			List<Notification> notifiche = JsonUtils.toObjectList(json, Notification.class);
 			

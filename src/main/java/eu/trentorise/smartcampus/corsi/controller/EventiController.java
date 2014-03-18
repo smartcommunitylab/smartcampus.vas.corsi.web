@@ -188,6 +188,8 @@ public class EventiController {
 
 				// communicatorConnector.sendAppNotification(n, appName, users,
 				// token);
+				
+				evento.setIdStudente(userId);
 
 				return eventoRepository.save(evento);
 			} else
@@ -198,6 +200,54 @@ public class EventiController {
 		}
 		return null;
 	}
+	
+	
+	
+	/*
+	 * Riceve evento e lo salva nel db
+	 */
+
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param evento
+	 * @return Evento
+	 * @throws IOException
+	 * 
+	 *             Salva nel DB l'evento passato dal client e restituisce
+	 *             l'evento se l'operazione va a buon fine, altrimenti false
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/evento/delete")
+	public @ResponseBody
+	boolean deleteEvento(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session, @RequestBody Evento evento)
+
+	throws IOException {
+		try {
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			// controllo se campi validi
+			if (evento != null && evento.getTitle() != "" && evento.getIdStudente() != -1 && evento.getIdStudente() == userId) {
+				eventoRepository.delete(evento);
+				return true;
+			} else
+				return false;
+
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return false;
+	}
+	
+	
 
 	/**
 	 * 
@@ -235,7 +285,7 @@ public class EventiController {
 			
 			// filtro gli eventi che interessano allo studente
 			for (CorsoCarriera corsoCarriera : corsiCarrieraList) {
-//				if(corsoCarriera.getResult().equals("0")){
+				if(corsoCarriera.getResult().equals("0")){
 				List<Evento> eventiAd = new ArrayList<Evento>();
 					eventiAd = eventoRepository.findEventoByAd(corsoCarriera.getName(), userId);
 					
@@ -247,9 +297,10 @@ public class EventiController {
 						if(evento.getEventoId().getDate().getTime() >= System.currentTimeMillis())
 							listEventi.add(evento);
 					}
-					
-//				}
+				}
 			}
+			
+			
 			
 			
 			
@@ -435,7 +486,6 @@ public class EventiController {
 					profileaddress, client_id, client_secret);
 			 client_auth_token =
 			 clientTokenManager.getClientSmartCampusToken();
-			client_auth_token = "c39fce2d-177a-4489-898b-c0a6924191f5";
 			System.out.println("Client auth token: " + client_auth_token);
 
 			List<Dipartimento> dipartimenti = dipartimentoRepository.findAll();

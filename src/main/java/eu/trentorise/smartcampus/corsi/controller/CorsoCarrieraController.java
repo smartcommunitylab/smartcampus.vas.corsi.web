@@ -298,9 +298,10 @@ public class CorsoCarrieraController {
 			if (corsoCarrieraList.size() == 0) {
 				return null;
 			} else {
-				for (CorsoCarriera cc : corsoCarrieraList) {
+				for (Iterator<CorsoCarriera> iterator = corsoCarrieraList.iterator(); iterator.hasNext();) {
+					CorsoCarriera cc = iterator.next();
 					if (!cc.getResult().equals("0")) {
-						corsoCarrieraList.remove(cc);
+						iterator.remove();
 					}
 				}
 			}
