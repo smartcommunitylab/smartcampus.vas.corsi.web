@@ -20,7 +20,7 @@ public class CorsoInteresse extends BasicEntity{
 	@Column(name = "ID")
 	private long id;
 
-	@OneToOne(fetch=FetchType.LAZY)
+	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="ATTIVITA_DIDATTICA")
 	private AttivitaDidattica attivitaDidattica; 
 	

@@ -27,13 +27,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
+import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
+import eu.trentorise.smartcampus.corsi.model.CorsoInteresse;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.EventoId;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
+import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
@@ -82,6 +85,9 @@ public class EventiController {
 	
 	@Autowired
 	private CorsoCarrieraRepository corsoCarrieraRepository;
+	
+	@Autowired
+	private CorsoInteresseRepository corsoInteresseRepository;
 
 	@Autowired
 	@Value("${url.studente.service}")
@@ -271,9 +277,13 @@ public class EventiController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
+			
+			
+			eventoChanged.getEventoId().setIdStudente(userId);
+			eventoChanged.getEventoId().setIdEventAd(-1);
 
 			// controllo se campi validi
-			if (eventoChanged != null && eventoChanged.getTitle() != "" && eventoChanged.getEventoId().getIdStudente() != -1 && eventoChanged.getEventoId().getIdStudente() == userId) {
+			if (eventoChanged != null && eventoChanged.getTitle() != "" && eventoChanged.getEventoId().getIdStudente() != -1) {
 				
 				EventoId eventoToChange = new EventoId();
 				eventoToChange.setIdEventAd(-1);
@@ -283,11 +293,10 @@ public class EventiController {
 				eventoToChange.setIdStudente(userId);
 				
 				Evento eventoToDelete = eventoRepository.findOne(eventoToChange);
-				eventoRepository.delete(eventoToDelete);
 				
-				eventoChanged.getEventoId().setIdStudente(userId);
-				eventoChanged.getEventoId().setIdEventAd(-1);
-
+				if(eventoToDelete != null)
+					eventoRepository.delete(eventoToDelete);
+				
 				eventoChanged = eventoRepository.save(eventoChanged);
 				
 				if(eventoChanged != null)
@@ -300,6 +309,7 @@ public class EventiController {
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -325,7 +335,7 @@ public class EventiController {
 	throws IOException {
 		try {
 			logger.info("/evento/me");
-
+			session.setMaxInactiveInterval(35);
 			String token = getToken(request);
 			
 			BasicProfileService service = new BasicProfileService(
@@ -346,11 +356,7 @@ public class EventiController {
 					eventiAd = eventoRepository.findEventoByAd(corsoCarriera.getName(), userId);
 					
 					for (Evento evento : eventiAd) {
-						
-//						if(!(evento.getYearCds() > Integer.parseInt(studente.getAcademicYear()))){
-//							eventiAd.remove(evento);
-//						}
-						
+
 						// today    
 						Calendar date = new GregorianCalendar();
 						// reset hour, minutes, seconds and millis
@@ -358,8 +364,6 @@ public class EventiController {
 						date.set(Calendar.MINUTE, 0);
 						date.set(Calendar.SECOND, 0);
 						date.set(Calendar.MILLISECOND, 0);
-
-						// next day
 						date.add(Calendar.DAY_OF_MONTH, 0);
 
 						if(evento.getEventoId().getDate().compareTo(date.getTime()) >= 0){
@@ -370,6 +374,34 @@ public class EventiController {
 			}
 			
 			
+			
+			// eventi corsi di interesse
+			
+			List<CorsoInteresse> corsiInteresse = corsoInteresseRepository.findCorsoInteresseByStudenteId(userId);
+			
+			logger.info("corsi interesse size = "+corsiInteresse.size());
+			
+			for (CorsoInteresse corsoInteresse : corsiInteresse) {
+				AttivitaDidattica ad = corsoInteresse.getAttivitaDidattica();
+				List<Evento> listEventsInteresse = eventoRepository.findEventoByAd(ad.getDescription(), userId);
+				logger.info("eventi size = "+corsiInteresse.size());
+				
+				for (Evento evento : listEventsInteresse) {
+
+					// today    
+					Calendar date = new GregorianCalendar();
+					// reset hour, minutes, seconds and millis
+					date.set(Calendar.HOUR_OF_DAY, 0);
+					date.set(Calendar.MINUTE, 0);
+					date.set(Calendar.SECOND, 0);
+					date.set(Calendar.MILLISECOND, 0);
+					date.add(Calendar.DAY_OF_MONTH, 0);
+
+					if(evento.getEventoId().getDate().compareTo(date.getTime()) >= 0){
+						listEventi.add(evento);
+					}
+				}
+			}
 			
 			
 			
@@ -384,16 +416,8 @@ public class EventiController {
 				      return millisecondE1.compareTo(millisecondE2);
 				  }
 				});
-	
 			
-
-
-			// for (CorsoCarriera index : studente.getCorsi()) {
-			//
-			// eventiListByCorso.addAll(eventoRepository
-			// .findEventoByCorso(index));
-			//
-			// }
+			
 
 			return listEventi;
 		} catch (Exception e) {
