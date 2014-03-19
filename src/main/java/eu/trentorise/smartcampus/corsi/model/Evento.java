@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @NamedQueries({ @NamedQuery(name = "Evento.findEventoByCds", query = "select e from Evento e where e.cds = ?1"),
 	      		@NamedQuery(name = "Evento.findEventoByAdAndYear", query = "select e from Evento e, CorsoCarriera cc where e.title = ?1 and e.yearCds <= ?2"),
-	      		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where (e.title = ?1) and (e.idStudente = ?2 or e.idStudente = -1)")})
+	      		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where (e.title = ?1) and (e.eventoId.idStudente = ?2 or e.eventoId.idStudente = -1)")})
 @Table(name="evento")
 public class Evento {
 	/**
@@ -44,9 +44,6 @@ public class Evento {
 
 	@Column(name = "TYPE")
 	private String type;
-	
-	@Column(name = "STUDENTE")
-	private long idStudente;
 	
 	@Column(name = "PERSONAL_DESCRIPTION")
 	private String personalDescription;
@@ -107,14 +104,6 @@ public class Evento {
 
 	public void setEventoId(EventoId eventoId) {
 		this.eventoId = eventoId;
-	}
-
-	public long getIdStudente() {
-		return idStudente;
-	}
-
-	public void setIdStudente(long idStudente) {
-		this.idStudente = idStudente;
 	}
 
 	public String getDescription() {

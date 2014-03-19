@@ -400,7 +400,7 @@ public class CorsoCarrieraController {
 			
 			for(Iterator<CorsoCarriera> iterator = corsoCarrieraList.iterator(); iterator.hasNext();){
 				CorsoCarriera cc = iterator.next();
-				if (cc.getResult().equals("0")) {
+				if (cc.getResult().equals("0") || cc.getResult().equals("")) {
 					iterator.remove();
 				}
 				

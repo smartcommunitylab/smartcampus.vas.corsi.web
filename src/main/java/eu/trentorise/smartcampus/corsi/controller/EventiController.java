@@ -31,6 +31,7 @@ import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
+import eu.trentorise.smartcampus.corsi.model.EventoId;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
@@ -191,11 +192,11 @@ public class EventiController {
 				// communicatorConnector.sendAppNotification(n, appName, users,
 				// token);
 				
-				evento.setIdStudente(userId);
+				evento.getEventoId().setIdStudente(userId);
+				evento.getEventoId().setIdEventAd(-1);
 
 				Evento e = eventoRepository.save(evento);
 				
-				logger.info("evento : title = "+e.getTitle()+", descr = "+e.getPersonalDescription()+", id stud = "+e.getIdStudente());
 				
 				return e;
 			} else
@@ -241,7 +242,7 @@ public class EventiController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			// controllo se campi validi
-			if (evento != null && evento.getTitle() != "" && evento.getIdStudente() != -1 && evento.getIdStudente() == userId) {
+			if (evento != null && evento.getTitle() != "" && evento.getEventoId().getIdStudente() != -1 && evento.getEventoId().getIdStudente() == userId) {
 				eventoRepository.delete(evento);
 				return true;
 			} else
@@ -253,6 +254,55 @@ public class EventiController {
 		return false;
 	}
 	
+	
+	
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/evento/change/date/{date}/from/{from}/to/{to}")
+	public @ResponseBody
+	boolean changeEvento(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session, @PathVariable("date") long date,
+			@PathVariable("from") long from, @PathVariable("to") long to, @RequestBody Evento eventoChanged)
+
+	throws IOException {
+		try {
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			// controllo se campi validi
+			if (eventoChanged != null && eventoChanged.getTitle() != "" && eventoChanged.getEventoId().getIdStudente() != -1 && eventoChanged.getEventoId().getIdStudente() == userId) {
+				
+				EventoId eventoToChange = new EventoId();
+				eventoToChange.setIdEventAd(-1);
+				eventoToChange.setDate(new Date(date));
+				eventoToChange.setStart(new Time(from));
+				eventoToChange.setStop(new Time(to));
+				eventoToChange.setIdStudente(userId);
+				
+				Evento eventoToDelete = eventoRepository.findOne(eventoToChange);
+				eventoRepository.delete(eventoToDelete);
+				
+				eventoChanged.getEventoId().setIdStudente(userId);
+				eventoChanged.getEventoId().setIdEventAd(-1);
+
+				eventoChanged = eventoRepository.save(eventoChanged);
+				
+				if(eventoChanged != null)
+					return true;
+				else 
+					return false;
+				
+			} else
+				return false;
+
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return false;
+	}
 	
 
 	/**
@@ -310,9 +360,9 @@ public class EventiController {
 						date.set(Calendar.MILLISECOND, 0);
 
 						// next day
-						date.add(Calendar.DAY_OF_MONTH, 1);
+						date.add(Calendar.DAY_OF_MONTH, 0);
 
-						if(evento.getEventoId().getDate().after(date.getTime())){
+						if(evento.getEventoId().getDate().compareTo(date.getTime()) >= 0){
 							listEventi.add(evento);
 						}
 					}

@@ -30,40 +30,68 @@ public class EventoMapper {
 	private String token;
 
 	private List<Evento> listEvento;
-	
-	private static final Logger logger = Logger
-			.getLogger(EventoMapper.class);
-	
+
+	private static final Logger logger = Logger.getLogger(EventoMapper.class);
+
 	public EventoMapper() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<Evento> convert(List<CalendarCdsData> listCalendarWeek, CorsoLaurea idCds, int year)
-			throws IllegalArgumentException, SecurityException,
-			ProfileServiceException {
+	public List<Evento> convert(List<CalendarCdsData> listCalendarWeek,
+			CorsoLaurea idCds, int year) throws IllegalArgumentException,
+			SecurityException, ProfileServiceException {
 
 		listEvento = new ArrayList<Evento>();
-		
+
 		for (CalendarCdsData eventCal : listCalendarWeek) {
 			Evento evento = new Evento();
-			
+
 			EventoId eId = new EventoId();
 			eId.setIdEventAd(Long.parseLong(eventCal.getId()));
 			eId.setDate(new Date(eventCal.getFrom()));
 			eId.setStart(new Time(eventCal.getFrom()));
 			eId.setStop(new Time(eventCal.getTo()));
+			eId.setIdStudente(-1);
 			evento.setEventoId(eId);
 			evento.setRoom(eventCal.getRoom());
 			evento.setTeacher(eventCal.getTeacher());
 			evento.setTitle(eventCal.getTitle());
-			evento.setIdStudente(-1);
 			evento.setType(eventCal.getType());
 			evento.setYearCds(year);
 			evento.setCds(idCds.getCdsId());
-			 
+
 			listEvento.add(evento);
 		}
+
+		return listEvento;
+
+	}
+
+	public List<Evento> convert(List<CalendarCdsData> dataCalendarOf2Week,
+			CorsoLaurea cl) {
 		
+		listEvento = new ArrayList<Evento>();
+
+		for (CalendarCdsData eventCal : dataCalendarOf2Week) {
+			Evento evento = new Evento();
+
+			EventoId eId = new EventoId();
+			eId.setIdEventAd(Long.parseLong(eventCal.getId()));
+			eId.setDate(new Date(eventCal.getFrom()));
+			eId.setStart(new Time(eventCal.getFrom()));
+			eId.setStop(new Time(eventCal.getTo()));
+			eId.setIdStudente(-1);
+			evento.setEventoId(eId);
+			evento.setRoom(eventCal.getRoom());
+			evento.setTeacher(eventCal.getTeacher());
+			evento.setTitle(eventCal.getTitle());
+			evento.setType(eventCal.getType());
+			evento.setYearCds(0);
+			evento.setCds(cl.getCdsId());
+
+			listEvento.add(evento);
+		}
+
 		return listEvento;
 
 	}

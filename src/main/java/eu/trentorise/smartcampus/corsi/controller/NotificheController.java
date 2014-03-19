@@ -2,7 +2,9 @@ package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.corsi.model.Notification;
-import eu.trentorise.smartcampus.corsi.model.Notifiche;
+import eu.trentorise.smartcampus.communicator.model.Notification;
+import eu.trentorise.smartcampus.corsi.model.SyncData;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
@@ -86,27 +88,41 @@ public class NotificheController {
 			Long userId = Long.valueOf(profile.getUserId());
 			
 			EasyTokenManger clientTokenManager = new EasyTokenManger(profileaddress, client_id, client_secret);
-			//String client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			String client_auth_token = clientTokenManager.getClientSmartCampusToken();
 			
-			String client_auth_token = "6f10bd36-fb44-49d0-8c41-4cb8fdfee732";//test locale
+			//String client_auth_token = "ba246a9d-39f2-4c13-91bc-3e3117b2428d";//test locale
 			
-			String json = RemoteConnector.postJSON(communicatoraddress,
-					"synctype?since=0&type=Cisca", JsonUtils.toJSON("{}"), client_auth_token);
+			String json = RemoteConnector.getJSON(communicatoraddress,
+					"synctype?since=0&type=Cisca", client_auth_token);
 			
-			Notifiche notifiche = JsonUtils.toObject(json, Notifiche.class);
+			SyncData notificheSync = JsonUtils.toObject(json, SyncData.class);
 			
-			List<Notification> notificheFiltrate = new ArrayList<Notification>();
+			Set<String> setKeys = notificheSync.getUpdated().keySet();
+			Iterator<String> iteratorKeys = setKeys.iterator();
 			
+			List<Notification> notificationsList = null;
+			List<Notification> notificationsListAll = new ArrayList<Notification>();
 			
- 			for (Notification notification : notifiche.getUpdated().getNotifications()) {
-				if((notification.getTimestamp() >= date_from) || (notification.getUpdateTime() >= date_from)){
-					notificheFiltrate.add(notification);
+			while (iteratorKeys.hasNext()) {
+				String key = iteratorKeys.next();
+				
+				notificationsList = notificheSync.getUpdated().get(key);
+				
+				Iterator<Notification> iteratorNotification = notificationsList.iterator();
+				Notification notification = null;
+				while(iteratorNotification.hasNext()){
+					notification = iteratorNotification.next();
+					if(notification.getTimestamp() < date_from){
+						iteratorNotification.remove();
+					}
 				}
-			}
+				
+				notificationsListAll.addAll(notificationsList);
+				
+			}			
+
 			
-			
-			// stud.setCorsiSuperati(assignCorsi(stud));
-			return notificheFiltrate;
+			return notificationsListAll;
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -28,6 +28,9 @@ public class EventoId implements Serializable {
 	// ora fine
 	@Column(name = "STOP")
 	private Time stop;
+	
+	@Column(name = "STUDENTE")
+	private long idStudente;
 
 	@Override
 	public int hashCode() {
@@ -71,6 +74,14 @@ public class EventoId implements Serializable {
 
 	public void setIdEventAd(long idEventAd) {
 		this.idEventAd = idEventAd;
+	}
+	
+	public long getIdStudente() {
+		return idStudente;
+	}
+
+	public void setIdStudente(long idStudente) {
+		this.idStudente = idStudente;
 	}
 
 }

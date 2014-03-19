@@ -24,6 +24,9 @@ public class AttivitaDidattica extends BasicEntity {
 
 	@Column(name = "DESCRIPTION")
 	private String description;
+	
+	@Column(name = "COURSE_DESCRIPTION")
+	private String courseDescription;
 
 	@Column(name = "ID_CDS")
 	private long cds_id;
@@ -158,6 +161,14 @@ public class AttivitaDidattica extends BasicEntity {
 
 	public void setRating_esame(Float rating_esame) {
 		this.rating_esame = rating_esame;
+	}
+
+	public String getCourseDescription() {
+		return courseDescription;
+	}
+
+	public void setCourseDescription(String courseDescription) {
+		this.courseDescription = courseDescription;
 	}
 
 	
