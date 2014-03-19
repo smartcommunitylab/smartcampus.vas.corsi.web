@@ -1,6 +1,8 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,11 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
+import eu.trentorise.smartcampus.corsi.model.CorsoInteresse;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
+import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.CorsoCarrieraMapper;
@@ -61,6 +66,9 @@ public class CorsoCarrieraController {
 	@Autowired
 	@Value("${url.studente.service}")
 	private String unidataaddress;
+	
+	@Autowired
+	private CorsoInteresseRepository corsoInteresseRepository;
 
 	/**
 	 * 
@@ -272,9 +280,6 @@ public class CorsoCarrieraController {
 			List<CorsoCarriera> corsoCarrieraList = corsoCarrieraRepository
 					.findCorsoCarrieraByStudenteId(studenteDB.getId());
 
-			
-			
-			
 			if (corsoCarrieraList.size() == 0) {
 				// prendo i dati da unidata e li mappo
 				StudentInfoService studentConnector = new StudentInfoService(
@@ -298,12 +303,28 @@ public class CorsoCarrieraController {
 			if (corsoCarrieraList.size() == 0) {
 				return null;
 			} else {
-				for (Iterator<CorsoCarriera> iterator = corsoCarrieraList.iterator(); iterator.hasNext();) {
+				for (Iterator<CorsoCarriera> iterator = corsoCarrieraList
+						.iterator(); iterator.hasNext();) {
 					CorsoCarriera cc = iterator.next();
 					if (!cc.getResult().equals("0")) {
 						iterator.remove();
 					}
 				}
+			}
+
+			// eventi corsi di interesse
+
+			List<CorsoInteresse> corsiInteresse = corsoInteresseRepository
+					.findCorsoInteresseByStudenteId(userId);
+
+
+			for (CorsoInteresse corsoInteresse : corsiInteresse) {
+				CorsoCarriera cc = new CorsoCarriera();
+				cc.setCod(corsoInteresse.getAttivitaDidattica().getAdCod());
+				cc.setName(corsoInteresse.getAttivitaDidattica().getDescription());
+				cc.setResult("0");
+				
+				corsoCarrieraList.add(cc);
 			}
 
 			return corsoCarrieraList;
@@ -315,14 +336,7 @@ public class CorsoCarrieraController {
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -394,18 +408,17 @@ public class CorsoCarrieraController {
 				corsoCarrieraList = corsoCarrieraRepository
 						.save(corsoCarrieraList);
 			}
-			
-			logger.info("size corsi carriera: "+corsoCarrieraList.size());
 
-			
-			for(Iterator<CorsoCarriera> iterator = corsoCarrieraList.iterator(); iterator.hasNext();){
+			logger.info("size corsi carriera: " + corsoCarrieraList.size());
+
+			for (Iterator<CorsoCarriera> iterator = corsoCarrieraList
+					.iterator(); iterator.hasNext();) {
 				CorsoCarriera cc = iterator.next();
 				if (cc.getResult().equals("0") || cc.getResult().equals("")) {
 					iterator.remove();
 				}
-				
+
 			}
-	
 
 			return corsoCarrieraList;
 
@@ -416,12 +429,6 @@ public class CorsoCarrieraController {
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
-	
 
 	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/{ad_cod}/superato")
 	public @ResponseBody
