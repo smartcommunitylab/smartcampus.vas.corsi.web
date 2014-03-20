@@ -344,8 +344,8 @@ public class EventiController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
-			List<CorsoCarriera> corsiCarrieraList = corsoCarrieraRepository.findCorsoCarrieraByStudenteId(studente.getId());
+			List<Evento> listEventi = new ArrayList<Evento>();
+/*			List<CorsoCarriera> corsiCarrieraList = corsoCarrieraRepository.findCorsoCarrieraByStudenteId(studente.getId());
 			logger.info("/evento/me --> corsiCarrieraList from db: size = "+corsiCarrieraList.size());
 			List<Evento> listEventi = new ArrayList<Evento>();
 			
@@ -356,7 +356,6 @@ public class EventiController {
 					eventiAd = eventoRepository.findEventoByAd(corsoCarriera.getName(), userId);
 					
 					for (Evento evento : eventiAd) {
-
 						// today    
 						Calendar date = new GregorianCalendar();
 						// reset hour, minutes, seconds and millis
@@ -372,7 +371,7 @@ public class EventiController {
 					}
 				}
 			}
-			
+			*/
 			
 			
 			// eventi corsi di interesse
