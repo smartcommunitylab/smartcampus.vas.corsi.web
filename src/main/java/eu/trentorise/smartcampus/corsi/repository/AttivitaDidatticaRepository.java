@@ -13,5 +13,6 @@ public interface AttivitaDidatticaRepository extends
 	
 	
 	List<AttivitaDidattica> findAttivitaDidatticaByCdsId(long cds_id);
+	List<AttivitaDidattica> findAttivitaDidatticaByAdCod(String ad_cod);
 	
 }

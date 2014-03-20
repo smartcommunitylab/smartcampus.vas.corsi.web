@@ -150,7 +150,7 @@ public class CorsoInteresseController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsointeresse/{adId}/seguito")
 	public @ResponseBody
-	boolean isCorsoInteresseSeguito(HttpServletRequest request,
+	CorsoInteresse isCorsoInteresseSeguito(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session, @PathVariable("adId") long adId)
 
 	throws IOException {
@@ -176,7 +176,7 @@ public class CorsoInteresseController {
 						.getStudentData(token);
 
 				if (studentUniData == null)
-					return false;
+					return null;
 
 				UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
 
@@ -188,23 +188,20 @@ public class CorsoInteresseController {
 			
 			
 			AttivitaDidattica aDidattica = attivitaDidatticaRepository.findOne(adId);
-			
+						
 			CorsoInteresse ci = new CorsoInteresse();
 			
-			ci = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studenteDB.getId(), aDidattica);
+			ci = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studenteDB.getId(), aDidattica.getAdId());
 			
-			if(ci == null){
-				return false;
-			}else{
-				return true;
-			}
+			return ci;
+			
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-		return false;
+		return null;
 	}	
 	
 	
@@ -245,7 +242,7 @@ public class CorsoInteresseController {
 			AttivitaDidattica aDidattica = attivitaDidatticaRepository.findOne(idAttivitaDidattica);
 			
 			
-			CorsoInteresse cInteresse = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studente.getId(), aDidattica);
+			CorsoInteresse cInteresse = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studente.getId(), aDidattica.getAdId());
 			
 			if(cInteresse == null){
 				
@@ -253,12 +250,15 @@ public class CorsoInteresseController {
 					return false;
 				
 				cInteresse = new CorsoInteresse();
-				
+				cInteresse.setId(aDidattica.getAdId());
 				cInteresse.setAttivitaDidattica(aDidattica);
 				cInteresse.setStudenteId(studente.getId());
 				corsoInteresseRepository.save(cInteresse);
 			}else{
-				corsoInteresseRepository.delete(cInteresse);
+				if(!cInteresse.isCorsoCarriera())
+					corsoInteresseRepository.delete(cInteresse);
+				else
+					return false;
 			}
 			
 			return true;

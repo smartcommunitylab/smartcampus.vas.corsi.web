@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +28,7 @@ import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoInteresse;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.Studente;
+import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
@@ -69,6 +72,9 @@ public class CorsoCarrieraController {
 	
 	@Autowired
 	private CorsoInteresseRepository corsoInteresseRepository;
+	
+	@Autowired
+	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 
 	/**
 	 * 
@@ -135,6 +141,25 @@ public class CorsoCarrieraController {
 					studenteDB.getId(), studentExamsCareer, token);
 
 			corsoCarrieraList = corsoCarrieraRepository.save(corsoCarrieraList);
+			
+			// setto in corso interesse i corsi carriera
+			for (CorsoCarriera corsoCarriera : corsoCarrieraList) {
+				
+				if(corsoCarriera.getResult().equals("0") || corsoCarriera.getResult().equals("")){
+					List<AttivitaDidattica> ad = attivitaDidatticaRepository.findAttivitaDidatticaByAdCod(corsoCarriera.getCod());
+					
+					CorsoInteresse ci = new CorsoInteresse();
+					ci.setAttivitaDidattica(ad.get(0));
+					ci.setCorsoCarriera(true);
+					ci.setStudenteId(userId);
+					ci.setId(ad.get(0).getAdId());
+					
+					corsoInteresseRepository.save(ci);
+				}
+				
+			}
+			
+			
 
 			return corsoCarrieraList;
 
@@ -319,12 +344,15 @@ public class CorsoCarrieraController {
 
 
 			for (CorsoInteresse corsoInteresse : corsiInteresse) {
-				CorsoCarriera cc = new CorsoCarriera();
-				cc.setCod(corsoInteresse.getAttivitaDidattica().getAdCod());
-				cc.setName(corsoInteresse.getAttivitaDidattica().getDescription());
-				cc.setResult("0");
 				
-				corsoCarrieraList.add(cc);
+				if(!corsoInteresse.isCorsoCarriera()){
+					CorsoCarriera cc = new CorsoCarriera();
+					cc.setCod(corsoInteresse.getAttivitaDidattica().getAdCod());
+					cc.setName(corsoInteresse.getAttivitaDidattica().getDescription());
+					cc.setResult("0");
+					
+					corsoCarrieraList.add(cc);
+				}
 			}
 
 			return corsoCarrieraList;

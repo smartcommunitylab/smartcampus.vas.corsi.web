@@ -7,7 +7,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByCdsId", query = "select ad from AttivitaDidattica ad where ad.cds_id = ?1")})
+@NamedQueries({ @NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByCdsId", query = "select ad from AttivitaDidattica ad where ad.cds_id = ?1"),
+				@NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByAdCod", query = "select ad from AttivitaDidattica ad where ad.adCod = ?1")})
 public class AttivitaDidattica extends BasicEntity {
 
 	/**

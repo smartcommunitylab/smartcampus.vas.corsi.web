@@ -1,7 +1,10 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sun.xml.bind.v2.runtime.output.Encoded;
+
+import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.Notification;
 import eu.trentorise.smartcampus.corsi.model.SyncData;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
@@ -120,6 +126,16 @@ public class NotificheController {
 				notificationsListAll.addAll(notificationsList);
 				
 			}			
+			
+			Collections.sort(notificationsListAll, new Comparator<Notification>() {
+				  public int compare(Notification e1, Notification e2) {
+
+				      Long millisecondE1 = e1.getTimestamp();
+				      Long millisecondE2 = e2.getTimestamp();
+				      
+				      return millisecondE2.compareTo(millisecondE1);
+				  }
+				});
 
 			
 			return notificationsListAll;

@@ -14,6 +14,7 @@ public interface CorsoInteresseRepository extends
 JpaRepository<CorsoInteresse, Long> {
 	
 	List<CorsoInteresse> findCorsoInteresseByStudenteId(long idStudente);
-	CorsoInteresse findCorsoInteresseByAttivitaIdAndStudenteId(long cds_id, AttivitaDidattica attivitaDidattica);
+	CorsoInteresse findCorsoInteresseByAttivitaIdAndStudenteId(long idStudente, long ad_id);
+	void deleteCorsiInteresseOfStudenteOfCareer(long idStudente);
 
 }
