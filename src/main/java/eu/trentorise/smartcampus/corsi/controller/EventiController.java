@@ -82,10 +82,10 @@ public class EventiController {
 
 	@Autowired
 	private EventoRepository eventoRepository;
-	
+
 	@Autowired
 	private CorsoCarrieraRepository corsoCarrieraRepository;
-	
+
 	@Autowired
 	private CorsoInteresseRepository corsoInteresseRepository;
 
@@ -105,9 +105,6 @@ public class EventiController {
 
 	String client_auth_token;
 
-	
-		
-	
 	/**
 	 * 
 	 * @param request
@@ -145,9 +142,6 @@ public class EventiController {
 		}
 		return null;
 	}
-	
-
-	
 
 	/*
 	 * Riceve evento e lo salva nel db
@@ -183,27 +177,27 @@ public class EventiController {
 				BasicProfile profile = service.getBasicProfile(token);
 				Long userId = Long.valueOf(profile.getUserId());
 
-//				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-//						communicatoraddress, appName);
+				// CommunicatorConnector communicatorConnector = new
+				// CommunicatorConnector(
+				// communicatoraddress, appName);
 
 				List<String> users = new ArrayList<String>();
 				users.add(userId.toString());
 
-//				Notification n = new Notification();
-//				n.setTitle(evento.getTitle());
-//				n.setUser(userId.toString());
-//				n.setTimestamp(System.currentTimeMillis());
-//				n.setDescription("Creazione Evento");
+				// Notification n = new Notification();
+				// n.setTitle(evento.getTitle());
+				// n.setUser(userId.toString());
+				// n.setTimestamp(System.currentTimeMillis());
+				// n.setDescription("Creazione Evento");
 
 				// communicatorConnector.sendAppNotification(n, appName, users,
 				// token);
-				
+
 				evento.getEventoId().setIdStudente(userId);
 				evento.getEventoId().setIdEventAd(-1);
 
 				Evento e = eventoRepository.save(evento);
-				
-				
+
 				return e;
 			} else
 				return null;
@@ -213,9 +207,7 @@ public class EventiController {
 		}
 		return null;
 	}
-	
-	
-	
+
 	/*
 	 * Riceve evento e lo salva nel db
 	 */
@@ -235,12 +227,13 @@ public class EventiController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/evento/delete")
 	public @ResponseBody
-	boolean deleteEvento(HttpServletRequest request, HttpServletResponse response,
-			HttpSession session, @RequestBody Evento evento)
+	boolean deleteEvento(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@RequestBody Evento evento)
 
 	throws IOException {
 		try {
-			
+
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
@@ -248,7 +241,9 @@ public class EventiController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			// controllo se campi validi
-			if (evento != null && evento.getTitle() != "" && evento.getEventoId().getIdStudente() != -1 && evento.getEventoId().getIdStudente() == userId) {
+			if (evento != null && evento.getTitle() != ""
+					&& evento.getEventoId().getIdStudente() != -1
+					&& evento.getEventoId().getIdStudente() == userId) {
 				eventoRepository.delete(evento);
 				return true;
 			} else
@@ -259,51 +254,63 @@ public class EventiController {
 		}
 		return false;
 	}
-	
-	
-	
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/evento/change/date/{date}/from/{from}/to/{to}")
 	public @ResponseBody
-	boolean changeEvento(HttpServletRequest request, HttpServletResponse response,
-			HttpSession session, @PathVariable("date") long date,
-			@PathVariable("from") long from, @PathVariable("to") long to, @RequestBody Evento eventoChanged)
+	boolean changeEvento(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("date") long date, @PathVariable("from") long from,
+			@PathVariable("to") long to, @RequestBody Evento eventoChanged)
 
 	throws IOException {
 		try {
-			
+
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-			
-			
+
 			eventoChanged.getEventoId().setIdStudente(userId);
 			eventoChanged.getEventoId().setIdEventAd(-1);
 
 			// controllo se campi validi
-			if (eventoChanged != null && eventoChanged.getTitle() != "" && eventoChanged.getEventoId().getIdStudente() != -1) {
-				
+			if (eventoChanged != null && eventoChanged.getTitle() != ""
+					&& eventoChanged.getEventoId().getIdStudente() != -1) {
+
 				EventoId eventoToChange = new EventoId();
 				eventoToChange.setIdEventAd(-1);
 				eventoToChange.setDate(new Date(date));
 				eventoToChange.setStart(new Time(from));
 				eventoToChange.setStop(new Time(to));
 				eventoToChange.setIdStudente(userId);
+
+				List<Evento> eventoToDelete = eventoRepository.findEventoByAd(
+						eventoChanged.getTitle(), userId);
 				
-				Evento eventoToDelete = eventoRepository.findOne(eventoToChange);
 				
-				if(eventoToDelete != null)
-					eventoRepository.delete(eventoToDelete);
-				
+
+				for (Evento evento : eventoToDelete) {
+					long roundDate = 10000 * (evento.getEventoId().getDate().getTime() / 10000);
+					date = 10000 * (date / 10000);
+					if (evento.getEventoId().getIdEventAd() == -1
+							&& roundDate == date
+							&& evento.getEventoId().getStart().getTime() == from
+							&& evento.getEventoId().getStop().getTime() == to) {
+						
+						eventoRepository.delete(evento);
+						
+						
+					}
+				}
+
 				eventoChanged = eventoRepository.save(eventoChanged);
-				
-				if(eventoChanged != null)
+
+				if (eventoChanged != null)
 					return true;
-				else 
+				else
 					return false;
-				
+
 			} else
 				return false;
 
@@ -313,7 +320,6 @@ public class EventiController {
 		}
 		return false;
 	}
-	
 
 	/**
 	 * 
@@ -337,7 +343,7 @@ public class EventiController {
 			logger.info("/evento/me");
 			session.setMaxInactiveInterval(35);
 			String token = getToken(request);
-			
+
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
@@ -345,49 +351,47 @@ public class EventiController {
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 			List<Evento> listEventi = new ArrayList<Evento>();
-/*			List<CorsoCarriera> corsiCarrieraList = corsoCarrieraRepository.findCorsoCarrieraByStudenteId(studente.getId());
-			logger.info("/evento/me --> corsiCarrieraList from db: size = "+corsiCarrieraList.size());
-			List<Evento> listEventi = new ArrayList<Evento>();
-			
-			// filtro gli eventi che interessano allo studente
-			for (CorsoCarriera corsoCarriera : corsiCarrieraList) {
-				if(corsoCarriera.getResult().equals("0") || corsoCarriera.getResult().equals("")){
-					List<Evento> eventiAd = new ArrayList<Evento>();
-					eventiAd = eventoRepository.findEventoByAd(corsoCarriera.getName(), userId);
-					
-					for (Evento evento : eventiAd) {
-						// today    
-						Calendar date = new GregorianCalendar();
-						// reset hour, minutes, seconds and millis
-						date.set(Calendar.HOUR_OF_DAY, 0);
-						date.set(Calendar.MINUTE, 0);
-						date.set(Calendar.SECOND, 0);
-						date.set(Calendar.MILLISECOND, 0);
-						date.add(Calendar.DAY_OF_MONTH, 0);
+			/*
+			 * List<CorsoCarriera> corsiCarrieraList =
+			 * corsoCarrieraRepository.findCorsoCarrieraByStudenteId
+			 * (studente.getId());
+			 * logger.info("/evento/me --> corsiCarrieraList from db: size = "
+			 * +corsiCarrieraList.size()); List<Evento> listEventi = new
+			 * ArrayList<Evento>();
+			 * 
+			 * // filtro gli eventi che interessano allo studente for
+			 * (CorsoCarriera corsoCarriera : corsiCarrieraList) {
+			 * if(corsoCarriera.getResult().equals("0") ||
+			 * corsoCarriera.getResult().equals("")){ List<Evento> eventiAd =
+			 * new ArrayList<Evento>(); eventiAd =
+			 * eventoRepository.findEventoByAd(corsoCarriera.getName(), userId);
+			 * 
+			 * for (Evento evento : eventiAd) { // today Calendar date = new
+			 * GregorianCalendar(); // reset hour, minutes, seconds and millis
+			 * date.set(Calendar.HOUR_OF_DAY, 0); date.set(Calendar.MINUTE, 0);
+			 * date.set(Calendar.SECOND, 0); date.set(Calendar.MILLISECOND, 0);
+			 * date.add(Calendar.DAY_OF_MONTH, 0);
+			 * 
+			 * if(evento.getEventoId().getDate().compareTo(date.getTime()) >=
+			 * 0){ listEventi.add(evento); } } } }
+			 */
 
-						if(evento.getEventoId().getDate().compareTo(date.getTime()) >= 0){
-							listEventi.add(evento);
-						}
-					}
-				}
-			}
-			*/
-			
-			
 			// eventi corsi di interesse
-			
-			List<CorsoInteresse> corsiInteresse = corsoInteresseRepository.findCorsoInteresseByStudenteId(userId);
-			
-			logger.info("corsi interesse size = "+corsiInteresse.size());
-			
+
+			List<CorsoInteresse> corsiInteresse = corsoInteresseRepository
+					.findCorsoInteresseByStudenteId(userId);
+
+			logger.info("corsi interesse size = " + corsiInteresse.size());
+
 			for (CorsoInteresse corsoInteresse : corsiInteresse) {
 				AttivitaDidattica ad = corsoInteresse.getAttivitaDidattica();
-				List<Evento> listEventsInteresse = eventoRepository.findEventoByAd(ad.getDescription(), userId);
-				logger.info("eventi size = "+corsiInteresse.size());
-				
+				List<Evento> listEventsInteresse = eventoRepository
+						.findEventoByAd(ad.getDescription(), userId);
+				logger.info("eventi size = " + corsiInteresse.size());
+
 				for (Evento evento : listEventsInteresse) {
 
-					// today    
+					// today
 					Calendar date = new GregorianCalendar();
 					// reset hour, minutes, seconds and millis
 					date.set(Calendar.HOUR_OF_DAY, 0);
@@ -396,27 +400,25 @@ public class EventiController {
 					date.set(Calendar.MILLISECOND, 0);
 					date.add(Calendar.DAY_OF_MONTH, 0);
 
-					if(evento.getEventoId().getDate().compareTo(date.getTime()) >= 0){
+					if (evento.getEventoId().getDate()
+							.compareTo(date.getTime()) >= 0) {
 						listEventi.add(evento);
 					}
 				}
 			}
-			
-			
-			
+
 			Collections.sort(listEventi, new Comparator<Evento>() {
-				  public int compare(Evento e1, Evento e2) {
-				      if (e1.getEventoId().getDate() == null || e2.getEventoId().getDate() == null)
-				        return 0;
-				      
-				      Long millisecondE1 = e1.getEventoId().getDate().getTime();
-				      Long millisecondE2 = e2.getEventoId().getDate().getTime();
-				      
-				      return millisecondE1.compareTo(millisecondE2);
-				  }
-				});
-			
-			
+				public int compare(Evento e1, Evento e2) {
+					if (e1.getEventoId().getDate() == null
+							|| e2.getEventoId().getDate() == null)
+						return 0;
+
+					Long millisecondE1 = e1.getEventoId().getDate().getTime();
+					Long millisecondE2 = e2.getEventoId().getDate().getTime();
+
+					return millisecondE1.compareTo(millisecondE2);
+				}
+			});
 
 			return listEventi;
 		} catch (Exception e) {
@@ -451,9 +453,8 @@ public class EventiController {
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
-			 client_auth_token =
-			 clientTokenManager.getClientSmartCampusToken();
-			//client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
+			client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			// client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
 			System.out.println("Client auth token: " + client_auth_token);
 
 			UniversityPlannerService uniplanner = new UniversityPlannerService(
@@ -508,38 +509,36 @@ public class EventiController {
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
-			 client_auth_token =
-			 clientTokenManager.getClientSmartCampusToken();
-			//client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
+			client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			// client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
 			System.out.println("Client auth token: " + client_auth_token);
 
-
 			List<Evento> eventsListTotal = new ArrayList<Evento>();
-			
+
 			CorsoLaurea cdLaurea = corsoLaureaRepository.findOne(cds);
-			logger.info("/sync/evento/{cds}/all: corso laurea = "+cdLaurea.getDescripion());
-			
-			for (int y = 1; y <= Integer.parseInt(cdLaurea.getDurata()); y++) { 
-				logger.info("/sync/evento/{cds}/all: corso laurea = "+cdLaurea.getDescripion()+" year = "+y);
+			logger.info("/sync/evento/{cds}/all: corso laurea = "
+					+ cdLaurea.getDescripion());
+
+			for (int y = 1; y <= Integer.parseInt(cdLaurea.getDurata()); y++) {
+				logger.info("/sync/evento/{cds}/all: corso laurea = "
+						+ cdLaurea.getDescripion() + " year = " + y);
 				List<CalendarCdsData> dataCalendarOfWeek = uniConnector
 						.getCdsCalendar(client_auth_token,
 								String.valueOf(cdLaurea.getCdsId()),
 								String.valueOf(y));
 
 				EventoMapper mapperEvento = new EventoMapper();
-				List<Evento> eventsMapped = mapperEvento.convert(dataCalendarOfWeek, cdLaurea, y);
-				
+				List<Evento> eventsMapped = mapperEvento.convert(
+						dataCalendarOfWeek, cdLaurea, y);
+
 				eventoRepository.save(eventsMapped);
-				
+
 				for (Evento evento : eventsMapped) {
 					eventsListTotal.add(evento);
 				}
-				
-				
+
 			}
 
-			
-			
 			return eventsListTotal;
 
 		} catch (Exception e) {
@@ -548,9 +547,7 @@ public class EventiController {
 		}
 		return null;
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -576,16 +573,16 @@ public class EventiController {
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
-			 client_auth_token =
-			 clientTokenManager.getClientSmartCampusToken();
+			client_auth_token = clientTokenManager.getClientSmartCampusToken();
 			System.out.println("Client auth token: " + client_auth_token);
 
 			List<Dipartimento> dipartimenti = dipartimentoRepository.findAll();
 
-			logger.info("/sync/evento/all: list dipartimento size = "+dipartimenti.size());
+			logger.info("/sync/evento/all: list dipartimento size = "
+					+ dipartimenti.size());
 			if (dipartimenti.size() == 0)
 				return false;
-			
+
 			List<Evento> eventsMapped = null;
 			List<CorsoLaurea> corsiDiLaurea = null;
 
@@ -593,21 +590,28 @@ public class EventiController {
 
 				corsiDiLaurea = new ArrayList<CorsoLaurea>();
 
-				corsiDiLaurea = corsoLaureaRepository.getCorsiLaureaByDipartimento(dip);
-				logger.info("/sync/evento/all: list corsi laurea size = "+corsiDiLaurea.size());
+				corsiDiLaurea = corsoLaureaRepository
+						.getCorsiLaureaByDipartimento(dip);
+				logger.info("/sync/evento/all: list corsi laurea size = "
+						+ corsiDiLaurea.size());
 
 				for (CorsoLaurea cl : corsiDiLaurea) { // per tutti i corsi di
 														// laurea
-					for (int year = 1; year <= Integer.parseInt(cl.getDurata()); year++) { // per tutti gli anni
-						logger.info("/sync/evento/all: corsi laurea year = "+year);
+					for (int year = 1; year <= Integer.parseInt(cl.getDurata()); year++) { // per
+																							// tutti
+																							// gli
+																							// anni
+						logger.info("/sync/evento/all: corsi laurea year = "
+								+ year);
 						List<CalendarCdsData> dataCalendarOfWeek = uniConnector
 								.getCdsCalendar(client_auth_token,
 										String.valueOf(cl.getCdsId()),
 										String.valueOf(year));
 
 						EventoMapper mapperEvento = new EventoMapper();
-						eventsMapped = mapperEvento.convert(dataCalendarOfWeek, cl, year);
-						
+						eventsMapped = mapperEvento.convert(dataCalendarOfWeek,
+								cl, year);
+
 						eventoRepository.save(eventsMapped);
 					}
 				}
@@ -621,8 +625,6 @@ public class EventiController {
 			return false;
 		}
 	}
-	
-	
 
 	/**
 	 * 

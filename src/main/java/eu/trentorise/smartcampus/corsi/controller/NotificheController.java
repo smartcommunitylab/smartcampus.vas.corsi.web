@@ -77,15 +77,15 @@ public class NotificheController {
 	 * Restituisce i dati dello studente riferiti allo studente che effetua la richiesta
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/notifiche/{date_from}/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/notifiche/type/{type}/date/{date_from}")
 	public @ResponseBody
 	List<Notification> getInfoStudentFromId(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("date_from") long date_from)
+			HttpServletResponse response, HttpSession session, @PathVariable("type") String type, @PathVariable("date_from") long date_from)
 
 	throws IOException {
 		try {
 
-			logger.info("/notifiche/{date_from}/me");
+			logger.info("/notifiche/type/{type}/date/{date_from}");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -96,10 +96,9 @@ public class NotificheController {
 			EasyTokenManger clientTokenManager = new EasyTokenManger(profileaddress, client_id, client_secret);
 			String client_auth_token = clientTokenManager.getClientSmartCampusToken();
 			
-			//String client_auth_token = "ba246a9d-39f2-4c13-91bc-3e3117b2428d";//test locale
 			
 			String json = RemoteConnector.getJSON(communicatoraddress,
-					"synctype?since=0&type=Cisca", client_auth_token);
+					"synctype?since=0&type="+type, client_auth_token);
 			
 			SyncData notificheSync = JsonUtils.toObject(json, SyncData.class);
 			

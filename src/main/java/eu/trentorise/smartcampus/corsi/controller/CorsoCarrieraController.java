@@ -69,10 +69,10 @@ public class CorsoCarrieraController {
 	@Autowired
 	@Value("${url.studente.service}")
 	private String unidataaddress;
-	
+
 	@Autowired
 	private CorsoInteresseRepository corsoInteresseRepository;
-	
+
 	@Autowired
 	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 
@@ -141,25 +141,27 @@ public class CorsoCarrieraController {
 					studenteDB.getId(), studentExamsCareer, token);
 
 			corsoCarrieraList = corsoCarrieraRepository.save(corsoCarrieraList);
-			
+
 			// setto in corso interesse i corsi carriera
 			for (CorsoCarriera corsoCarriera : corsoCarrieraList) {
-				
-				if(corsoCarriera.getResult().equals("0") || corsoCarriera.getResult().equals("")){
-					List<AttivitaDidattica> ad = attivitaDidatticaRepository.findAttivitaDidatticaByAdCod(corsoCarriera.getCod());
-					
-					CorsoInteresse ci = new CorsoInteresse();
-					ci.setAttivitaDidattica(ad.get(0));
-					ci.setCorsoCarriera(true);
-					ci.setStudenteId(userId);
-					ci.setId(ad.get(0).getAdId());
-					
-					corsoInteresseRepository.save(ci);
+
+				if (corsoCarriera.getResult().equals("0")
+						|| corsoCarriera.getResult().equals("")) {
+					List<AttivitaDidattica> ad = attivitaDidatticaRepository
+							.findAttivitaDidatticaByAdCod(corsoCarriera
+									.getCod());
+					if (ad.size() > 0) {
+						CorsoInteresse ci = new CorsoInteresse();
+						ci.setAttivitaDidattica(ad.get(0));
+						ci.setCorsoCarriera(true);
+						ci.setStudenteId(userId);
+						ci.setId(ad.get(0).getAdId());
+
+						corsoInteresseRepository.save(ci);
+					}
 				}
-				
+
 			}
-			
-			
 
 			return corsoCarrieraList;
 
@@ -342,15 +344,15 @@ public class CorsoCarrieraController {
 			List<CorsoInteresse> corsiInteresse = corsoInteresseRepository
 					.findCorsoInteresseByStudenteId(userId);
 
-
 			for (CorsoInteresse corsoInteresse : corsiInteresse) {
-				
-				if(!corsoInteresse.isCorsoCarriera()){
+
+				if (!corsoInteresse.isCorsoCarriera()) {
 					CorsoCarriera cc = new CorsoCarriera();
 					cc.setCod(corsoInteresse.getAttivitaDidattica().getAdCod());
-					cc.setName(corsoInteresse.getAttivitaDidattica().getDescription());
+					cc.setName(corsoInteresse.getAttivitaDidattica()
+							.getDescription());
 					cc.setResult("0");
-					
+
 					corsoCarrieraList.add(cc);
 				}
 			}
