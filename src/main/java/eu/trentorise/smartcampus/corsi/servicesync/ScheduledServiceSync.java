@@ -99,7 +99,7 @@ public class ScheduledServiceSync {
 	 * @throws IOException
 	 */
 	//@Scheduled(cron = "0 0 0 1 * ?")
-	//@Scheduled(fixedDelay = 1196000000)
+	@Scheduled(fixedDelay = 1196000000)
 	public @ResponseBody
 	void getDipartimentoAndCdsSync()
 
@@ -267,7 +267,7 @@ public class ScheduledServiceSync {
 	 * @throws IOException
 	 */
 	//@Scheduled(cron = "0 0 1 * * ?")
-	// everyday at 1am
+	@Scheduled(cron = "0 0 1 * 1 ?")
 	public @ResponseBody
 	void getCalendarFull()
 
