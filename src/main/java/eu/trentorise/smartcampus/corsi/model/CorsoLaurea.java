@@ -16,23 +16,27 @@ import javax.persistence.OneToMany;
 @NamedQuery(name = "CorsoLaurea.getCorsiLaureaByDipartimento", query = "select cl from CorsoLaurea cl where cl.dipartimento = ?1")
 public class CorsoLaurea extends BasicEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2348842239289261461L;
 
 	@Id
 	@Column(name = "CDS_ID")
 	private long cdsId;
-	
+
 	@Column(name = "CDS_COD")
 	private String cdsCod;
-	
+
 	@Column(name = "DESCRIPTION")
 	private String descripion;
-	
+
 	@Column(name = "DURATA")
 	private String durata;
-	
+
 	@Column(name = "AA_ORD")
 	private String aaOrd;
-	
+
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(joinColumns = @JoinColumn(name = "CDS_ID"), inverseJoinColumns = @JoinColumn(name = "PDS_ID"))
 	private List<PianoStudi> pds;
@@ -73,7 +77,6 @@ public class CorsoLaurea extends BasicEntity {
 		this.cdsCod = cdsCod;
 	}
 
-
 	public String getDescripion() {
 		return descripion;
 	}
@@ -106,5 +109,4 @@ public class CorsoLaurea extends BasicEntity {
 		this.pds = pds;
 	}
 
-	
 }

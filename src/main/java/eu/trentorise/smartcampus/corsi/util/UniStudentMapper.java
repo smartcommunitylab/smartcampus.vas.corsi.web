@@ -31,11 +31,7 @@ public class UniStudentMapper {
 	private BasicProfile basicProfile;
 	private AccountProfile accountProfile;
 
-	private String token;
-
 	private Studente studente;
-	private StudentInfoData fromStudentInfo;
-	private StudentInfoExams fromStudentExams;
 
 	private List<StudentInfoExam> fromListExams;
 
@@ -48,8 +44,8 @@ public class UniStudentMapper {
 			ProfileServiceException {
 
 		BasicProfileService service = new BasicProfileService(profileaddress);
-		//tokenUser = "b1931a7e-66a4-4136-907a-907bfbca893d";
-		
+		// tokenUser = "b1931a7e-66a4-4136-907a-907bfbca893d";
+
 		// recupero i dati del profilo dell'utente
 		basicProfile = service.getBasicProfile(tokenUser);
 		accountProfile = service.getAccountProfile(tokenUser);
@@ -93,7 +89,6 @@ public class UniStudentMapper {
 		studente.setMarksAverage(fromStudentInfo.getMarksAverage());
 		studente.setMarksNumber(fromStudentInfo.getMarksNumber());
 
-
 		return studente;
 
 	}
@@ -118,7 +113,6 @@ public class UniStudentMapper {
 		basicProfile = service.getBasicProfile(token);
 		// informazioni esami
 		ArrayList<CorsoCarriera> corsi = new ArrayList<CorsoCarriera>();
-		ArrayList<CorsoCarriera> corsiSuperati = new ArrayList<CorsoCarriera>();
 
 		fromListExams = fromStudentExams.getExams();
 
@@ -160,7 +154,7 @@ public class UniStudentMapper {
 		// informazioni esami
 		ArrayList<CorsoLite> corsiSuperati = new ArrayList<CorsoLite>();
 		fromListExams = fromStudentExams.getExams();
-		
+
 		for (StudentInfoExam exam : fromListExams) {
 			CorsoLite corsoSuperato = new CorsoLite();
 			if (exam.getResult() != null) {
@@ -173,9 +167,7 @@ public class UniStudentMapper {
 		return corsiSuperati;
 
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @param fromStudentExams
@@ -198,7 +190,7 @@ public class UniStudentMapper {
 		// informazioni esami
 		ArrayList<CorsoLite> corsiSuperati = new ArrayList<CorsoLite>();
 		fromListExams = fromStudentExams.getExams();
-		
+
 		for (StudentInfoExam exam : fromListExams) {
 			CorsoLite corsoSuperato = new CorsoLite();
 			if (exam.getResult() != null) {

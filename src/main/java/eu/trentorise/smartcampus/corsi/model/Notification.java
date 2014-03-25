@@ -123,6 +123,4 @@ public class Notification extends BasicObject {
 		this.author = author;
 	}
 
-
-
 }

@@ -27,58 +27,58 @@ public class Studente extends BasicEntity {
 	@Column(name = "COGNOME")
 	private String cognome;
 
-	//@Column(name = "CORSO_LAUREA")
-//	@ManyToOne
-//	@JoinColumn(name = "ID_CORSOLAUREA")
-//	private CorsoLaurea corso_laurea;
+	// @Column(name = "CORSO_LAUREA")
+	// @ManyToOne
+	// @JoinColumn(name = "ID_CORSOLAUREA")
+	// private CorsoLaurea corso_laurea;
 
-	//@Column(name = "DIPARTIMENTO")
-//	@ManyToOne
-//	@JoinColumn(name = "ID_DIPARTIMENTO")
-	//private Dipartimento dipartimento;
+	// @Column(name = "DIPARTIMENTO")
+	// @ManyToOne
+	// @JoinColumn(name = "ID_DIPARTIMENTO")
+	// private Dipartimento dipartimento;
 
 	@Column(name = "ANNO_CORSO")
 	private String anno_corso;
 
 	@Column(name = "ENROLLMENT_YEAR")
 	private String enrollmentYear;
-	
+
 	@Column(name = "NATION")
 	private String nation;
-	
+
 	@Column(name = "ACADEMIC_YEAR")
 	private String academicYear;
-	
+
 	@Column(name = "SUPLEMENTARY_YEAR")
 	private String suplementaryYear;
-	
+
 	@Column(name = "CFU")
 	private String cfu;
-	
+
 	@Column(name = "CFU_TOTAL")
 	private String cfuTotal;
-	
+
 	@Column(name = "MARKS_NUMBER")
 	private String marksNumber;
-	
+
 	@Column(name = "MARKS_AVERAGE")
 	private String marksAverage;
-	
+
 	@Column(name = "GENDER")
 	private String gender;
-	
+
 	@Column(name = "DATE_BIRTH")
 	private String dateOfBirth;
-	
+
 	@Column(name = "PHONE")
 	private String phone;
-	
+
 	@Column(name = "MOBILE")
 	private String mobile;
-	
+
 	@Column(name = "ADDRESS")
 	private String address;
-	
+
 	@Column(name = "CDS")
 	private String cds;
 
@@ -87,14 +87,12 @@ public class Studente extends BasicEntity {
 
 	@Column(name = "USER_SOCIAL_ID")
 	private long userSocialId;
-	
-	
+
 	@Column(name = "GRUPPI_DI_STUDIO")
 	private String idsGruppiDiStudio;
-	
+
 	@Transient
 	private List<GruppoDiStudio> gruppiDiStudio;
-
 
 	public String getIdsGruppiDiStudio() {
 		return idsGruppiDiStudio;
@@ -144,13 +142,13 @@ public class Studente extends BasicEntity {
 		this.cognome = cognome;
 	}
 
-//	public CorsoLaurea getCorso_laurea() {
-//		return corso_laurea;
-//	}
-//
-//	public void setCorso_laurea(CorsoLaurea corso_laurea) {
-//		this.corso_laurea = corso_laurea;
-//	}
+	// public CorsoLaurea getCorso_laurea() {
+	// return corso_laurea;
+	// }
+	//
+	// public void setCorso_laurea(CorsoLaurea corso_laurea) {
+	// this.corso_laurea = corso_laurea;
+	// }
 
 	public String getAnno_corso() {
 		return anno_corso;
@@ -170,21 +168,23 @@ public class Studente extends BasicEntity {
 
 	public void addGruppoStudente(Studente studente, long idGruppoDaAggiungere) {
 		// TODO Auto-generated method stub
-		studente.setIdsGruppiDiStudio(studente.getIdsGruppiDiStudio()+String.valueOf(idGruppoDaAggiungere)+",");		
+		studente.setIdsGruppiDiStudio(studente.getIdsGruppiDiStudio()
+				+ String.valueOf(idGruppoDaAggiungere) + ",");
 	}
 
 	public void removeGruppoStudente(Studente studente, long id2) {
 		// TODO Auto-generated method stub
 		String studenteGruppoIds = null;
 		studenteGruppoIds = studente.getIdsGruppiDiStudio();
-		
+
 		String[] listS = studenteGruppoIds.split(",");
-		
+
 		String studenteGruppoAggiornato = "";
-		
+
 		for (String s : listS) {
-			if(!s.equals(String.valueOf(id2))){
-				studenteGruppoAggiornato = studenteGruppoAggiornato.concat(s.toString()+",");
+			if (!s.equals(String.valueOf(id2))) {
+				studenteGruppoAggiornato = studenteGruppoAggiornato.concat(s
+						.toString() + ",");
 			}
 		}
 		studente.setIdsGruppiDiStudio(studenteGruppoAggiornato);
@@ -301,7 +301,5 @@ public class Studente extends BasicEntity {
 	public void setCds(String cds) {
 		this.cds = cds;
 	}
-
-	
 
 }

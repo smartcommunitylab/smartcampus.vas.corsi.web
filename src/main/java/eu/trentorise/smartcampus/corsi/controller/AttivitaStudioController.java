@@ -22,12 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
-import eu.trentorise.smartcampus.communicator.model.EntityObject;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
-import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
@@ -75,16 +73,13 @@ public class AttivitaStudioController {
 	@Autowired
 	private EventoRepository eventoRepository;
 
-
 	@Autowired
 	private StudenteRepository studenteRepository;
-	
-	
-	
-	///////////////////////////////////////////////////////////////////////////
+
+	// /////////////////////////////////////////////////////////////////////////
 	// METODI GET /////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////
-	
+	// /////////////////////////////////////////////////////////////////////////
+
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadistudio/{id_gruppodistudio}")
 	public @ResponseBody
 	List<AttivitaDiStudio> getAttivitadistudioByID(HttpServletRequest request,
@@ -106,15 +101,11 @@ public class AttivitaStudioController {
 		}
 		return null;
 	}
-	
-	
-	
-	
-	///////////////////////////////////////////////////////////////////////////
+
+	// /////////////////////////////////////////////////////////////////////////
 	// METODI POST ////////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////
-	
-	
+	// /////////////////////////////////////////////////////////////////////////
+
 	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/add")
 	public @ResponseBody
 	boolean saveAttivitaStudio(HttpServletRequest request,
@@ -210,8 +201,6 @@ public class AttivitaStudioController {
 		return false;
 	}
 
-	
-
 	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/change")
 	public @ResponseBody
 	boolean changeAttivitaDiStudio(HttpServletRequest request,
@@ -228,7 +217,7 @@ public class AttivitaStudioController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			Studente studente = studenteRepository.findOne(userId);
+			//Studente studente = studenteRepository.findOne(userId);
 
 			// ottengo i membri che fanno parte del gruppo di studio relativo
 			// all'attività di studio
@@ -308,14 +297,10 @@ public class AttivitaStudioController {
 		}
 		return false;
 	}
-	
-	
-	
-	
-	
-	///////////////////////////////////////////////////////////////////////////
+
+	// /////////////////////////////////////////////////////////////////////////
 	// METODI DELETE //////////////////////////////////////////////////////////
-	///////////////////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * 
@@ -345,7 +330,7 @@ public class AttivitaStudioController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			Studente studente = studenteRepository.findOne(userId);
+			//Studente studente = studenteRepository.findOne(userId);
 
 			if (userId == null)
 				return false;
@@ -409,8 +394,8 @@ public class AttivitaStudioController {
 
 			AttivitaDiStudio AttivitaFromDB = attivitastudioRepository
 					.findOne(attivitadistudio.getEventoId());
-			
-			if(AttivitaFromDB==null)
+
+			if (AttivitaFromDB == null)
 				return false;
 
 			attivitastudioRepository.delete(AttivitaFromDB);

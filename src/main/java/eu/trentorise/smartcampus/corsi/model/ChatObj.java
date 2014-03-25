@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-
 public class ChatObj {
 	// id del gruppo
 	@Id
@@ -20,8 +19,8 @@ public class ChatObj {
 	private String nome;
 
 	// Nome del gruppo
-		@Column(name = "TIME")
-		private Date data;
+	@Column(name = "TIME")
+	private Date data;
 
 	public ChatObj() {
 	}
@@ -42,6 +41,4 @@ public class ChatObj {
 		this.nome = nome;
 	}
 
-
-	
 }

@@ -25,16 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
-import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
-import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoInteresse;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.EventoId;
-import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
@@ -287,20 +283,18 @@ public class EventiController {
 
 				List<Evento> eventoToDelete = eventoRepository.findEventoByAd(
 						eventoChanged.getTitle(), userId);
-				
-				
 
 				for (Evento evento : eventoToDelete) {
-					long roundDate = 10000 * (evento.getEventoId().getDate().getTime() / 10000);
+					long roundDate = 10000 * (evento.getEventoId().getDate()
+							.getTime() / 10000);
 					date = 10000 * (date / 10000);
 					if (evento.getEventoId().getIdEventAd() == -1
 							&& roundDate == date
 							&& evento.getEventoId().getStart().getTime() == from
 							&& evento.getEventoId().getStop().getTime() == to) {
-						
+
 						eventoRepository.delete(evento);
-						
-						
+
 					}
 				}
 
@@ -349,7 +343,8 @@ public class EventiController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
+			// Studente studente =
+			// studenteRepository.findStudenteByUserId(userId);
 			List<Evento> listEventi = new ArrayList<Evento>();
 			/*
 			 * List<CorsoCarriera> corsiCarrieraList =
@@ -460,6 +455,7 @@ public class EventiController {
 			UniversityPlannerService uniplanner = new UniversityPlannerService(
 					unidataaddress);
 
+			@SuppressWarnings("deprecation")
 			List<CalendarCdsData> dataCalendarOfWeek = uniplanner
 					.getCdsCalendar(client_auth_token, String.valueOf(cds_id),
 							year);
@@ -522,6 +518,7 @@ public class EventiController {
 			for (int y = 1; y <= Integer.parseInt(cdLaurea.getDurata()); y++) {
 				logger.info("/sync/evento/{cds}/all: corso laurea = "
 						+ cdLaurea.getDescripion() + " year = " + y);
+				@SuppressWarnings("deprecation")
 				List<CalendarCdsData> dataCalendarOfWeek = uniConnector
 						.getCdsCalendar(client_auth_token,
 								String.valueOf(cdLaurea.getCdsId()),
@@ -603,6 +600,7 @@ public class EventiController {
 																							// anni
 						logger.info("/sync/evento/all: corsi laurea year = "
 								+ year);
+						@SuppressWarnings("deprecation")
 						List<CalendarCdsData> dataCalendarOfWeek = uniConnector
 								.getCdsCalendar(client_auth_token,
 										String.valueOf(cl.getCdsId()),

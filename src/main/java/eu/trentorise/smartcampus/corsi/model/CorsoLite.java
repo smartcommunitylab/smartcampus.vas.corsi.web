@@ -22,9 +22,9 @@ public class CorsoLite extends BasicEntity {
 	@Column(name = "NOME")
 	private String nome;
 
-//	// nome del dipartimento
-//	@Column(name = "FK_DIPARTIMENTO")
-//	private long dipartimento;
+	// // nome del dipartimento
+	// @Column(name = "FK_DIPARTIMENTO")
+	// private long dipartimento;
 
 	public CorsoLite() {
 	}

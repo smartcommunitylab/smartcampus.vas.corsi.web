@@ -7,15 +7,20 @@ import javax.persistence.Id;
 @Entity
 public class PianoStudi extends BasicEntity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2429312744664290916L;
+
 	@Id
 	private long pdsId;
-	
+
 	@Column(name = "PDS_COD")
 	private String pdsCod;
 
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@PrimaryKeyJoinColumn(name = "pds")
-//	private CorsoLaurea cdsId;
+	// @ManyToOne(fetch=FetchType.LAZY)
+	// @PrimaryKeyJoinColumn(name = "pds")
+	// private CorsoLaurea cdsId;
 
 	public String getPdsCod() {
 		return pdsCod;
@@ -33,16 +38,12 @@ public class PianoStudi extends BasicEntity {
 		this.pdsId = pdsId;
 	}
 
-//	public CorsoLaurea getCdsId() {
-//		return cdsId;
-//	}
-//
-//	public void setCdsId(CorsoLaurea cdsId) {
-//		this.cdsId = cdsId;
-//	}
+	// public CorsoLaurea getCdsId() {
+	// return cdsId;
+	// }
+	//
+	// public void setCdsId(CorsoLaurea cdsId) {
+	// this.cdsId = cdsId;
+	// }
 
-
-	
-	
-	
 }

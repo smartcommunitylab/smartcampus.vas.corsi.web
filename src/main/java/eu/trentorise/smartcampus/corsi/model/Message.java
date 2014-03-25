@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-public class Message extends ChatObj{
+public class Message extends ChatObj {
 	// id del gruppo
 
 	// Nome del gruppo
@@ -22,6 +22,4 @@ public class Message extends ChatObj{
 		this.testo = testo;
 	}
 
-
-	
 }

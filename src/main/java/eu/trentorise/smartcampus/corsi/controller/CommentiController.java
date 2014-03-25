@@ -1,15 +1,10 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
-import java.awt.color.CMMException;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -34,14 +29,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.aac.AACException;
-import eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.Commento;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
-import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
-import eu.trentorise.smartcampus.corsi.model.Dipartimento;
-import eu.trentorise.smartcampus.corsi.model.Evento;
-import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
@@ -53,7 +43,6 @@ import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
-import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
@@ -87,7 +76,7 @@ public class CommentiController {
 
 	@Autowired
 	private CorsoCarrieraRepository corsoCarrieraRepository;
-	
+
 	@Autowired
 	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 
@@ -167,7 +156,8 @@ public class CommentiController {
 	 *         del corso
 	 * 
 	 */
-	private AttivitaDidattica UpdateRatingCorso(AttivitaDidattica corsoDaAggiornare) {
+	private AttivitaDidattica UpdateRatingCorso(
+			AttivitaDidattica corsoDaAggiornare) {
 
 		if (corsoDaAggiornare == null)
 			return null;
@@ -213,7 +203,8 @@ public class CommentiController {
 		// setto la media delle valutazioni
 		corsoDaAggiornare.setValutazione_media(sommaValutazioni / 5);
 
-		AttivitaDidattica corsoAggiornato = attivitaDidatticaRepository.saveAndFlush(corsoDaAggiornare);
+		AttivitaDidattica corsoAggiornato = attivitaDidatticaRepository
+				.saveAndFlush(corsoDaAggiornare);
 
 		if (corsoAggiornato == null)
 			return null;
@@ -245,7 +236,6 @@ public class CommentiController {
 	throws IOException {
 		try {
 
-			List<Commento> commenti;
 			List<Commento> commentiAggiornati;
 
 			// Aggiorno le valutazioni del corso
@@ -256,15 +246,16 @@ public class CommentiController {
 				return null;
 
 			commentiAggiornati = commentiRepository
-					.getCommentoByCorsoApproved(attivitaDidatticaRepository.findOne(
-							id_corso).getAdId());
+					.getCommentoByCorsoApproved(attivitaDidatticaRepository
+							.findOne(id_corso).getAdId());
 
 			if (commentiAggiornati.size() != 0) {
 				commentiAggiornati = commentiRepository
 						.save(commentiAggiornati);
 				return commentiAggiornati;
 			} else {
-				AttivitaDidattica corso = attivitaDidatticaRepository.findOne(id_corso);
+				AttivitaDidattica corso = attivitaDidatticaRepository
+						.findOne(id_corso);
 				String token = getToken(request);
 				BasicProfileService service = new BasicProfileService(
 						profileaddress);
@@ -306,8 +297,10 @@ public class CommentiController {
 				.updateComment(0, System.currentTimeMillis(),
 						tkm.getClientSmartCampusToken());
 		if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
+			@SuppressWarnings("rawtypes")
 			Iterator iterator = updatedCommentList.entrySet().iterator();
 			while (iterator.hasNext()) {
+				@SuppressWarnings("rawtypes")
 				Map.Entry mapEntry = (Map.Entry) iterator.next();
 
 				Commento c = commentiRepository.findOne(Long.parseLong(mapEntry
@@ -371,8 +364,8 @@ public class CommentiController {
 				return null;
 
 			return commentiRepository.getCommentoByStudenteApproved(
-					studenteRepository.findOne(userId).getId(), attivitaDidatticaRepository
-							.findOne(id_corso).getAdId());
+					studenteRepository.findOne(userId).getId(),
+					attivitaDidatticaRepository.findOne(id_corso).getAdId());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -436,7 +429,8 @@ public class CommentiController {
 				// Creare associazione su frequenze
 
 				// TEST
-				List<CorsoCarriera> corsiEsse3 = corsoCarrieraRepository.findAll();
+				List<CorsoCarriera> corsiEsse3 = corsoCarrieraRepository
+						.findAll();
 
 				String supera = null;
 				String interesse = null;
@@ -469,9 +463,10 @@ public class CommentiController {
 			if (profile != null) {
 
 				Commento commentoDaModificare = commentiRepository
-						.getCommentoByStudenteApproved(studenteRepository
-								.findOne(userId).getId(), attivitaDidatticaRepository
-								.findOne(commento.getCorso()).getAdId());
+						.getCommentoByStudenteApproved(
+								studenteRepository.findOne(userId).getId(),
+								attivitaDidatticaRepository.findOne(
+										commento.getCorso()).getAdId());
 
 				// gestisco il commento nel caso sia già presente
 
@@ -499,7 +494,6 @@ public class CommentiController {
 									commentoDaModificare.getTesto(),
 									commentoDaModificare.getId().toString(),
 									userId, tkm.getClientSmartCampusToken()));
-					
 
 					if (commentoDaModificare.isApproved()) {
 						mediationParserImpl.remoteValidationComment(
@@ -507,7 +501,6 @@ public class CommentiController {
 								commentoDaModificare.getId().toString(),
 								userId, tkm.getClientSmartCampusToken());
 					}
-
 
 					if (commentoDaModificare.isApproved()) {
 						commentoDaModificare = commentiRepository
@@ -559,7 +552,8 @@ public class CommentiController {
 					if (commentoNuovo.isApproved()) {
 						mediationParserImpl.remoteValidationComment(
 								commentoNuovo.getTesto(), commentoNuovo.getId()
-										.toString(), userId, tkm.getClientSmartCampusToken());
+										.toString(), userId, tkm
+										.getClientSmartCampusToken());
 					}
 
 					if (commentoNuovo.isApproved()) {
@@ -581,11 +575,8 @@ public class CommentiController {
 
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return false;
 		}
 		return false;
 	}
-
-
 
 }

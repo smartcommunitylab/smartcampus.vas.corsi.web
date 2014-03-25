@@ -14,27 +14,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
-import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoInteresse;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
-import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
-import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
-import eu.trentorise.smartcampus.corsi.util.CorsoCarrieraMapper;
 import eu.trentorise.smartcampus.corsi.util.UniStudentMapper;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
 import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
-import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExams;
 
 @Controller("corsoInteresseController")
 public class CorsoInteresseController {
@@ -63,11 +57,11 @@ public class CorsoInteresseController {
 
 	@Autowired
 	private AttivitaDidatticaRepository attivitaDidatticaRepository;
-	
+
 	@Autowired
 	@Value("${url.studente.service}")
 	private String unidataaddress;
-	
+
 	/**
 	 * 
 	 * @param request
@@ -96,9 +90,8 @@ public class CorsoInteresseController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studenteDB = studenteRepository.findOne(userId);
-			
-			
-			if(studenteDB == null){
+
+			if (studenteDB == null) {
 				StudentInfoService studentConnector = new StudentInfoService(
 						unidataaddress);
 
@@ -109,22 +102,19 @@ public class CorsoInteresseController {
 				if (studentUniData == null)
 					return null;
 
-				UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
+				UniStudentMapper studentMapper = new UniStudentMapper(
+						profileaddress);
 
 				// converto e salvo nel db lo studente aggiornato
 				studenteDB = studentMapper.convert(studentUniData, token);
 
 				studenteDB = studenteRepository.save(studenteDB);
 			}
-			
-			
-			
-			
+
 			List<CorsoInteresse> ci = new ArrayList<CorsoInteresse>();
-			
-			ci = corsoInteresseRepository.findCorsoInteresseByStudenteId(studenteDB.getId());
-			
-			
+
+			ci = corsoInteresseRepository
+					.findCorsoInteresseByStudenteId(studenteDB.getId());
 
 			return ci;
 
@@ -134,9 +124,8 @@ public class CorsoInteresseController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
-	}	
-	
-	
+	}
+
 	/**
 	 * 
 	 * @param request
@@ -151,7 +140,8 @@ public class CorsoInteresseController {
 	@RequestMapping(method = RequestMethod.GET, value = "/corsointeresse/{adId}/seguito")
 	public @ResponseBody
 	CorsoInteresse isCorsoInteresseSeguito(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("adId") long adId)
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("adId") long adId)
 
 	throws IOException {
 		try {
@@ -165,9 +155,8 @@ public class CorsoInteresseController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studenteDB = studenteRepository.findOne(userId);
-			
-			
-			if(studenteDB == null){
+
+			if (studenteDB == null) {
 				StudentInfoService studentConnector = new StudentInfoService(
 						unidataaddress);
 
@@ -178,23 +167,25 @@ public class CorsoInteresseController {
 				if (studentUniData == null)
 					return null;
 
-				UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
+				UniStudentMapper studentMapper = new UniStudentMapper(
+						profileaddress);
 
 				// converto e salvo nel db lo studente aggiornato
 				studenteDB = studentMapper.convert(studentUniData, token);
 
 				studenteDB = studenteRepository.save(studenteDB);
 			}
-			
-			
-			AttivitaDidattica aDidattica = attivitaDidatticaRepository.findOne(adId);
-						
+
+			AttivitaDidattica aDidattica = attivitaDidatticaRepository
+					.findOne(adId);
+
 			CorsoInteresse ci = new CorsoInteresse();
-			
-			ci = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studenteDB.getId(), aDidattica.getAdId());
-			
+
+			ci = corsoInteresseRepository
+					.findCorsoInteresseByAttivitaIdAndStudenteId(
+							studenteDB.getId(), aDidattica.getAdId());
+
 			return ci;
-			
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -202,11 +193,8 @@ public class CorsoInteresseController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
-	}	
-	
-	
-	
-	
+	}
+
 	/**
 	 * 
 	 * @param request
@@ -216,20 +204,23 @@ public class CorsoInteresseController {
 	 * @return boolean
 	 * @throws IOException
 	 * 
-	 * Dato un corso restituisce al client true se il corso � di interesse dello studente altrimenti false 
+	 *             Dato un corso restituisce al client true se il corso � di
+	 *             interesse dello studente altrimenti false
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping(method = RequestMethod.POST, value = "/corsointeresse/{adId}/seguo")
 	//
 	public @ResponseBody
 	boolean setCorsoAsFollowUnflollow(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("adId") Long idAttivitaDidattica)
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("adId") Long idAttivitaDidattica)
 
 	throws IOException {
 		try {
-			
+
 			logger.info("/corsointeresse/{adId}/seguo");
-			
+
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
@@ -238,32 +229,33 @@ public class CorsoInteresseController {
 
 			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
-			AttivitaDidattica aDidattica = attivitaDidatticaRepository.findOne(idAttivitaDidattica);
-			
-			
-			CorsoInteresse cInteresse = corsoInteresseRepository.findCorsoInteresseByAttivitaIdAndStudenteId(studente.getId(), aDidattica.getAdId());
-			
-			if(cInteresse == null){
-				
-				if(aDidattica == null)
+
+			AttivitaDidattica aDidattica = attivitaDidatticaRepository
+					.findOne(idAttivitaDidattica);
+
+			CorsoInteresse cInteresse = corsoInteresseRepository
+					.findCorsoInteresseByAttivitaIdAndStudenteId(
+							studente.getId(), aDidattica.getAdId());
+
+			if (cInteresse == null) {
+
+				if (aDidattica == null)
 					return false;
-				
+
 				cInteresse = new CorsoInteresse();
 				cInteresse.setId(aDidattica.getAdId());
 				cInteresse.setAttivitaDidattica(aDidattica);
 				cInteresse.setStudenteId(studente.getId());
 				corsoInteresseRepository.save(cInteresse);
-			}else{
-				if(!cInteresse.isCorsoCarriera())
+			} else {
+				if (!cInteresse.isCorsoCarriera())
 					corsoInteresseRepository.delete(cInteresse);
 				else
 					return false;
 			}
-			
+
 			return true;
-			
-			
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
@@ -271,21 +263,13 @@ public class CorsoInteresseController {
 		}
 		return false;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
 	 * @return String
 	 * 
-	 * Ottiene il token riferito alla request
+	 *         Ottiene il token riferito alla request
 	 * 
 	 */
 	private String getToken(HttpServletRequest request) {

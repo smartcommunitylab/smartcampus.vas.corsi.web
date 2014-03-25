@@ -1,19 +1,14 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,13 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoInteresse;
-import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
-import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
-import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.CorsoCarrieraMapper;
 import eu.trentorise.smartcampus.corsi.util.UniStudentMapper;
@@ -351,7 +343,7 @@ public class CorsoCarrieraController {
 					cc.setCod(corsoInteresse.getAttivitaDidattica().getAdCod());
 					cc.setName(corsoInteresse.getAttivitaDidattica()
 							.getDescription());
-					cc.setResult("0");
+					cc.setResult("-1");
 
 					corsoCarrieraList.add(cc);
 				}

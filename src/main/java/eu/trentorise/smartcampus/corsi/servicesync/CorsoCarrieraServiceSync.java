@@ -72,10 +72,10 @@ public class CorsoCarrieraServiceSync {
 	
 	String client_auth_token = "6d6ed274-4db7-4d9c-8c78-0a519ff33625";
 	
-	private final String client_id = "b8fcb94d-b4cf-438f-802a-c0a560734c88";
-	private final String client_secret_mobile = "186b10c3-1f14-4833-9728-14eaa6c27891";
-	private final String client_secret = "536560ac-cb74-4e1b-86a1-ef2c06c3313a";
-	private final String grant_type = "client_credentials";
+//	private final String client_id = "b8fcb94d-b4cf-438f-802a-c0a560734c88";
+//	private final String client_secret_mobile = "186b10c3-1f14-4833-9728-14eaa6c27891";
+//	private final String client_secret = "536560ac-cb74-4e1b-86a1-ef2c06c3313a";
+//	private final String grant_type = "client_credentials";
 	
 	/**
 	 * 

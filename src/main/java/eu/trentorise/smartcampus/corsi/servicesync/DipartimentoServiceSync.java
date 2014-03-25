@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -118,17 +117,17 @@ public class DipartimentoServiceSync {
 	}
 	
 	
-	/**
-	 * 
-	 * @param request
-	 * @return String
-	 * 
-	 *         Ottiene il token riferito alla request
-	 * 
-	 */
-	private String getToken(HttpServletRequest request) {
-		return (String) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-	}
+//	/**
+//	 * 
+//	 * @param request
+//	 * @return String
+//	 * 
+//	 *         Ottiene il token riferito alla request
+//	 * 
+//	 */
+//	private String getToken(HttpServletRequest request) {
+//		return (String) SecurityContextHolder.getContext().getAuthentication()
+//				.getPrincipal();
+//	}
 
 }

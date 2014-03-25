@@ -1,7 +1,6 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -16,16 +15,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sun.xml.bind.v2.runtime.output.Encoded;
-
-import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.Notification;
 import eu.trentorise.smartcampus.corsi.model.SyncData;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
@@ -33,8 +28,6 @@ import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.network.JsonUtils;
 import eu.trentorise.smartcampus.network.RemoteConnector;
-import eu.trentorise.smartcampus.profileservice.BasicProfileService;
-import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("notificheController")
 public class NotificheController {
@@ -45,27 +38,27 @@ public class NotificheController {
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
-	
+
 	@Autowired
 	private StudenteRepository studenteRepository;
-	
+
 	@Autowired
 	private CorsoCarrieraRepository corsoCarrieraRepository;
-	
+
 	@Autowired
 	@Value("${communicator.address}")
 	private String communicatoraddress;
-	
+
 	// client id studymate
 	@Autowired
 	@Value("${studymate.client.id}")
 	private String client_id;
-	
+
 	// client secret studymate
 	@Autowired
 	@Value("${studymate.client.secret}")
 	private String client_secret;
-	
+
 	/**
 	 * 
 	 * @param request
@@ -74,69 +67,74 @@ public class NotificheController {
 	 * @return Studente
 	 * @throws IOException
 	 * 
-	 * Restituisce i dati dello studente riferiti allo studente che effetua la richiesta
+	 *             Restituisce i dati dello studente riferiti allo studente che
+	 *             effetua la richiesta
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/notifiche/type/{type}/date/{date_from}")
 	public @ResponseBody
 	List<Notification> getInfoStudentFromId(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("type") String type, @PathVariable("date_from") long date_from)
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("type") String type,
+			@PathVariable("date_from") long date_from)
 
 	throws IOException {
 		try {
 
 			logger.info("/notifiche/type/{type}/date/{date_from}");
 
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
-			
-			EasyTokenManger clientTokenManager = new EasyTokenManger(profileaddress, client_id, client_secret);
-			String client_auth_token = clientTokenManager.getClientSmartCampusToken();
-			
-			
+//			String token = getToken(request);
+//			BasicProfileService service = new BasicProfileService(
+//					profileaddress);
+//			BasicProfile profile = service.getBasicProfile(token);
+//			Long userId = Long.valueOf(profile.getUserId());
+
+			EasyTokenManger clientTokenManager = new EasyTokenManger(
+					profileaddress, client_id, client_secret);
+			String client_auth_token = clientTokenManager
+					.getClientSmartCampusToken();
+
 			String json = RemoteConnector.getJSON(communicatoraddress,
-					"synctype?since=0&type="+type, client_auth_token);
-			
+					"synctype?since=0&type=" + type, client_auth_token);
+
 			SyncData notificheSync = JsonUtils.toObject(json, SyncData.class);
-			
+
 			Set<String> setKeys = notificheSync.getUpdated().keySet();
 			Iterator<String> iteratorKeys = setKeys.iterator();
-			
+
 			List<Notification> notificationsList = null;
 			List<Notification> notificationsListAll = new ArrayList<Notification>();
-			
+
 			while (iteratorKeys.hasNext()) {
 				String key = iteratorKeys.next();
-				
+
 				notificationsList = notificheSync.getUpdated().get(key);
-				
-				Iterator<Notification> iteratorNotification = notificationsList.iterator();
+
+				Iterator<Notification> iteratorNotification = notificationsList
+						.iterator();
 				Notification notification = null;
-				while(iteratorNotification.hasNext()){
+				while (iteratorNotification.hasNext()) {
 					notification = iteratorNotification.next();
-					if(notification.getTimestamp() < date_from){
+					if (notification.getTimestamp() < date_from) {
 						iteratorNotification.remove();
 					}
 				}
-				
+
 				notificationsListAll.addAll(notificationsList);
-				
-			}			
-			
-			Collections.sort(notificationsListAll, new Comparator<Notification>() {
-				  public int compare(Notification e1, Notification e2) {
 
-				      Long millisecondE1 = e1.getTimestamp();
-				      Long millisecondE2 = e2.getTimestamp();
-				      
-				      return millisecondE2.compareTo(millisecondE1);
-				  }
-				});
+			}
 
-			
+			Collections.sort(notificationsListAll,
+					new Comparator<Notification>() {
+						public int compare(Notification e1, Notification e2) {
+
+							Long millisecondE1 = e1.getTimestamp();
+							Long millisecondE2 = e2.getTimestamp();
+
+							return millisecondE2.compareTo(millisecondE1);
+						}
+					});
+
 			return notificationsListAll;
 
 		} catch (Exception e) {
@@ -146,18 +144,17 @@ public class NotificheController {
 		return null;
 	}
 
-	
-	/**
-	 * 
-	 * @param request
-	 * @return String
-	 * 
-	 * Ottiene il token riferito alla request
-	 * 
-	 */
-	private String getToken(HttpServletRequest request) {
-		return (String) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-	}
-	
+//	/**
+//	 * 
+//	 * @param request
+//	 * @return String
+//	 * 
+//	 *         Ottiene il token riferito alla request
+//	 * 
+//	 */
+//	private String getToken(HttpServletRequest request) {
+//		return (String) SecurityContextHolder.getContext().getAuthentication()
+//				.getPrincipal();
+//	}
+
 }

@@ -28,7 +28,7 @@ public class EventoId implements Serializable {
 	// ora fine
 	@Column(name = "STOP")
 	private Time stop;
-	
+
 	@Column(name = "STUDENTE")
 	private long idStudente;
 
@@ -43,7 +43,7 @@ public class EventoId implements Serializable {
 		// TODO Auto-generated method stub
 		return super.equals(obj);
 	}
-	
+
 	public Time getStart() {
 		return start;
 	}
@@ -59,7 +59,7 @@ public class EventoId implements Serializable {
 	public void setStop(Time stop) {
 		this.stop = stop;
 	}
-	
+
 	public Date getDate() {
 		return date;
 	}
@@ -75,7 +75,7 @@ public class EventoId implements Serializable {
 	public void setIdEventAd(long idEventAd) {
 		this.idEventAd = idEventAd;
 	}
-	
+
 	public long getIdStudente() {
 		return idStudente;
 	}

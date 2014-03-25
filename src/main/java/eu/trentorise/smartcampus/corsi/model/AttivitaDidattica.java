@@ -7,8 +7,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByCdsId", query = "select ad from AttivitaDidattica ad where ad.cds_id = ?1"),
-				@NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByAdCod", query = "select ad from AttivitaDidattica ad where ad.adCod = ?1")})
+@NamedQueries({
+		@NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByCdsId", query = "select ad from AttivitaDidattica ad where ad.cds_id = ?1"),
+		@NamedQuery(name = "AttivitaDidattica.findAttivitaDidatticaByAdCod", query = "select ad from AttivitaDidattica ad where ad.adCod = ?1") })
 public class AttivitaDidattica extends BasicEntity {
 
 	/**
@@ -25,7 +26,7 @@ public class AttivitaDidattica extends BasicEntity {
 
 	@Column(name = "DESCRIPTION")
 	private String description;
-	
+
 	@Column(name = "COURSE_DESCRIPTION")
 	private String courseDescription;
 
@@ -172,8 +173,6 @@ public class AttivitaDidattica extends BasicEntity {
 		this.courseDescription = courseDescription;
 	}
 
-	
-	
 	// public List<String> getFatPart() {
 	// return fatPart;
 	// }

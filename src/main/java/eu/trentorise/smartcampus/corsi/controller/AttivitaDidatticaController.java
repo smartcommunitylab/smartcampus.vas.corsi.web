@@ -2,10 +2,8 @@ package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +24,6 @@ import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
-import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
@@ -34,20 +31,15 @@ import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.servicesync.CorsoLaureaServiceSync;
-import eu.trentorise.smartcampus.corsi.util.CorsoCarrieraMapper;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
-import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExams;
-
 
 @Controller("attivitaDidatticaController")
 public class AttivitaDidatticaController {
 
-	
 	private static final Logger logger = Logger
 			.getLogger(AttivitaDidatticaController.class);
-	
+
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
@@ -68,22 +60,18 @@ public class AttivitaDidatticaController {
 	@Value("${url.studente.service}")
 	private String unidataaddress;
 
-
 	@Autowired
 	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
-	
+
 	@Autowired
 	private CorsoLaureaRepository corsoLaureaRepository;
 
 	@Autowired
 	private CorsoLaureaServiceSync controllerSyncCorsoLaurea;
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -98,15 +86,16 @@ public class AttivitaDidatticaController {
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/{id_ad}")
 	public @ResponseBody
 	AttivitaDidattica getAttivitaDidatticaById(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("id_ad") Long id_ad)
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_ad") Long id_ad)
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/"+id_ad);
-			
+			logger.info("/attivitadidattica/" + id_ad);
+
 			AttivitaDidattica getAttivitaDidattica = new AttivitaDidattica();
 			getAttivitaDidattica = attivitaDidatticaRepository.findOne(id_ad);
-			
+
 			return getAttivitaDidattica;
 
 		} catch (Exception e) {
@@ -116,9 +105,7 @@ public class AttivitaDidatticaController {
 		}
 		return null;
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -132,24 +119,30 @@ public class AttivitaDidatticaController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/corsolaurea/{id_cds}")
 	public @ResponseBody
-	List<AttivitaDidattica> getAttivitaDidatticaByCds(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("id_cds") Long id_cds)
+	List<AttivitaDidattica> getAttivitaDidatticaByCds(
+			HttpServletRequest request, HttpServletResponse response,
+			HttpSession session, @PathVariable("id_cds") Long id_cds)
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/corsolaurea/"+id_cds);
-			
+			logger.info("/attivitadidattica/corsolaurea/" + id_cds);
+
 			List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
-			getAttivitaDidattica = attivitaDidatticaRepository.findAttivitaDidatticaByCdsId(id_cds);
-			
-			Collections.sort(getAttivitaDidattica, new Comparator<AttivitaDidattica>() {
-				  public int compare(AttivitaDidattica e1, AttivitaDidattica e2) {
-				      if (e1.getDescription() == null || e2.getDescription() == null)
-				        return 0;
-				      return e1.getDescription().compareTo(e2.getDescription());
-				  }
-				});
-			
+			getAttivitaDidattica = attivitaDidatticaRepository
+					.findAttivitaDidatticaByCdsId(id_cds);
+
+			Collections.sort(getAttivitaDidattica,
+					new Comparator<AttivitaDidattica>() {
+						public int compare(AttivitaDidattica e1,
+								AttivitaDidattica e2) {
+							if (e1.getDescription() == null
+									|| e2.getDescription() == null)
+								return 0;
+							return e1.getDescription().compareTo(
+									e2.getDescription());
+						}
+					});
+
 			return getAttivitaDidattica;
 
 		} catch (Exception e) {
@@ -159,9 +152,7 @@ public class AttivitaDidatticaController {
 		}
 		return null;
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -175,35 +166,41 @@ public class AttivitaDidatticaController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/dipartimento/{id_dip}")
 	public @ResponseBody
-	List<AttivitaDidattica> getAttivitaDidatticaByDipartimento(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("id_dip") Long id_dip)
+	List<AttivitaDidattica> getAttivitaDidatticaByDipartimento(
+			HttpServletRequest request, HttpServletResponse response,
+			HttpSession session, @PathVariable("id_dip") Long id_dip)
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/dipartimento/"+id_dip);
-			
+			logger.info("/attivitadidattica/dipartimento/" + id_dip);
+
 			Dipartimento dipartimento = dipartimentoRepository.findOne(id_dip);
-			
-			List<CorsoLaurea> listCds = corsoLaureaRepository.getCorsiLaureaByDipartimento(dipartimento);
-			
+
+			List<CorsoLaurea> listCds = corsoLaureaRepository
+					.getCorsiLaureaByDipartimento(dipartimento);
+
 			List<AttivitaDidattica> attivitaAllByDip = new ArrayList<AttivitaDidattica>();
-			
+
 			for (CorsoLaurea corsoLaurea : listCds) {
 				List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
-				getAttivitaDidattica = attivitaDidatticaRepository.findAttivitaDidatticaByCdsId(corsoLaurea.getCdsId());
-				
+				getAttivitaDidattica = attivitaDidatticaRepository
+						.findAttivitaDidatticaByCdsId(corsoLaurea.getCdsId());
+
 				attivitaAllByDip.addAll(getAttivitaDidattica);
 			}
 
-			
-			Collections.sort(attivitaAllByDip, new Comparator<AttivitaDidattica>() {
-				  public int compare(AttivitaDidattica e1, AttivitaDidattica e2) {
-				      if (e1.getDescription() == null || e2.getDescription() == null)
-				        return 0;
-				      return e1.getDescription().compareTo(e2.getDescription());
-				  }
-				});
-			
+			Collections.sort(attivitaAllByDip,
+					new Comparator<AttivitaDidattica>() {
+						public int compare(AttivitaDidattica e1,
+								AttivitaDidattica e2) {
+							if (e1.getDescription() == null
+									|| e2.getDescription() == null)
+								return 0;
+							return e1.getDescription().compareTo(
+									e2.getDescription());
+						}
+					});
+
 			return attivitaAllByDip;
 
 		} catch (Exception e) {
@@ -213,10 +210,7 @@ public class AttivitaDidatticaController {
 		}
 		return null;
 	}
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -236,22 +230,28 @@ public class AttivitaDidatticaController {
 	throws IOException {
 		try {
 			logger.info("/attivitadidattica/all");
-			
+
 			List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
 			getAttivitaDidattica = attivitaDidatticaRepository.findAll();
-			
-			Collections.sort(getAttivitaDidattica, new Comparator<AttivitaDidattica>() {
-				  public int compare(AttivitaDidattica e1, AttivitaDidattica e2) {
-				      if (e1.getDescription() == null || e2.getDescription() == null)
-				        return 0;
-				      
-				      CorsoLaurea e1Cds = corsoLaureaRepository.findOne(e1.getCds_id());
-				      CorsoLaurea e2Cds = corsoLaureaRepository.findOne(e2.getCds_id());
-				      
-				      return e1Cds.getDescripion().compareTo(e2Cds.getDescripion());
-				  }
-				});
-			
+
+			Collections.sort(getAttivitaDidattica,
+					new Comparator<AttivitaDidattica>() {
+						public int compare(AttivitaDidattica e1,
+								AttivitaDidattica e2) {
+							if (e1.getDescription() == null
+									|| e2.getDescription() == null)
+								return 0;
+
+							CorsoLaurea e1Cds = corsoLaureaRepository
+									.findOne(e1.getCds_id());
+							CorsoLaurea e2Cds = corsoLaureaRepository
+									.findOne(e2.getCds_id());
+
+							return e1Cds.getDescripion().compareTo(
+									e2Cds.getDescripion());
+						}
+					});
+
 			return getAttivitaDidattica;
 
 		} catch (Exception e) {
@@ -262,9 +262,6 @@ public class AttivitaDidatticaController {
 		return null;
 	}
 
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -279,12 +276,13 @@ public class AttivitaDidatticaController {
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/{ad_cod}/passed")
 	public @ResponseBody
 	boolean isAttivitaDidatticaPassed(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("ad_cod") String adCod)
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("ad_cod") String adCod)
 
 	throws IOException {
 		try {
 			logger.info("/attivitadidattica/{ad_cod}/passed");
-			
+
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
@@ -293,24 +291,21 @@ public class AttivitaDidatticaController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studenteDB = studenteRepository.findOne(userId);
-			
-			
-			
+
 			CorsoCarriera corsoCarriera = corsoCarrieraRepository
-					.findCorsoCarrieraByAdCodAndStudenteId(adCod, studenteDB.getId());
+					.findCorsoCarrieraByAdCodAndStudenteId(adCod,
+							studenteDB.getId());
 
 			if (corsoCarriera == null) {
 				// prendo i dati da unidata e li mappo
 				return false;
 			}
-			
+
 			if (corsoCarriera.getResult().equals("0")) {
 				return false;
-			}else{
+			} else {
 				return true;
 			}
-			
-			
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -320,7 +315,6 @@ public class AttivitaDidatticaController {
 		return false;
 	}
 
-	
 	/**
 	 * 
 	 * @param request
@@ -333,5 +327,5 @@ public class AttivitaDidatticaController {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 	}
-	
+
 }

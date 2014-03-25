@@ -10,105 +10,102 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({
-	@NamedQuery(name = "CorsoCarriera.findCorsoCarrieraByStudenteId", query = "select cc from CorsoCarriera cc where cc.studenteId = ?1"),
-	@NamedQuery(name = "CorsoCarriera.findCorsoCarrieraByAdCodAndStudenteId", query = "select cc from CorsoCarriera cc where cc.cod = ?1 and cc.studenteId = ?2")})
+		@NamedQuery(name = "CorsoCarriera.findCorsoCarrieraByStudenteId", query = "select cc from CorsoCarriera cc where cc.studenteId = ?1"),
+		@NamedQuery(name = "CorsoCarriera.findCorsoCarrieraByAdCodAndStudenteId", query = "select cc from CorsoCarriera cc where cc.cod = ?1 and cc.studenteId = ?2") })
 public class CorsoCarriera extends BasicEntity {
 
-		/**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1306548062859361763L;
 
-		@Id
-		@Column(name = "ID")
-		private long id;
+	@Id
+	@Column(name = "ID")
+	private long id;
 
-		@Column(name = "COD")
-		private String cod;
-		
-		@Column(name = "NAME")
-		private String name;
+	@Column(name = "COD")
+	private String cod;
 
-		@Column(name = "RESULT")
-		private String result;
-		
-		@Column(name = "LODE")
-		private boolean lode;
+	@Column(name = "NAME")
+	private String name;
 
-		@Column(name = "weight")
-		private String weight;
-		
-		@Column(name = "DATE")
-		private Date date;
-		
-		@Column(name = "STUDENTE_ID")
-		private long studenteId;
+	@Column(name = "RESULT")
+	private String result;
 
-		public long getId() {
-			return id;
-		}
+	@Column(name = "LODE")
+	private boolean lode;
 
-		public void setId(long id) {
-			this.id = id;
-		}
+	@Column(name = "weight")
+	private String weight;
 
-		public String getCod() {
-			return cod;
-		}
+	@Column(name = "DATE")
+	private Date date;
 
-		public void setCod(String cod) {
-			this.cod = cod;
-		}
+	@Column(name = "STUDENTE_ID")
+	private long studenteId;
 
-		public String getName() {
-			return name;
-		}
+	public long getId() {
+		return id;
+	}
 
-		public void setName(String name) {
-			this.name = name;
-		}
+	public void setId(long id) {
+		this.id = id;
+	}
 
-		public String getResult() {
-			return result;
-		}
+	public String getCod() {
+		return cod;
+	}
 
-		public void setResult(String result) {
-			this.result = result;
-		}
+	public void setCod(String cod) {
+		this.cod = cod;
+	}
 
-		public boolean isLode() {
-			return lode;
-		}
+	public String getName() {
+		return name;
+	}
 
-		public void setLode(boolean lode) {
-			this.lode = lode;
-		}
+	public void setName(String name) {
+		this.name = name;
+	}
 
-		public String getWeight() {
-			return weight;
-		}
+	public String getResult() {
+		return result;
+	}
 
-		public void setWeight(String weight) {
-			this.weight = weight;
-		}
+	public void setResult(String result) {
+		this.result = result;
+	}
 
-		public Date getDate() {
-			return date;
-		}
+	public boolean isLode() {
+		return lode;
+	}
 
-		public void setDate(Date date) {
-			this.date = date;
-		}
+	public void setLode(boolean lode) {
+		this.lode = lode;
+	}
 
-		public long getStudente() {
-			return studenteId;
-		}
+	public String getWeight() {
+		return weight;
+	}
 
-		public void setStudente(long studenteId) {
-			this.studenteId = studenteId;
-		}
+	public void setWeight(String weight) {
+		this.weight = weight;
+	}
 
-		
-		
-	
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public long getStudente() {
+		return studenteId;
+	}
+
+	public void setStudente(long studenteId) {
+		this.studenteId = studenteId;
+	}
+
 }

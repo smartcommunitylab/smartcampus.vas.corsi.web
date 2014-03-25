@@ -1,6 +1,5 @@
 package eu.trentorise.smartcampus.corsi.util;
 
-
 import java.io.IOException;
 
 import org.apache.http.HttpEntity;
@@ -14,14 +13,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
 
 import eu.trentorise.smartcampus.aac.AACException;
 import eu.trentorise.smartcampus.aac.model.TokenData;
 
 public class EasyTokenManger {
-
-	private static final Logger log = Logger.getLogger(EasyTokenManger.class);
 
 	/** address of the code validation endpoint */
 	private static final String PATH_TOKEN = "oauth/token";

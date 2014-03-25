@@ -33,11 +33,8 @@ public class UniCourseDegreeMapper {
 
 	@Autowired
 	private CorsoLaureaRepository corsoLaureaRepository;
-	
 
 	private BasicProfile basicProfile;
-
-	private String token;
 
 	private List<CorsoLaurea> corsiLaurea;
 
@@ -46,7 +43,8 @@ public class UniCourseDegreeMapper {
 	}
 
 	public List<CorsoLaurea> convert(List<CdsData> dataCds, String token,
-			DipartimentoRepository dipartimentoRepository, PianoStudiRepository pianoStudiRepository)
+			DipartimentoRepository dipartimentoRepository,
+			PianoStudiRepository pianoStudiRepository)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
@@ -69,15 +67,15 @@ public class UniCourseDegreeMapper {
 					PianoStudi pds = new PianoStudi();
 					pds.setPdsId(Long.parseLong(pdsData.getPdsId()));
 					pds.setPdsCod(pdsData.getPdsCod());
-					//pds.setCdsId(corsoLaurea);
+					// pds.setCdsId(corsoLaurea);
 					pdsList.add(pds);
 
 				}
 
 				corsoLaurea.setPds(pdsList);
-				
+
 				pianoStudiRepository.save(pdsList);
-				
+
 				Dipartimento dip = dipartimentoRepository.findOne(Long
 						.valueOf(cds.getFacId()));
 

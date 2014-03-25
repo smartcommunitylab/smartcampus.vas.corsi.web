@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
-import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.servicesync.CorsoLaureaServiceSync;
-import eu.trentorise.smartcampus.corsi.servicesync.DipartimentoServiceSync;
 
 @Controller("corsoLaureaController")
 public class CorsoLaureaController {
@@ -57,10 +55,10 @@ public class CorsoLaureaController {
 	throws IOException {
 		try {
 			logger.info("/corsolaurea/all");
-			
+
 			List<CorsoLaurea> getCorsiLaurea = new ArrayList<CorsoLaurea>();
 			getCorsiLaurea = corsoLaureaRepository.findAll();
-			
+
 			return getCorsiLaurea;
 
 		} catch (Exception e) {
@@ -102,7 +100,6 @@ public class CorsoLaureaController {
 			List<CorsoLaurea> getCds = corsoLaureaRepository
 					.getCorsiLaureaByDipartimento(dipartimentoRepository
 							.findOne(id_dipartimento));
-
 
 			return getCds;
 

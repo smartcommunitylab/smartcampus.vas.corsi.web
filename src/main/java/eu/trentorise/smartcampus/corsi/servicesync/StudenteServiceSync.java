@@ -1,7 +1,6 @@
 package eu.trentorise.smartcampus.corsi.servicesync;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.corsi.model.CorsoCarriera;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.CommentiRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
@@ -30,7 +28,6 @@ import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
 import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
-import eu.trentorise.smartcampus.unidataservice.model.StudentInfoExams;
 
 @Service("studenteServiceSync")
 @Configuration
@@ -75,7 +72,6 @@ public class StudenteServiceSync {
 	String client_auth_token = "6d6ed274-4db7-4d9c-8c78-0a519ff33625";
 	
 	private final String client_id = "b8fcb94d-b4cf-438f-802a-c0a560734c88";
-	private final String client_secret_mobile = "186b10c3-1f14-4833-9728-14eaa6c27891";
 	private final String client_secret = "536560ac-cb74-4e1b-86a1-ef2c06c3313a";
 	private final String grant_type = "client_credentials";
 
@@ -119,8 +115,8 @@ public class StudenteServiceSync {
 			 * Da rivedere la gestione della sincronizzazione degli esami:
 			 * adesso sincronizza sempre
 			 */
-			StudentInfoExams studentExamsUniData = studentConnector
-					.getStudentExams(client_auth_token, String.valueOf(id_studente));
+//			StudentInfoExams studentExamsUniData = studentConnector
+//					.getStudentExams(client_auth_token, String.valueOf(id_studente));
 
 			// ottengo da unidata lo studente
 			StudentInfoData studentUniData = studentConnector
@@ -187,8 +183,8 @@ public class StudenteServiceSync {
 			StudentInfoService studentConnector = new StudentInfoService(
 					unidataaddress);
 
-			StudentInfoExams studentExamsUniData = studentConnector
-					.getStudentExams(token);
+//			StudentInfoExams studentExamsUniData = studentConnector
+//					.getStudentExams(token);
 
 			// ottengo da unidata lo studente
 			StudentInfoData studentUniData = studentConnector
@@ -197,10 +193,10 @@ public class StudenteServiceSync {
 			if (studentUniData == null)
 				return null;
 
-			UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
+			//UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
 
-			List<CorsoCarriera> convertedEsse3Courses = studentMapper
-					.convertCoursesEsse3Student(studentExamsUniData, token);
+//			List<CorsoCarriera> convertedEsse3Courses = studentMapper
+//					.convertCoursesEsse3Student(studentExamsUniData, token);
 
 			studenteRepository.delete(studenteDB);
 

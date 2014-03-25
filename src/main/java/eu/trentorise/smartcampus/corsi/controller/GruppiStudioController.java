@@ -2,23 +2,17 @@ package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.derby.catalog.GetProcedureColumns;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,23 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mysql.jdbc.PreparedStatement;
-
-import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
-import eu.trentorise.smartcampus.communicator.model.EntityObject;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
-import eu.trentorise.smartcampus.corsi.model.Commento;
-import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
-import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
-import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
@@ -54,9 +40,8 @@ public class GruppiStudioController {
 		INVITO, AVVISO
 	}
 
-	private static final String CLIENT_ID = "b8fcb94d-b4cf-438f-802a-c0a560734c88";
-	private static final String CLIENT_SECRET = "536560ac-cb74-4e1b-86a1-ef2c06c3313a";
-	private static final String CLIENT = "bd4f112b-7951-4ab2-be8c-e504ac7bff15";
+//	private static final String CLIENT_ID = "b8fcb94d-b4cf-438f-802a-c0a560734c88";
+//	private static final String CLIENT_SECRET = "536560ac-cb74-4e1b-86a1-ef2c06c3313a";
 
 	private static final Logger logger = Logger
 			.getLogger(GruppiStudioController.class);
@@ -89,17 +74,15 @@ public class GruppiStudioController {
 
 	@Autowired
 	private GruppoDiStudioRepository gruppidistudioRepository;
-	
+
 	@Autowired
 	private AttivitaDidatticaRepository attivitaDidatticaRepository;
 
 	@Autowired
 	private StudenteRepository studenteRepository;
-	
+
 	@Autowired
 	private CorsoLaureaRepository corsoLaureaRepository;
-
-	private eu.trentorise.smartcampus.corsi.util.EasyTokenManger tkm;
 
 	// /////////////////////////////////////////////////////////////////////////
 	// METODI GET /////////////////////////////////////////////////////////////
@@ -177,8 +160,6 @@ public class GruppiStudioController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			Studente studente = studenteRepository.findOne(userId);
-
 			if (userId == null)
 				return null;
 
@@ -235,7 +216,8 @@ public class GruppiStudioController {
 				// Creare associazione su frequenze
 
 				// TEST
-				List<AttivitaDidattica> corsiEsse3 = attivitaDidatticaRepository.findAll();
+				List<AttivitaDidattica> corsiEsse3 = attivitaDidatticaRepository
+						.findAll();
 
 				String supera = null;
 				String interesse = null;
@@ -322,13 +304,6 @@ public class GruppiStudioController {
 
 			// mediationParserImpl.updateKeyWord(token);
 
-			// controllo se lo studente � presente nel db
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-
-
-			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-					communicatoraddress, appName);
-
 			List<String> users = new ArrayList<String>();
 			List<String> idsInvited = gruppodistudio.getListInvited(userId);
 
@@ -367,10 +342,9 @@ public class GruppiStudioController {
 			// clientSecret);
 			// communicatorConnector.sendAppNotification(n, appName, users,
 			// tkm.getClientSmartCampusToken());
-			EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
-					CLIENT_SECRET, profileaddress);
 
-			//communicatorConnector.sendAppNotification(n, appName, users,tManager.getClientSmartCampusToken());
+			// communicatorConnector.sendAppNotification(n, appName,
+			// users,tManager.getClientSmartCampusToken());
 
 			gruppodistudio.setId(-1); // setto l'id a -1 per evitare che il
 										// commento venga sovrascritto
@@ -427,10 +401,6 @@ public class GruppiStudioController {
 
 			// mediationParserImpl.updateKeyWord(token);
 
-			// controllo se lo studente � presente nel db
-			Studente studente = studenteRepository.findStudenteByUserId(userId);
-
-
 			GruppoDiStudio gdsFromDB = gruppidistudioRepository
 					.findOne(gruppodistudio.getId());
 
@@ -445,8 +415,8 @@ public class GruppiStudioController {
 			// 2 membri)
 			if (gdsFromDB.isVisible()) {
 
-				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-						communicatoraddress, appName);
+//				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+//						communicatoraddress, appName);
 
 				List<String> users = new ArrayList<String>();
 				List<String> idsInvited = gdsFromDB.getListInvited(userId);
@@ -486,10 +456,11 @@ public class GruppiStudioController {
 					n.setContent(mapGruppo);
 
 					// ottengo il client token
-					EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
-							CLIENT_SECRET, profileaddress);
+//					EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
+//							CLIENT_SECRET, profileaddress);
 
-					//communicatorConnector.sendAppNotification(n, appName, users, tManager.getClientSmartCampusToken());
+					// communicatorConnector.sendAppNotification(n, appName,
+					// users, tManager.getClientSmartCampusToken());
 
 				}
 			}
@@ -540,7 +511,7 @@ public class GruppiStudioController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			Studente studente = studenteRepository.findOne(userId);
+//			Studente studente = studenteRepository.findOne(userId);
 
 			if (userId == null)
 				return false;

@@ -1,4 +1,3 @@
-
 package eu.trentorise.smartcampus.corsi.model;
 
 import javax.persistence.Column;
@@ -11,28 +10,27 @@ import javax.persistence.NamedQuery;
 
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 
-
 @Entity
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @NamedQueries({
-	@NamedQuery(name = "Commento.getCommentoByCorsoApproved", query = "select c from Commento c where c.corso = ?1 and c.approved = true"), 
-	@NamedQuery(name = "Commento.getCommentoByStudenteApproved", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2 and c.approved = true"),
-	@NamedQuery(name = "Commento.getCommentoByCorsoAll", query = "select c from Commento c where c.corso = ?1"),
-	@NamedQuery(name = "Commento.getCommentoByStudenteAll", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })
+		@NamedQuery(name = "Commento.getCommentoByCorsoApproved", query = "select c from Commento c where c.corso = ?1 and c.approved = true"),
+		@NamedQuery(name = "Commento.getCommentoByStudenteApproved", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2 and c.approved = true"),
+		@NamedQuery(name = "Commento.getCommentoByCorsoAll", query = "select c from Commento c where c.corso = ?1"),
+		@NamedQuery(name = "Commento.getCommentoByStudenteAll", query = "select c from Commento c where c.id_studente = ?1 and c.corso = ?2") })
 public class Commento extends CommentBaseEntity {
 
-	public Commento(){
+	public Commento() {
 		super();
 	}
 
 	// corso di riferimento
 	@JoinColumn(name = "AD_ID")
 	private long corso;
-	
+
 	// utente che ha scritto commento
 	@JoinColumn(name = "ID_STUDENTE")
 	private long id_studente;
-	
+
 	// utente che ha scritto commento
 	@Column(name = "NOME_STUDENTE")
 	private String nome_studente;
@@ -61,15 +59,15 @@ public class Commento extends CommentBaseEntity {
 	@Column(name = "RATING_ESAME")
 	private Float rating_esame;
 
-//	@Override
-//    @Id  
-//	public Long getId() {
-//		return id;
-//	}
-//
-//	public void setId(Long id) {
-//		this.id = id;
-//	}
+	// @Override
+	// @Id
+	// public Long getId() {
+	// return id;
+	// }
+	//
+	// public void setId(Long id) {
+	// this.id = id;
+	// }
 
 	public long getId_studente() {
 		return id_studente;
@@ -87,13 +85,13 @@ public class Commento extends CommentBaseEntity {
 		this.id_studente = id_studente;
 	}
 
-//	public String getTesto() {
-//		return testo;
-//	}
-//
-//	public void setTesto(String testo) {
-//		this.testo = testo;
-//	}
+	// public String getTesto() {
+	// return testo;
+	// }
+	//
+	// public void setTesto(String testo) {
+	// this.testo = testo;
+	// }
 
 	public String getData_inserimento() {
 		return data_inserimento;
@@ -143,15 +141,15 @@ public class Commento extends CommentBaseEntity {
 		this.rating_esame = rating_esame;
 	}
 
-//	@Override
-//	public boolean isApproved() {
-//		return approved;
-//	}
-//
-//	@Override
-//	public void setApproved(boolean approved) {
-//		this.approved = approved;
-//	}
+	// @Override
+	// public boolean isApproved() {
+	// return approved;
+	// }
+	//
+	// @Override
+	// public void setApproved(boolean approved) {
+	// this.approved = approved;
+	// }
 
 	public String getNome_studente() {
 		return nome_studente;

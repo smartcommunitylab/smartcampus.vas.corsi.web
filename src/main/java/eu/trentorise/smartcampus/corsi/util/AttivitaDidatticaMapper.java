@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
-import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.model.AdData;
 
 public class AttivitaDidatticaMapper {
@@ -20,22 +19,19 @@ public class AttivitaDidatticaMapper {
 	@Autowired
 	private DipartimentoRepository dipartimentoRepository;
 
-	private BasicProfile basicProfile;
-
-	private String token;
-
 	private List<AttivitaDidattica> adList;
-	
+
 	public AttivitaDidatticaMapper() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public List<AttivitaDidattica> convert(List<AdData> attDidattiche, long idCds, String aaOrd, String offYear, String token)
+	public List<AttivitaDidattica> convert(List<AdData> attDidattiche,
+			long idCds, String aaOrd, String offYear, String token)
 			throws IllegalArgumentException, SecurityException,
 			ProfileServiceException {
 
 		adList = new ArrayList<AttivitaDidattica>();
-		
+
 		for (AdData ad : attDidattiche) {
 			// wrappo i dati dei dipartimenti
 			AttivitaDidattica attivitaDidattica = new AttivitaDidattica();
@@ -48,10 +44,9 @@ public class AttivitaDidatticaMapper {
 			attivitaDidattica.setOrdYear(aaOrd);
 			adList.add(attivitaDidattica);
 		}
-		
-		
+
 		return adList;
 
 	}
-	
+
 }
