@@ -97,8 +97,8 @@ public class ScheduledServiceSync {
 	 * 
 	 * @throws IOException
 	 */
-	// @Scheduled(cron = "0 0 0 1 * ?")
-	@Scheduled(fixedDelay = 1196000000)
+	@Scheduled(cron = "0 0 0 1 * ?")
+	//@Scheduled(fixedDelay = 1196000000)
 	public @ResponseBody
 	void getDipartimentoAndCdsSync()
 
@@ -185,7 +185,7 @@ public class ScheduledServiceSync {
 
 				attivitaDidatticaRepository.save(attivitaDidatticaList);
 			}
-			
+
 			getCalendarFull();
 
 		} catch (Exception e) {
@@ -202,7 +202,7 @@ public class ScheduledServiceSync {
 	 * 
 	 * @throws IOException
 	 */
-	// @Scheduled(fixedDelay = 1209600000)
+	//@Scheduled(fixedDelay = 1209600000)
 	public @ResponseBody
 	void getCalendar()
 
@@ -271,8 +271,9 @@ public class ScheduledServiceSync {
 	 * 
 	 * @throws IOException
 	 */
+	@SuppressWarnings("deprecation")
 	// @Scheduled(cron = "0 0 1 * * ?")
-	@Scheduled(cron = "0 0 1 * * ?")
+	@Scheduled(cron = "0 0 * * * *")
 	public @ResponseBody
 	void getCalendarFull()
 
@@ -309,12 +310,20 @@ public class ScheduledServiceSync {
 																							// tutti
 																							// gli
 																							// anni
-						@SuppressWarnings("deprecation")
-						List<CalendarCdsData> dataCalendarOfWeek = uniConnector
-								.getCdsCalendar(client_auth_token,
-										String.valueOf(cl.getCdsId()),
-										String.valueOf(year));
+						List<CalendarCdsData> dataCalendarOfWeek = null;
+						int tentativi = 0;
 
+						do {
+
+							dataCalendarOfWeek = null;
+							if (tentativi <= 1) {
+								dataCalendarOfWeek = uniConnector
+										.getCdsCalendar(client_auth_token,
+												String.valueOf(cl.getCdsId()),
+												String.valueOf(year));
+								tentativi++;
+							}
+						} while (!(dataCalendarOfWeek.size() >= 1));
 						EventoMapper mapperEvento = new EventoMapper();
 						eventsMapped = mapperEvento.convert(dataCalendarOfWeek,
 								cl, year);

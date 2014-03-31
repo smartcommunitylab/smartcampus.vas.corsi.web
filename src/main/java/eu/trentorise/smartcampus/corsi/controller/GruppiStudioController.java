@@ -301,6 +301,9 @@ public class GruppiStudioController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
+			
+			//gruppodistudio.getEventoId().setIdStudente(userId);
+			//gruppodistudio.getEventoId().setIdEventAd(-1);
 
 			// mediationParserImpl.updateKeyWord(token);
 
@@ -495,7 +498,7 @@ public class GruppiStudioController {
 	/*
 	 * Cancella lo studente dal gruppo
 	 */
-	@RequestMapping(method = RequestMethod.DELETE, value = "/gruppodistudio/delete/me")
+	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/delete/me")
 	public @ResponseBody
 	boolean deleteMeByGds(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,

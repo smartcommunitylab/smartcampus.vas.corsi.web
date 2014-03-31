@@ -29,6 +29,9 @@ public class GruppoDiStudio {
 
 	@Column(name = "STUDENTI_GRUPPO")
 	private String idsStudenti;
+	
+	@Column(name = "NOME_ATTIVITA")
+	private String materia;
 
 	@Transient
 	private List<Studente> studentiGruppo;
@@ -140,6 +143,16 @@ public class GruppoDiStudio {
 		}
 
 		return listIdsInvited;
+	}
+	
+	
+
+	public String getMateria() {
+		return materia;
+	}
+
+	public void setMateria(String materia) {
+		this.materia = materia;
 	}
 
 	public void removeStudenteGruppo(long id2) {

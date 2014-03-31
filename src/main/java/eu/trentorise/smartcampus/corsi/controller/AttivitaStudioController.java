@@ -180,8 +180,8 @@ public class AttivitaStudioController {
 					EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
 							CLIENT_SECRET, profileaddress);
 
-					communicatorConnector.sendAppNotification(n, appName,
-							users, tManager.getClientSmartCampusToken());
+//					communicatorConnector.sendAppNotification(n, appName,
+//							users, tManager.getClientSmartCampusToken());
 
 				}
 
@@ -272,8 +272,8 @@ public class AttivitaStudioController {
 				EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
 						CLIENT_SECRET, profileaddress);
 
-				communicatorConnector.sendAppNotification(n, appName, users,
-						tManager.getClientSmartCampusToken());
+//				communicatorConnector.sendAppNotification(n, appName, users,
+//						tManager.getClientSmartCampusToken());
 			}
 
 			AttivitaDiStudio attivitadistudioAggiornato = attivitastudioRepository
@@ -314,7 +314,7 @@ public class AttivitaStudioController {
 	 *             Elimina un'attività di studio
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.DELETE, value = "/attivitadistudio/delete")
+	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/delete")
 	public @ResponseBody
 	boolean deleteAttivita(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -388,8 +388,8 @@ public class AttivitaStudioController {
 				EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
 						CLIENT_SECRET, profileaddress);
 
-				communicatorConnector.sendAppNotification(n, appName, users,
-						tManager.getClientSmartCampusToken());
+//				communicatorConnector.sendAppNotification(n, appName, users,
+//						tManager.getClientSmartCampusToken());
 			}
 
 			AttivitaDiStudio AttivitaFromDB = attivitastudioRepository

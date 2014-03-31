@@ -1,6 +1,7 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -319,8 +320,8 @@ public class CorsoCarrieraController {
 						.save(corsoCarrieraList);
 			}
 
-			if (corsoCarrieraList.size() == 0) {
-				return null;
+			if (corsoCarrieraList.size() == 0 || corsoCarrieraList == null) {
+				corsoCarrieraList = new ArrayList<CorsoCarriera>();
 			} else {
 				for (Iterator<CorsoCarriera> iterator = corsoCarrieraList
 						.iterator(); iterator.hasNext();) {
