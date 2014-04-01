@@ -111,6 +111,58 @@ public class GruppiStudioController {
 		}
 		return null;
 	}
+	
+	
+	
+	
+	
+	// /////////////////////////////////////////////////////////////////////////
+		// METODI GET /////////////////////////////////////////////////////////////
+		// /////////////////////////////////////////////////////////////////////////
+
+		/*
+		 * Ritorna tutti i corsi in versione lite
+		 */
+		@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/find")
+		public @ResponseBody
+		List<GruppoDiStudio> getgruppidistudioSearchToSubscribe(HttpServletRequest request,
+				HttpServletResponse response, HttpSession session)
+
+		throws IOException {
+			try {
+				logger.info("/gruppodistudio/find");
+				
+				String token = getToken(request);
+				BasicProfileService service = new BasicProfileService(
+						profileaddress);
+				BasicProfile profile = service.getBasicProfile(token);
+				Long userId = Long.valueOf(profile.getUserId());
+				
+				List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository
+						.findAll();
+
+				List<GruppoDiStudio> getGds = new ArrayList<GruppoDiStudio>();
+				for (GruppoDiStudio gruppoDiStudio : getgruppidistudio) {
+					List<Studente> listStudIscritti = gruppoDiStudio.getStudentiGruppo();
+					for (Studente studente : listStudIscritti) {
+						int i = 0;
+						if(studente.getId() == userId && i==0){
+							getGds.add(gruppoDiStudio);
+							i++;
+						}
+					}
+				}
+				return getGds;
+
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				e.printStackTrace();
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			}
+			return null;
+		}
+	
+	
 
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
@@ -540,18 +592,15 @@ public class GruppiStudioController {
 	}
 	
 	
-	/*
-	 * Cancella lo studente dal gruppo
-	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/change")
 	public @ResponseBody
 	boolean changeGds(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@RequestBody long gruppodistudio)
+			@RequestBody GruppoDiStudio gruppodistudio)
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/delete/me");
+			logger.info("/gruppodistudio/change");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -564,16 +613,10 @@ public class GruppiStudioController {
 			if (userId == null)
 				return false;
 
-			GruppoDiStudio gdsFromDB = gruppidistudioRepository
-					.findOne(gruppodistudio);
+			gruppidistudioRepository
+					.delete(gruppodistudio);
 
-			gdsFromDB.removeStudenteGruppo(userId);
-			gdsFromDB.setIfVisibleFromNumMembers();
-			// se il gruppo ha 0 membri lo elimino dal db
-			if (gdsFromDB.canRemoveGruppoDiStudioIfVoid())
-				gruppidistudioRepository.delete(gdsFromDB);
-			else
-				gruppidistudioRepository.save(gdsFromDB);
+			GruppoDiStudio gdsFromDB = gruppidistudioRepository.save(gruppodistudio);
 
 			return true;
 

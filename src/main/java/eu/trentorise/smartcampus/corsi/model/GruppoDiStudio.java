@@ -109,7 +109,7 @@ public class GruppoDiStudio {
 	public void setIfVisibleFromNumMembers() {
 		int numMembers = this.getIdsStudenti().split(",").length;
 
-		if (numMembers >= 2)
+		if (numMembers >= 1)
 			this.setVisible(true);
 		else
 			this.setVisible(false);
