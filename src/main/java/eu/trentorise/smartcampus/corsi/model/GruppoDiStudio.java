@@ -144,8 +144,6 @@ public class GruppoDiStudio {
 
 		return listIdsInvited;
 	}
-	
-	
 
 	public String getMateria() {
 		return materia;

@@ -502,7 +502,7 @@ public class GruppiStudioController {
 	public @ResponseBody
 	boolean deleteMeByGds(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@RequestBody long idGruppodistudio)
+			@RequestBody long gruppodistudio)
 
 	throws IOException {
 		try {
@@ -520,7 +520,52 @@ public class GruppiStudioController {
 				return false;
 
 			GruppoDiStudio gdsFromDB = gruppidistudioRepository
-					.findOne(idGruppodistudio);
+					.findOne(gruppodistudio);
+
+			gdsFromDB.removeStudenteGruppo(userId);
+			gdsFromDB.setIfVisibleFromNumMembers();
+			// se il gruppo ha 0 membri lo elimino dal db
+			if (gdsFromDB.canRemoveGruppoDiStudioIfVoid())
+				gruppidistudioRepository.delete(gdsFromDB);
+			else
+				gruppidistudioRepository.save(gdsFromDB);
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return false;
+	}
+	
+	
+	/*
+	 * Cancella lo studente dal gruppo
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/change")
+	public @ResponseBody
+	boolean changeGds(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@RequestBody long gruppodistudio)
+
+	throws IOException {
+		try {
+			logger.info("/gruppodistudio/delete/me");
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+//			Studente studente = studenteRepository.findOne(userId);
+
+			if (userId == null)
+				return false;
+
+			GruppoDiStudio gdsFromDB = gruppidistudioRepository
+					.findOne(gruppodistudio);
 
 			gdsFromDB.removeStudenteGruppo(userId);
 			gdsFromDB.setIfVisibleFromNumMembers();

@@ -1,7 +1,9 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio;
+import eu.trentorise.smartcampus.corsi.model.EventoId;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
@@ -124,6 +127,9 @@ public class AttivitaStudioController {
 						profileaddress);
 				BasicProfile profile = service.getBasicProfile(token);
 				Long userId = Long.valueOf(profile.getUserId());
+				
+				atDiStudio.getEventoId().setIdStudente(userId);
+				atDiStudio.getEventoId().setIdEventAd(-2);
 
 				// ottengo i membri che fanno parte del gruppo di studio
 				// relativo all'attività di studio
@@ -201,11 +207,11 @@ public class AttivitaStudioController {
 		return false;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/change")
+	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/change/date/{date}/from/{from}/to/{to}")
 	public @ResponseBody
 	boolean changeAttivitaDiStudio(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@RequestBody AttivitaDiStudio attivitadistudio)
+			HttpServletResponse response, HttpSession session,@PathVariable("date") long date, @PathVariable("from") long from,
+			@PathVariable("to") long to, @RequestBody AttivitaDiStudio attivitadistudio)
 
 	throws IOException {
 		try {
@@ -216,6 +222,21 @@ public class AttivitaStudioController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
+			
+			attivitadistudio.getEventoId().setIdEventAd(-2);
+			attivitadistudio.getEventoId().setIdStudente(userId);
+			
+			
+			long roundDate = 10000 * (attivitadistudio.getEventoId().getDate()
+					.getTime() / 10000);
+			date = 10000 * (date / 10000);
+			
+			EventoId eventoToChange = new EventoId();
+			eventoToChange.setIdEventAd(-2);
+			eventoToChange.setDate(new Date(roundDate));
+			eventoToChange.setStart(new Time(from));
+			eventoToChange.setStop(new Time(to));
+			eventoToChange.setIdStudente(userId);
 
 			//Studente studente = studenteRepository.findOne(userId);
 
@@ -275,6 +296,8 @@ public class AttivitaStudioController {
 //				communicatorConnector.sendAppNotification(n, appName, users,
 //						tManager.getClientSmartCampusToken());
 			}
+			
+			attivitastudioRepository.delete(eventoToChange);
 
 			AttivitaDiStudio attivitadistudioAggiornato = attivitastudioRepository
 					.save(attivitadistudio);
@@ -329,6 +352,9 @@ public class AttivitaStudioController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
+			
+			attivitadistudio.getEventoId().setIdEventAd(-2);
+			attivitadistudio.getEventoId().setIdStudente(userId);
 
 			//Studente studente = studenteRepository.findOne(userId);
 
