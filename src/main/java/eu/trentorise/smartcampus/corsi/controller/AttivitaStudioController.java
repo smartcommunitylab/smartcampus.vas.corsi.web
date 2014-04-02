@@ -233,7 +233,7 @@ public class AttivitaStudioController {
 			
 			EventoId eventoToChange = new EventoId();
 			eventoToChange.setIdEventAd(-2);
-			eventoToChange.setDate(new Date(roundDate));
+			eventoToChange.setDate(new Date(date));
 			eventoToChange.setStart(new Time(from));
 			eventoToChange.setStop(new Time(to));
 			eventoToChange.setIdStudente(userId);

@@ -97,7 +97,7 @@ public class ScheduledServiceSync {
 	 * 
 	 * @throws IOException
 	 */
-	//@Scheduled(cron = "0 0 0 1 * ?")
+	// @Scheduled(cron = "0 0 0 1 * ?")
 	//@Scheduled(fixedDelay = 1196000000)
 	public @ResponseBody
 	void getDipartimentoAndCdsSync()
@@ -316,19 +316,24 @@ public class ScheduledServiceSync {
 						do {
 
 							dataCalendarOfWeek = null;
-							if (tentativi <= 1) {
 								dataCalendarOfWeek = uniConnector
 										.getCdsCalendar(client_auth_token,
 												String.valueOf(cl.getCdsId()),
 												String.valueOf(year));
 								tentativi++;
-							}
-						} while (!(dataCalendarOfWeek.size() >= 1));
-						EventoMapper mapperEvento = new EventoMapper();
-						eventsMapped = mapperEvento.convert(dataCalendarOfWeek,
-								cl, year);
 
-						eventoRepository.save(eventsMapped);
+						} while (tentativi <= 2
+								&& dataCalendarOfWeek.size() == 0);
+
+						if (dataCalendarOfWeek.size() > 0
+								&& dataCalendarOfWeek != null) {
+							EventoMapper mapperEvento = new EventoMapper();
+							eventsMapped = mapperEvento.convert(
+									dataCalendarOfWeek, cl, year);
+
+							if (eventsMapped != null)
+								eventoRepository.save(eventsMapped);
+						}
 
 					}
 				}

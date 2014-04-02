@@ -29,7 +29,7 @@ public class GruppoDiStudio {
 
 	@Column(name = "STUDENTI_GRUPPO")
 	private String idsStudenti;
-	
+
 	@Column(name = "NOME_ATTIVITA")
 	private String materia;
 
@@ -78,6 +78,10 @@ public class GruppoDiStudio {
 		this.idsStudenti = idsStudenti;
 	}
 
+//	public List<Long> getIdStudentiGruppo() {
+//		return this.convertIdsAllStudentsToList(this.idsStudenti);
+//	}
+	
 	public List<Studente> getStudentiGruppo() {
 		return studentiGruppo;
 	}
@@ -144,6 +148,8 @@ public class GruppoDiStudio {
 
 		return listIdsInvited;
 	}
+
+	
 
 	public String getMateria() {
 		return materia;

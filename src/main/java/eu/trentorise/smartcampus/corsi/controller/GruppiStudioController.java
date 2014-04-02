@@ -40,8 +40,10 @@ public class GruppiStudioController {
 		INVITO, AVVISO
 	}
 
-//	private static final String CLIENT_ID = "b8fcb94d-b4cf-438f-802a-c0a560734c88";
-//	private static final String CLIENT_SECRET = "536560ac-cb74-4e1b-86a1-ef2c06c3313a";
+	// private static final String CLIENT_ID =
+	// "b8fcb94d-b4cf-438f-802a-c0a560734c88";
+	// private static final String CLIENT_SECRET =
+	// "536560ac-cb74-4e1b-86a1-ef2c06c3313a";
 
 	private static final Logger logger = Logger
 			.getLogger(GruppiStudioController.class);
@@ -102,6 +104,18 @@ public class GruppiStudioController {
 			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository
 					.findAll();
 
+			for (GruppoDiStudio gruppoDiStudio : getgruppidistudio) {
+
+				List<Long> idsStudenti = convertIdsAllStudentsToList(gruppoDiStudio
+						.getIdsStudenti());
+				List<Studente> studentiGruppo = new ArrayList<Studente>();
+				for (Long id : idsStudenti) {
+					Studente studente = studenteRepository.findOne(id);
+					studentiGruppo.add(studente);
+
+				}
+				gruppoDiStudio.setStudentiGruppo(studentiGruppo);
+			}
 			return getgruppidistudio;
 
 		} catch (Exception e) {
@@ -111,58 +125,118 @@ public class GruppiStudioController {
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
+
 	// /////////////////////////////////////////////////////////////////////////
-		// METODI GET /////////////////////////////////////////////////////////////
-		// /////////////////////////////////////////////////////////////////////////
+	// METODI GET /////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////
 
-		/*
-		 * Ritorna tutti i corsi in versione lite
-		 */
-		@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/find")
-		public @ResponseBody
-		List<GruppoDiStudio> getgruppidistudioSearchToSubscribe(HttpServletRequest request,
-				HttpServletResponse response, HttpSession session)
+	/*
+	 * Ritorna tutti i corsi in versione lite
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/find")
+	public @ResponseBody
+	List<GruppoDiStudio> getgruppidistudioSearchToSubscribe(
+			HttpServletRequest request, HttpServletResponse response,
+			HttpSession session)
 
-		throws IOException {
-			try {
-				logger.info("/gruppodistudio/find");
-				
-				String token = getToken(request);
-				BasicProfileService service = new BasicProfileService(
-						profileaddress);
-				BasicProfile profile = service.getBasicProfile(token);
-				Long userId = Long.valueOf(profile.getUserId());
-				
-				List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository
-						.findAll();
+	throws IOException {
+		try {
+			logger.info("/gruppodistudio/find");
 
-				List<GruppoDiStudio> getGds = new ArrayList<GruppoDiStudio>();
-				for (GruppoDiStudio gruppoDiStudio : getgruppidistudio) {
-					List<Studente> listStudIscritti = gruppoDiStudio.getStudentiGruppo();
-					for (Studente studente : listStudIscritti) {
-						int i = 0;
-						if(studente.getId() == userId && i==0){
-							getGds.add(gruppoDiStudio);
-							i++;
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository
+					.findAll();
+
+			List<GruppoDiStudio> getGds = new ArrayList<GruppoDiStudio>();
+			for (GruppoDiStudio gruppoDiStudio : getgruppidistudio) {
+				List<Long> listStudIscritti = convertIdsAllStudentsToList(gruppoDiStudio
+						.getIdsStudenti());
+				List<Studente> studentiGruppo = new ArrayList<Studente>();
+				for (Long studenteId : listStudIscritti) {
+					int i = 0;
+					if (studenteId != userId) {
+						getGds.add(gruppoDiStudio);
+					}
+					Studente studente = studenteRepository.findOne(studenteId);
+					studentiGruppo.add(studente);
+				}
+
+				gruppoDiStudio.setStudentiGruppo(studentiGruppo);
+			}
+			return getGds;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	// /////////////////////////////////////////////////////////////////////////
+	// METODI GET /////////////////////////////////////////////////////////////
+	// /////////////////////////////////////////////////////////////////////////
+
+	/*
+	 * Ritorna tutti i corsi in versione lite
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/find/{ad_id}")
+	public @ResponseBody
+	List<GruppoDiStudio> getgruppidistudioSearchToSubscribeByAd(
+			HttpServletRequest request, HttpServletResponse response,
+			HttpSession session, @PathVariable("ad_id") Long ad_id)
+
+	throws IOException {
+		try {
+			logger.info("/gruppodistudio/find/{ad_id}");
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository
+					.findAll();
+
+			List<GruppoDiStudio> getGds = new ArrayList<GruppoDiStudio>();
+			for (GruppoDiStudio gruppoDiStudio : getgruppidistudio) {
+
+
+				if (gruppoDiStudio.getCorso() == ad_id) {
+					List<Long> listStudIscritti = convertIdsAllStudentsToList(gruppoDiStudio
+							.getIdsStudenti());
+					List<Studente> studentiGruppo = new ArrayList<Studente>();
+					for (Long studenteId : listStudIscritti) {
+						if (studenteId != userId) {
+							Studente studente = studenteRepository.findOne(studenteId);
+							
+							studentiGruppo.add(studente);
 						}
+
+					}
+					
+					if(!gruppoDiStudio.isContainsStudente(userId)){
+						gruppoDiStudio.setStudentiGruppo(studentiGruppo);
+						getGds.add(gruppoDiStudio);
+								
 					}
 				}
-				return getGds;
-
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-				e.printStackTrace();
-				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
-			return null;
+			return getGds;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-	
-	
+		return null;
+	}
 
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
@@ -184,8 +258,23 @@ public class GruppiStudioController {
 
 			if (id_corso == null)
 				return null;
+			
+			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository.findGdsBycourseId(id_corso);
+			
+			for (GruppoDiStudio gruppoDiStudio : getgruppidistudio) {
 
-			return gruppidistudioRepository.findGdsBycourseId(id_corso);
+				List<Long> idsStudenti = convertIdsAllStudentsToList(gruppoDiStudio
+						.getIdsStudenti());
+				List<Studente> studentiGruppo = new ArrayList<Studente>();
+				for (Long id : idsStudenti) {
+					Studente studente = studenteRepository.findOne(id);
+					studentiGruppo.add(studente);
+
+				}
+				gruppoDiStudio.setStudentiGruppo(studentiGruppo);
+			}
+
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -222,6 +311,16 @@ public class GruppiStudioController {
 
 			for (GruppoDiStudio gruppoDiStudio : listaGruppi) {
 				if (gruppoDiStudio.isContainsStudente(userId)) {
+					List<Long> idsStudenti = convertIdsAllStudentsToList(gruppoDiStudio
+							.getIdsStudenti());
+					List<Studente> studentiGruppo = new ArrayList<Studente>();
+					for (Long id : idsStudenti) {
+						Studente studente = studenteRepository.findOne(id);
+						studentiGruppo.add(studente);
+
+					}
+					gruppoDiStudio.setStudentiGruppo(studentiGruppo);
+
 					listaGruppiStudente.add(gruppoDiStudio);
 				}
 			}
@@ -306,6 +405,16 @@ public class GruppiStudioController {
 
 			for (GruppoDiStudio gruppoDiStudio : listaGruppiCorso) {
 				if (gruppoDiStudio.isContainsStudente(userId)) {
+					List<Long> idsStudenti = convertIdsAllStudentsToList(gruppoDiStudio
+							.getIdsStudenti());
+					List<Studente> studentiGruppo = new ArrayList<Studente>();
+					for (Long id : idsStudenti) {
+						Studente stud = studenteRepository.findOne(id);
+						studentiGruppo.add(stud);
+
+					}
+					gruppoDiStudio.setStudentiGruppo(studentiGruppo);
+					
 					listaGruppiCorsoStudente.add(gruppoDiStudio);
 				}
 			}
@@ -353,9 +462,9 @@ public class GruppiStudioController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-			
-			//gruppodistudio.getEventoId().setIdStudente(userId);
-			//gruppodistudio.getEventoId().setIdEventAd(-1);
+
+			// gruppodistudio.getEventoId().setIdStudente(userId);
+			// gruppodistudio.getEventoId().setIdEventAd(-1);
 
 			// mediationParserImpl.updateKeyWord(token);
 
@@ -470,8 +579,9 @@ public class GruppiStudioController {
 			// 2 membri)
 			if (gdsFromDB.isVisible()) {
 
-//				CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-//						communicatoraddress, appName);
+				// CommunicatorConnector communicatorConnector = new
+				// CommunicatorConnector(
+				// communicatoraddress, appName);
 
 				List<String> users = new ArrayList<String>();
 				List<String> idsInvited = gdsFromDB.getListInvited(userId);
@@ -511,8 +621,8 @@ public class GruppiStudioController {
 					n.setContent(mapGruppo);
 
 					// ottengo il client token
-//					EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
-//							CLIENT_SECRET, profileaddress);
+					// EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
+					// CLIENT_SECRET, profileaddress);
 
 					// communicatorConnector.sendAppNotification(n, appName,
 					// users, tManager.getClientSmartCampusToken());
@@ -566,7 +676,7 @@ public class GruppiStudioController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-//			Studente studente = studenteRepository.findOne(userId);
+			// Studente studente = studenteRepository.findOne(userId);
 
 			if (userId == null)
 				return false;
@@ -590,13 +700,11 @@ public class GruppiStudioController {
 		}
 		return false;
 	}
-	
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/change")
 	public @ResponseBody
-	boolean changeGds(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@RequestBody GruppoDiStudio gruppodistudio)
+	boolean changeGds(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
 
 	throws IOException {
 		try {
@@ -608,15 +716,15 @@ public class GruppiStudioController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-//			Studente studente = studenteRepository.findOne(userId);
+			// Studente studente = studenteRepository.findOne(userId);
 
 			if (userId == null)
 				return false;
 
-			gruppidistudioRepository
-					.delete(gruppodistudio);
+			gruppidistudioRepository.delete(gruppodistudio);
 
-			GruppoDiStudio gdsFromDB = gruppidistudioRepository.save(gruppodistudio);
+			GruppoDiStudio gdsFromDB = gruppidistudioRepository
+					.save(gruppodistudio);
 
 			return true;
 
@@ -625,6 +733,21 @@ public class GruppiStudioController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;
+	}
+
+	public List<Long> convertIdsAllStudentsToList(String ids) {
+		String[] listIds = null;
+		List<Long> listIdsInvited = new ArrayList<Long>();
+
+		listIds = ids.split(",");
+
+		for (String id : listIds) {
+
+			listIdsInvited.add(Long.parseLong(id));
+
+		}
+
+		return listIdsInvited;
 	}
 
 }

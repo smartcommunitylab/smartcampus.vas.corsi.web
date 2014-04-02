@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -127,6 +128,49 @@ public class StudenteController {
 		return null;
 	}
 
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return Studente
+	 * @throws IOException
+	 * 
+	 *             Restituisce i dati dello studente riferiti allo studente che
+	 *             effetua la richiesta
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/studente/{id_studente}")
+	public @ResponseBody
+	Studente getInfoStudent(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session, @PathVariable("id_studente") Long id_studente)
+
+	throws IOException {
+		try {
+
+			logger.info("/studente/{id_studente}");
+
+			Studente studente = studenteRepository.findStudenteByUserId(id_studente);
+			//Studente studenteAggiornato = null;
+
+			// stud.setCorsiSuperati(assignCorsi(stud));
+			return studente;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	
+	
+	
+	
 	/**
 	 * 
 	 * @param request
