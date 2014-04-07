@@ -156,26 +156,9 @@ public class CorsoInteresseController {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
-			if (studenteDB == null) {
-				StudentInfoService studentConnector = new StudentInfoService(
-						unidataaddress);
-
-				// ottengo da unidata lo studente
-				StudentInfoData studentUniData = studentConnector
-						.getStudentData(token);
-
-				if (studentUniData == null)
-					return null;
-
-				UniStudentMapper studentMapper = new UniStudentMapper(
-						profileaddress);
-
-				// converto e salvo nel db lo studente aggiornato
-				studenteDB = studentMapper.convert(studentUniData, token);
-
-				studenteDB = studenteRepository.save(studenteDB);
-			}
-
+			if(studenteDB == null)
+				return null;
+			
 			AttivitaDidattica aDidattica = attivitaDidatticaRepository
 					.findOne(adId);
 

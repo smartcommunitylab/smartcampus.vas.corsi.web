@@ -1,6 +1,9 @@
 package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +25,7 @@ import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.servicesync.StudenteServiceSync;
 import eu.trentorise.smartcampus.corsi.util.UniStudentMapper;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
+import eu.trentorise.smartcampus.profileservice.model.AccountProfile;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
 import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
@@ -193,12 +197,41 @@ public class StudenteController {
 			logger.info("/sync/studente/me");
 
 			String token = getToken(request);
+			
+			
+			
+			BasicProfileService service = new BasicProfileService(profileaddress);
 
-//			BasicProfileService service = new BasicProfileService(
-//					profileaddress);
+			AccountProfile accProfile = service.getAccountProfile(token);
+			
+			Set<String> accountNames = accProfile.getAccountNames();
+			Iterator<String> iter = accountNames.iterator();
+			Set<String> attributesAccount = null;
+			if (iter.hasNext()) {
+				attributesAccount = accProfile.getAccountNames();
+				String provider = attributesAccount.toString();
+				if(provider.equals("[fbk]") || provider.equals("[google]")){
+					
+					
+					
+					service = new BasicProfileService(
+							profileaddress);
 
-			//BasicProfile profile = service.getBasicProfile(token);
-			//Long userId = Long.valueOf(profile.getUserId());
+					BasicProfile profile = service.getBasicProfile(token);
+					Long userId = Long.valueOf(profile.getUserId());
+					
+					Studente stdBase = new Studente();
+					stdBase.setNome(profile.getName());
+					stdBase.setCognome(profile.getSurname());
+					stdBase.setId(userId);
+					
+					stdBase =studenteRepository.save(stdBase);
+					
+					return stdBase;
+				}
+			}
+
+//			
 
 			//Studente studenteDB = studenteRepository.findOne(userId);
 
@@ -228,8 +261,9 @@ public class StudenteController {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			
+			return null;//fbk account
 		}
-		return null;
 	}
 
 	// /**

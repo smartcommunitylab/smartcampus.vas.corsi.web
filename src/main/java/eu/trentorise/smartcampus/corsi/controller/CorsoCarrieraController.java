@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.CorsoCarrieraMapper;
 import eu.trentorise.smartcampus.corsi.util.UniStudentMapper;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
+import eu.trentorise.smartcampus.profileservice.model.AccountProfile;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
 import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
@@ -97,44 +99,43 @@ public class CorsoCarrieraController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studenteDB = studenteRepository.findOne(userId);
-
-			if (studenteDB == null) {
-				StudentInfoService studentConnector = new StudentInfoService(
-						unidataaddress);
-
-				// ottengo da unidata lo studente
-				StudentInfoData studentUniData = studentConnector
-						.getStudentData(token);
-
-				if (studentUniData == null)
-					return null;
-
-				UniStudentMapper studentMapper = new UniStudentMapper(
-						profileaddress);
-
-				// converto e salvo nel db lo studente aggiornato
-				studenteDB = studentMapper.convert(studentUniData, token);
-
-				studenteDB = studenteRepository.save(studenteDB);
+			
+			if(studenteDB == null){
+				return null;
 			}
 
-			// prendo i dati da unidata e li mappo
-			StudentInfoService studentConnector = new StudentInfoService(
-					unidataaddress);
+			StudentInfoExams studentExamsCareer = null;
+			List<CorsoCarriera> corsoCarrieraList = null;
+			
+			AccountProfile accProfile = service.getAccountProfile(token);
+			
+			Set<String> accountNames = accProfile.getAccountNames();
+			Iterator<String> iter = accountNames.iterator();
+			Set<String> attributesAccount = null;
+			if (iter.hasNext()) {
+				attributesAccount = accProfile.getAccountNames();
+				String provider = attributesAccount.toString();
+				if(provider.equals("[unitn]")){				
+					// prendo i dati da unidata e li mappo
+					StudentInfoService studentConnector = new StudentInfoService(
+							unidataaddress);
 
-			StudentInfoExams studentExamsCareer = studentConnector
-					.getStudentExams(token);
+					studentExamsCareer = studentConnector
+							.getStudentExams(token);
+					
+					CorsoCarrieraMapper cc = new CorsoCarrieraMapper();
 
-			if (studentExamsCareer == null)
+					corsoCarrieraList = cc.convert(
+							studenteDB.getId(), studentExamsCareer, token);
+
+					corsoCarrieraList = corsoCarrieraRepository.save(corsoCarrieraList);
+				}
+			}
+			
+			
+			if(corsoCarrieraList == null)
 				return null;
-
-			CorsoCarrieraMapper cc = new CorsoCarrieraMapper();
-
-			List<CorsoCarriera> corsoCarrieraList = cc.convert(
-					studenteDB.getId(), studentExamsCareer, token);
-
-			corsoCarrieraList = corsoCarrieraRepository.save(corsoCarrieraList);
-
+			
 			// setto in corso interesse i corsi carriera
 			for (CorsoCarriera corsoCarriera : corsoCarrieraList) {
 
@@ -277,47 +278,64 @@ public class CorsoCarrieraController {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
-			if (studenteDB == null) {
-				StudentInfoService studentConnector = new StudentInfoService(
-						unidataaddress);
-
-				// ottengo da unidata lo studente
-				StudentInfoData studentUniData = studentConnector
-						.getStudentData(token);
-
-				if (studentUniData == null)
-					return null;
-
-				UniStudentMapper studentMapper = new UniStudentMapper(
-						profileaddress);
-
-				// converto e salvo nel db lo studente aggiornato
-				studenteDB = studentMapper.convert(studentUniData, token);
-
-				studenteDB = studenteRepository.save(studenteDB);
-			}
+//			if (studenteDB == null) {
+//				StudentInfoService studentConnector = new StudentInfoService(
+//						unidataaddress);
+//
+//				// ottengo da unidata lo studente
+//				StudentInfoData studentUniData = studentConnector
+//						.getStudentData(token);
+//
+//				if (studentUniData == null)
+//					return null;
+//
+//				UniStudentMapper studentMapper = new UniStudentMapper(
+//						profileaddress);
+//
+//				// converto e salvo nel db lo studente aggiornato
+//				studenteDB = studentMapper.convert(studentUniData, token);
+//
+//				studenteDB = studenteRepository.save(studenteDB);
+//			}
 
 			List<CorsoCarriera> corsoCarrieraList = corsoCarrieraRepository
 					.findCorsoCarrieraByStudenteId(studenteDB.getId());
+			
+			StudentInfoExams studentExamsCareer = null;
+			List<CorsoCarriera> corsoCarrieraL = null;
 
 			if (corsoCarrieraList.size() == 0) {
-				// prendo i dati da unidata e li mappo
-				StudentInfoService studentConnector = new StudentInfoService(
-						unidataaddress);
+				
+				AccountProfile accProfile = service.getAccountProfile(token);
+				
+				Set<String> accountNames = accProfile.getAccountNames();
+				Iterator<String> iter = accountNames.iterator();
+				Set<String> attributesAccount = null;
+				if (iter.hasNext()) {
+					attributesAccount = accProfile.getAccountNames();
+					String provider = attributesAccount.toString();
+					if(provider.equals("[unitn]")){				
+						// prendo i dati da unidata e li mappo
+						StudentInfoService studentConnector = new StudentInfoService(
+								unidataaddress);
 
-				StudentInfoExams studentExamsCareer = studentConnector
-						.getStudentExams(token);
+						studentExamsCareer = studentConnector
+								.getStudentExams(token);
 
-				if (studentExamsCareer == null)
-					return null;
+						if (studentExamsCareer == null)
+							return null;
 
-				CorsoCarrieraMapper cc = new CorsoCarrieraMapper();
+						CorsoCarrieraMapper cc = new CorsoCarrieraMapper();
 
-				corsoCarrieraList = cc.convert(studenteDB.getId(),
-						studentExamsCareer, token);
+						corsoCarrieraList = cc.convert(studenteDB.getId(),
+								studentExamsCareer, token);
 
-				corsoCarrieraList = corsoCarrieraRepository
-						.save(corsoCarrieraList);
+						corsoCarrieraList = corsoCarrieraRepository
+								.save(corsoCarrieraList);
+					}
+				}
+				
+				
 			}
 
 			if (corsoCarrieraList.size() == 0 || corsoCarrieraList == null) {

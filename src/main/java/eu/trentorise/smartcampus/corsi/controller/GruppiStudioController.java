@@ -573,11 +573,11 @@ public class GruppiStudioController {
 				return false;
 
 			gdsFromDB.addStudenteGruppo(userId); // aggiungo il membro al gruppo
-			gdsFromDB.setIfVisibleFromNumMembers();
+			//gdsFromDB.setIfVisibleFromNumMembers();
 
 			// mando una notifica se il gruppo diventa visibile (ci sono almeno
 			// 2 membri)
-			if (gdsFromDB.isVisible()) {
+			//if (gdsFromDB.isVisible()) {
 
 				// CommunicatorConnector communicatorConnector = new
 				// CommunicatorConnector(
@@ -606,9 +606,9 @@ public class GruppiStudioController {
 							+ " a cui sei iscritto ora è visibile");
 					Map<String, Object> mapGruppo = new HashMap<String, Object>();
 
-					gdsFromDB.initStudenteGruppo(userId); // inizializzo i
+					//gdsFromDB.initStudenteGruppo(userId); // inizializzo i
 															// membri del gruppo
-					gdsFromDB.setVisible(false); // setto a visible = false
+					gdsFromDB.setVisible(true); // setto a visible = false
 													// finchè non ci saranno
 													// almeno 2 componenti
 					mapGruppo.put("GruppoDiStudio", gdsFromDB); // passo come
@@ -628,7 +628,7 @@ public class GruppiStudioController {
 					// users, tManager.getClientSmartCampusToken());
 
 				}
-			}
+			//}
 
 			GruppoDiStudio gruppodistudioAggiornato = gruppidistudioRepository
 					.save(gdsFromDB);
