@@ -105,6 +105,53 @@ public class AttivitaDidatticaController {
 		}
 		return null;
 	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<CorsoLaurea>
+	 * @throws IOException
+	 * 
+	 *             Restituisce tutti i corsi di laurea
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/adcod/{ad_cod}")
+	public @ResponseBody
+	AttivitaDidattica getAttivitaDidatticaByCod(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("ad_cod") Long ad_cod)
+
+	throws IOException {
+		try {
+			logger.info("/attivitadidattica/" + ad_cod);
+
+			List<AttivitaDidattica> getAttivitaDidattica = attivitaDidatticaRepository.findAttivitaDidatticaByAdCod(String.valueOf(ad_cod));
+
+			if(getAttivitaDidattica.size()==0){
+				return null;
+			}
+			
+			return getAttivitaDidattica.get(0);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
+	
+	
+	
 
 	/**
 	 * 

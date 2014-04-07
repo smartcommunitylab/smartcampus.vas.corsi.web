@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 @NamedQueries({
 		@NamedQuery(name = "CorsoInteresse.findCorsoInteresseByStudenteId", query = "select ci from CorsoInteresse ci where ci.studenteId = ?1"),
 		@NamedQuery(name = "CorsoInteresse.findCorsoInteresseByAttivitaIdAndStudenteId", query = "select ci from CorsoInteresse ci where ci.studenteId = ?1 and ci.attivitaDidattica.adId = ?2 "),
+		@NamedQuery(name = "CorsoInteresse.findCorsoInteresseByAttivitaCodAndStudenteId", query = "select ci from CorsoInteresse ci where ci.studenteId = ?1 and ci.attivitaDidattica.adCod = ?2 "),
 		@NamedQuery(name = "CorsoInteresse.deleteCorsiInteresseOfStudenteOfCareer", query = "delete from CorsoInteresse ci WHERE ci.studenteId = ?1 and ci.isCorsoCarriera = true") })
 public class CorsoInteresse extends BasicEntity {
 	private static final long serialVersionUID = 1306548062859361763L;

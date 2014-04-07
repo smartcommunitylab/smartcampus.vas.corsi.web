@@ -246,6 +246,72 @@ public class CorsoInteresseController {
 		}
 		return false;
 	}
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param corso
+	 * @return boolean
+	 * @throws IOException
+	 * 
+	 *             Dato un corso restituisce al client true se il corso � di
+	 *             interesse dello studente altrimenti false
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/corsointeresse/{adCod}/delete")
+	public @ResponseBody
+	boolean setCorsoAsUnflollow(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("adCod") String attivitaDidatticaCod)
+
+	throws IOException {
+		try {
+
+			logger.info("/corsointeresse/{adCod}/delete");
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
+
+			// test
+			Studente studente = studenteRepository.findStudenteByUserId(userId);
+
+			List<AttivitaDidattica> aDidattica = attivitaDidatticaRepository
+					.findAttivitaDidatticaByAdCod(attivitaDidatticaCod);
+			
+			if(aDidattica.size() == 0)
+				return false;
+
+			CorsoInteresse cInteresse = corsoInteresseRepository
+					.findCorsoInteresseByAttivitaCodAndStudenteId(
+							studente.getId(), aDidattica.get(0).getAdCod());
+
+			
+
+			if (!cInteresse.isCorsoCarriera()){
+					corsoInteresseRepository.delete(cInteresse);
+			}else{
+					return false;
+			}
+
+			return true;
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return false;
+	}
+	
+	
 
 	/**
 	 * 

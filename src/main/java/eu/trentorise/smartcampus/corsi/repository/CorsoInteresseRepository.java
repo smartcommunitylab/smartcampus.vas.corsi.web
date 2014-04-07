@@ -15,6 +15,9 @@ public interface CorsoInteresseRepository extends
 
 	CorsoInteresse findCorsoInteresseByAttivitaIdAndStudenteId(long idStudente,
 			long ad_id);
+	
+	CorsoInteresse findCorsoInteresseByAttivitaCodAndStudenteId(long idStudente,
+			String ad_cod);
 
 	void deleteCorsiInteresseOfStudenteOfCareer(long idStudente);
 
