@@ -83,6 +83,16 @@ public class AttivitaStudioController {
 	// METODI GET /////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_gruppodistudio
+	 * @return le attività di studio dato l'id di un gds
+	 * @throws IOException
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadistudio/{id_gruppodistudio}")
 	public @ResponseBody
 	List<AttivitaDiStudio> getAttivitadistudioByID(HttpServletRequest request,
@@ -109,6 +119,17 @@ public class AttivitaStudioController {
 	// METODI POST ////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param atDiStudio
+	 * @return Aggiunta di un'attività di studio
+	 * evento_id = -2
+	 * @throws IOException
+	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/add")
 	public @ResponseBody
 	boolean saveAttivitaStudio(HttpServletRequest request,
@@ -191,6 +212,7 @@ public class AttivitaStudioController {
 
 				}
 
+				// salvo l'attività di studio
 				AttivitaDiStudio attivitaSaved = attivitastudioRepository
 						.save(atDiStudio);
 
@@ -207,6 +229,23 @@ public class AttivitaStudioController {
 		return false;
 	}
 
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param date
+	 * @param from
+	 * @param to
+	 * @param attivitadistudio
+	 * @return modifica di un'attività di studio (soltanto chi fa parte del gruppo può modificarla)
+	 * evento_id = -2
+	 * @throws IOException
+	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/change/date/{date}/from/{from}/to/{to}")
 	public @ResponseBody
 	boolean changeAttivitaDiStudio(HttpServletRequest request,

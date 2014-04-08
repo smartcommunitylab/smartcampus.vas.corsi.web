@@ -89,8 +89,6 @@ public class CorsoLaureaServiceSync {
 	 *             Restituisce la lista dei dipartimenti soltanto se sono da sincronizzare
 	 * 
 	 */
-
-
 	@RequestMapping(method = RequestMethod.GET, value = "/sync/corsolaurea/{id_dipartimento}/all")
 	public @ResponseBody
 	List<CorsoLaurea> getCdsSync(HttpServletRequest request,

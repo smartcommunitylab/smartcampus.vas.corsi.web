@@ -2,7 +2,6 @@ package eu.trentorise.smartcampus.corsi.controller;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -62,9 +61,8 @@ public class StudenteController {
 	@Autowired
 	private StudenteServiceSync controllerSyncStudente;
 
-	/*
-	 * Ritorna tutti i corsi in versione lite
-	 */
+	
+	
 
 	/**
 	 * 
@@ -75,7 +73,7 @@ public class StudenteController {
 	 * @throws IOException
 	 * 
 	 *             Restituisce i dati dello studente riferiti allo studente che
-	 *             effetua la richiesta
+	 *             effettua la richiesta
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/studente/me")
@@ -95,34 +93,7 @@ public class StudenteController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			//Studente studenteAggiornato = null;
-
-			// se lo studente � null vado a prendere i dati da unidata
-			if (studente == null) {
-				// prendo i dati da unidata e li mappo
-				StudentInfoService studentConnector = new StudentInfoService(
-						unidataaddress);
-
-				// ottengo da unidata lo studente
-				StudentInfoData studentUniData = studentConnector
-						.getStudentData(token);
-
-				if (studentUniData == null)
-					return null;
-
-				UniStudentMapper studentMapper = new UniStudentMapper(
-						profileaddress);
-
-				// converto e salvo nel db lo studente aggiornato
-				Studente convertedStudent = studentMapper.convert(
-						studentUniData, token);
-
-				convertedStudent = studenteRepository.save(convertedStudent);
-
-				return convertedStudent;
-			}
-
-			// stud.setCorsiSuperati(assignCorsi(stud));
+			
 			return studente;
 
 		} catch (Exception e) {
@@ -145,7 +116,7 @@ public class StudenteController {
 	 * @throws IOException
 	 * 
 	 *             Restituisce i dati dello studente riferiti allo studente che
-	 *             effetua la richiesta
+	 *             effettua la richiesta
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/studente/{id_studente}")
@@ -159,9 +130,7 @@ public class StudenteController {
 			logger.info("/studente/{id_studente}");
 
 			Studente studente = studenteRepository.findStudenteByUserId(id_studente);
-			//Studente studenteAggiornato = null;
-
-			// stud.setCorsiSuperati(assignCorsi(stud));
+			
 			return studente;
 
 		} catch (Exception e) {
@@ -180,12 +149,8 @@ public class StudenteController {
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return Studente
+	 * @return restituisce lo studente sincronizzato con unidata e viene salvato nel db locale
 	 * @throws IOException
-	 * 
-	 *             Restituisce lo studente soltanto se c'� bisogno di
-	 *             sincronizzare
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/sync/studente/me")
 	public @ResponseBody
@@ -231,10 +196,6 @@ public class StudenteController {
 				}
 			}
 
-//			
-
-			//Studente studenteDB = studenteRepository.findOne(userId);
-
 			// prendo i dati da unidata e li mappo
 			StudentInfoService studentConnector = new StudentInfoService(
 					unidataaddress);
@@ -266,74 +227,7 @@ public class StudenteController {
 		}
 	}
 
-	// /**
-	// *
-	// * @param request
-	// * @param response
-	// * @param session
-	// * @return Studente
-	// * @throws IOException
-	// *
-	// * Restituisce lo studente soltanto se c'� bisogno di
-	// * sincronizzare
-	// *
-	// */
-	// @RequestMapping(method = RequestMethod.GET, value = "/sync/studente/me")
-	// public @ResponseBody
-	// Studente getStudenteSync(HttpServletRequest request,
-	// HttpServletResponse response, HttpSession session)
-	//
-	// throws IOException {
-	// try {
-	// logger.info("/sync/studente/me");
-	//
-	// String token = getToken(request);
-	// BasicProfileService service = new BasicProfileService(
-	// profileaddress);
-	//
-	// BasicProfile profile = service.getBasicProfile(token);
-	// Long userId = Long.valueOf(profile.getUserId());
-	//
-	// Studente studenteDB = studenteRepository.findOne(userId);
-	//
-	// // prendo i dati da unidata e li mappo
-	// StudentInfoService studentConnector = new StudentInfoService(
-	// unidataaddress);
-	//
-	// /*
-	// * Da rivedere la gestione della sincronizzazione degli esami:
-	// * adesso sincronizza sempre
-	// */
-	// token = getToken(request);
-	// //token = "9a554546-dc69-4282-a169-358a3ece5487";
-	// StudentInfoExams studentExamsUniData = studentConnector
-	// .getStudentExams(token);
-	//
-	// // ottengo da unidata lo studente
-	// StudentInfoData studentUniData = studentConnector
-	// .getStudentData(token);
-	//
-	// if (studentUniData == null)
-	// return null;
-	//
-	// UniStudentMapper studentMapper = new UniStudentMapper(profileaddress);
-	//
-	// // converto e salvo nel db lo studente aggiornato
-	// Studente convertedStudent = studentMapper.convert(studentUniData,
-	// studentExamsUniData, token);
-	//
-	// convertedStudent = studenteRepository.save(convertedStudent);
-	//
-	// return convertedStudent;
-	//
-	// } catch (Exception e) {
-	// logger.error(e.getMessage());
-	// e.printStackTrace();
-	// response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-	// }
-	// return null;
-	// }
-	//
+	
 
 	/**
 	 * 

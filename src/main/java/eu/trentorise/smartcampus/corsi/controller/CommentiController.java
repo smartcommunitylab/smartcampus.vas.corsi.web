@@ -106,6 +106,10 @@ public class CommentiController {
 
 	private eu.trentorise.smartcampus.corsi.util.EasyTokenManger tkm;
 
+	
+	/**
+	 * Inizializzazione per la gestione delle keywords
+	 */
 	@PostConstruct
 	private void init() {
 		tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
@@ -287,6 +291,12 @@ public class CommentiController {
 		return null;
 	}
 
+	
+	/**
+	 * Ogni 15 minuti viene effettuata la sincronizzazione dello stato di
+	 * validazione degli eventi con il moderatore
+	 * @throws AACException
+	 */
 	@Scheduled(fixedDelay = 900000)
 	// 15min
 	public void updateRemoteComment() throws AACException {
@@ -309,25 +319,14 @@ public class CommentiController {
 				if (c != null) {
 					c.setApproved((Boolean) mapEntry.getValue());
 					commentiRepository.saveAndFlush(c);
-					logger.info("Scheduled Synchronization comments... "
-							+ updatedCommentList.size() + " comments updated");
 				}
 			}
+			
+			logger.info("Scheduled Synchronization comments... "
+					+ updatedCommentList.size() + " comments updated");
 		}
 	}
 
-	/**
-	 * 
-	 * @param request
-	 * @return String
-	 * 
-	 *         Ottiene il token riferito alla request
-	 * 
-	 */
-	private String getToken(HttpServletRequest request) {
-		return (String) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-	}
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
@@ -391,7 +390,6 @@ public class CommentiController {
 	 *             true se l'operazione va a buon fine, altrimenti false.
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/commento")
-	//
 	public @ResponseBody
 	boolean saveCommento(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -577,6 +575,22 @@ public class CommentiController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;
+	}
+	
+	
+	
+
+	/**
+	 * 
+	 * @param request
+	 * @return String
+	 * 
+	 *         Ottiene il token riferito alla request
+	 * 
+	 */
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
 	}
 
 }

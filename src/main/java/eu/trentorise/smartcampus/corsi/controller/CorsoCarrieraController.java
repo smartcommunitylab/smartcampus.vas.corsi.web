@@ -112,9 +112,13 @@ public class CorsoCarrieraController {
 			Set<String> accountNames = accProfile.getAccountNames();
 			Iterator<String> iter = accountNames.iterator();
 			Set<String> attributesAccount = null;
+			
 			if (iter.hasNext()) {
+				
 				attributesAccount = accProfile.getAccountNames();
 				String provider = attributesAccount.toString();
+				
+				// controllo se l'utente è loggato con unitn posso effettuare la sincronizzazione
 				if (provider.equals("[unitn]")) {
 					// prendo i dati da unidata e li mappo
 					StudentInfoService studentConnector = new StudentInfoService(
@@ -139,6 +143,7 @@ public class CorsoCarrieraController {
 			// setto in corso interesse i corsi carriera
 			for (CorsoCarriera corsoCarriera : corsoCarrieraList) {
 
+				// filtro i corsi carriera in corsi di interesse se i corsi non sono ancora superati
 				if (corsoCarriera.getResult().equals("0")
 						|| corsoCarriera.getResult().equals("")) {
 					List<AttivitaDidattica> ad = attivitaDidatticaRepository
@@ -257,7 +262,7 @@ public class CorsoCarrieraController {
 	 * @return Studente
 	 * @throws IOException
 	 * 
-	 *             Ritorna i corsi in carriera nel db
+	 *             Ritorna i corsi in carriera nel db non ancora superati + i corsi di interesse settati manualmente
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/notpassed/me")
@@ -278,26 +283,6 @@ public class CorsoCarrieraController {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
-			// if (studenteDB == null) {
-			// StudentInfoService studentConnector = new StudentInfoService(
-			// unidataaddress);
-			//
-			// // ottengo da unidata lo studente
-			// StudentInfoData studentUniData = studentConnector
-			// .getStudentData(token);
-			//
-			// if (studentUniData == null)
-			// return null;
-			//
-			// UniStudentMapper studentMapper = new UniStudentMapper(
-			// profileaddress);
-			//
-			// // converto e salvo nel db lo studente aggiornato
-			// studenteDB = studentMapper.convert(studentUniData, token);
-			//
-			// studenteDB = studenteRepository.save(studenteDB);
-			// }
-
 			List<CorsoCarriera> corsoCarrieraList = corsoCarrieraRepository
 					.findCorsoCarrieraByStudenteId(studenteDB.getId());
 
@@ -311,6 +296,8 @@ public class CorsoCarrieraController {
 				Set<String> accountNames = accProfile.getAccountNames();
 				Iterator<String> iter = accountNames.iterator();
 				Set<String> attributesAccount = null;
+				
+				// controllo se lo studente è loggato con unitn effettuo la sincronizzazione
 				if (iter.hasNext()) {
 					attributesAccount = accProfile.getAccountNames();
 					String provider = attributesAccount.toString();
@@ -340,6 +327,7 @@ public class CorsoCarrieraController {
 			if (corsoCarrieraList.size() == 0 || corsoCarrieraList == null) {
 				corsoCarrieraList = new ArrayList<CorsoCarriera>();
 			} else {
+				// filtro i corsi della carriera non superati
 				for (Iterator<CorsoCarriera> iterator = corsoCarrieraList
 						.iterator(); iterator.hasNext();) {
 					CorsoCarriera cc = iterator.next();
@@ -356,6 +344,7 @@ public class CorsoCarrieraController {
 
 			for (CorsoInteresse corsoInteresse : corsiInteresse) {
 
+				// filtro i corsi di interesse e li aggiungo alla lista dei corsi carriera
 				if (!corsoInteresse.isCorsoCarriera()) {
 					CorsoCarriera cc = new CorsoCarriera();
 					cc.setCod(corsoInteresse.getAttivitaDidattica().getAdCod());
@@ -385,7 +374,7 @@ public class CorsoCarrieraController {
 	 * @return Studente
 	 * @throws IOException
 	 * 
-	 *             Ritorna i corsi in carriera nel db
+	 *             Ritorna i corsi in carriera nel db superati
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/passed/me")
@@ -445,8 +434,6 @@ public class CorsoCarrieraController {
 			if(corsoCarrieraList == null)
 				return null;
 
-			logger.info("size corsi carriera: " + corsoCarrieraList.size());
-
 			for (Iterator<CorsoCarriera> iterator = corsoCarrieraList
 					.iterator(); iterator.hasNext();) {
 				CorsoCarriera cc = iterator.next();
@@ -466,6 +453,18 @@ public class CorsoCarrieraController {
 		return null;
 	}
 
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param ad_cod
+	 * @return true se l'ad è stata superata dallo studente
+	 * @throws IOException
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/{ad_cod}/superato")
 	public @ResponseBody
 	boolean isCorsoCarrieraPassed(HttpServletRequest request,
@@ -485,25 +484,8 @@ public class CorsoCarrieraController {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
-			if (studenteDB == null) {
-				StudentInfoService studentConnector = new StudentInfoService(
-						unidataaddress);
-
-				// ottengo da unidata lo studente
-				StudentInfoData studentUniData = studentConnector
-						.getStudentData(token);
-
-				if (studentUniData == null)
-					return false;
-
-				UniStudentMapper studentMapper = new UniStudentMapper(
-						profileaddress);
-
-				// converto e salvo nel db lo studente aggiornato
-				studenteDB = studentMapper.convert(studentUniData, token);
-
-				studenteDB = studenteRepository.save(studenteDB);
-			}
+			if(studenteDB == null)
+				return false;
 
 			CorsoCarriera corsoCarriera = corsoCarrieraRepository
 					.findCorsoCarrieraByAdCodAndStudenteId(ad_cod,

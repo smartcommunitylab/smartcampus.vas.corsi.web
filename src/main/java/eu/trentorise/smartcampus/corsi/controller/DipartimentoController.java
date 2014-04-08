@@ -52,23 +52,6 @@ public class DipartimentoController {
 
 			List<Dipartimento> getDip = dipartimentoRepository.findAll();
 
-			// // se non ci sono db in locale li prendo da unidaa e li salvo
-			// if (getDip.size() == 0) {
-			// List<Dipartimento> dipartimentiSync;
-			//
-			// dipartimentiSync = controllerSyncDipartimento
-			// .getDipartimentoSync(request, response, session);
-			//
-			// if (dipartimentiSync == null)
-			// return null;
-			//
-			// dipartimentiSync = dipartimentoRepository
-			// .save(dipartimentiSync);
-			//
-			// return dipartimentiSync;
-			//
-			// }
-
 			return getDip;
 
 		} catch (Exception e) {
@@ -106,24 +89,6 @@ public class DipartimentoController {
 
 			Dipartimento getDip = dipartimentoRepository
 					.findOne(id_dipartimento);
-
-			// se non ci sono db in locale li prendo da unidata e li salvo
-			if (getDip == null) {
-				List<Dipartimento> dipartimentiSync;
-				dipartimentiSync = controllerSyncDipartimento
-						.getDipartimentoSync(request, response, session);
-
-				dipartimentiSync = dipartimentoRepository
-						.save(dipartimentiSync);
-
-				if (dipartimentiSync == null)
-					return null;
-
-				getDip = dipartimentoRepository.findOne(id_dipartimento);
-
-				return getDip;
-
-			}
 
 			return getDip;
 

@@ -101,6 +101,8 @@ public class EventiController {
 
 	String client_auth_token;
 
+	
+	
 	/**
 	 * 
 	 * @param request
@@ -110,7 +112,7 @@ public class EventiController {
 	 * @return List<Evento>
 	 * @throws IOException
 	 * 
-	 *             Restituisce tutti gli eventi riferiti ad un corso dato
+	 *             Restituisce tutti gli eventi riferiti ad un corso di studi dato
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/evento/corsolaurea/{id_cds}")
@@ -152,8 +154,10 @@ public class EventiController {
 	 * @return Evento
 	 * @throws IOException
 	 * 
-	 *             Salva nel DB l'evento passato dal client e restituisce
+	 *             Salva nel DB l'evento personale passato dal client e restituisce
 	 *             l'evento se l'operazione va a buon fine, altrimenti false
+	 *             
+	 *             evento_id = -1 (evento personale)
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/evento")
@@ -250,7 +254,23 @@ public class EventiController {
 		}
 		return false;
 	}
-
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param date
+	 * @param from
+	 * @param to
+	 * @param eventoChanged
+	 * @return true se l'evento personale viene modificato con successo
+	 * @throws IOException
+	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/evento/change/date/{date}/from/{from}/to/{to}")
 	public @ResponseBody
 	boolean changeEvento(HttpServletRequest request,
@@ -298,6 +318,8 @@ public class EventiController {
 					}
 				}
 
+				
+				// salvo l'evento nel db
 				eventoChanged = eventoRepository.save(eventoChanged);
 
 				if (eventoChanged != null)
@@ -323,8 +345,8 @@ public class EventiController {
 	 * @return List<Evento>
 	 * @throws IOException
 	 * 
-	 *             Restituisce tutti gli eventi di tutti i corsi personali
-	 *             riferiti allo studente
+	 *             Restituisce tutti gli eventi di tutti i corsi da libretto + 
+	 *             i corsi di interesse riferiti allo studente 
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/evento/me")
@@ -343,33 +365,8 @@ public class EventiController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			// Studente studente =
-			// studenteRepository.findStudenteByUserId(userId);
 			List<Evento> listEventi = new ArrayList<Evento>();
-			/*
-			 * List<CorsoCarriera> corsiCarrieraList =
-			 * corsoCarrieraRepository.findCorsoCarrieraByStudenteId
-			 * (studente.getId());
-			 * logger.info("/evento/me --> corsiCarrieraList from db: size = "
-			 * +corsiCarrieraList.size()); List<Evento> listEventi = new
-			 * ArrayList<Evento>();
-			 * 
-			 * // filtro gli eventi che interessano allo studente for
-			 * (CorsoCarriera corsoCarriera : corsiCarrieraList) {
-			 * if(corsoCarriera.getResult().equals("0") ||
-			 * corsoCarriera.getResult().equals("")){ List<Evento> eventiAd =
-			 * new ArrayList<Evento>(); eventiAd =
-			 * eventoRepository.findEventoByAd(corsoCarriera.getName(), userId);
-			 * 
-			 * for (Evento evento : eventiAd) { // today Calendar date = new
-			 * GregorianCalendar(); // reset hour, minutes, seconds and millis
-			 * date.set(Calendar.HOUR_OF_DAY, 0); date.set(Calendar.MINUTE, 0);
-			 * date.set(Calendar.SECOND, 0); date.set(Calendar.MILLISECOND, 0);
-			 * date.add(Calendar.DAY_OF_MONTH, 0);
-			 * 
-			 * if(evento.getEventoId().getDate().compareTo(date.getTime()) >=
-			 * 0){ listEventi.add(evento); } } } }
-			 */
+
 
 			// eventi corsi di interesse
 
@@ -402,6 +399,8 @@ public class EventiController {
 				}
 			}
 
+			
+			// sort per data
 			Collections.sort(listEventi, new Comparator<Evento>() {
 				public int compare(Evento e1, Evento e2) {
 					if (e1.getEventoId().getDate() == null
@@ -553,7 +552,7 @@ public class EventiController {
 	 * @return List<Evento>
 	 * @throws IOException
 	 * 
-	 *             Sincronizza gli eventi di di tutti i gds
+	 *             Sincronizza gli eventi di di tutti i cds
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/sync/evento/all")
@@ -571,7 +570,6 @@ public class EventiController {
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
 			client_auth_token = clientTokenManager.getClientSmartCampusToken();
-			System.out.println("Client auth token: " + client_auth_token);
 
 			List<Dipartimento> dipartimenti = dipartimentoRepository.findAll();
 

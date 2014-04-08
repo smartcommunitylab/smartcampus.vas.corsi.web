@@ -24,11 +24,8 @@ import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
-import eu.trentorise.smartcampus.corsi.util.UniStudentMapper;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
-import eu.trentorise.smartcampus.unidataservice.model.StudentInfoData;
 
 @Controller("corsoInteresseController")
 public class CorsoInteresseController {
@@ -62,16 +59,17 @@ public class CorsoInteresseController {
 	@Value("${url.studente.service}")
 	private String unidataaddress;
 
+
+	
+	
+	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return Studente
+	 * @return lista dei corsi di interesse settati manualmente
 	 * @throws IOException
-	 * 
-	 *             Sincronizza con unidata service corsi in carriera
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsointeresse/me")
 	public @ResponseBody
@@ -91,24 +89,8 @@ public class CorsoInteresseController {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
-			if (studenteDB == null) {
-				StudentInfoService studentConnector = new StudentInfoService(
-						unidataaddress);
-
-				// ottengo da unidata lo studente
-				StudentInfoData studentUniData = studentConnector
-						.getStudentData(token);
-
-				if (studentUniData == null)
-					return null;
-
-				UniStudentMapper studentMapper = new UniStudentMapper(
-						profileaddress);
-
-				// converto e salvo nel db lo studente aggiornato
-				studenteDB = studentMapper.convert(studentUniData, token);
-
-				studenteDB = studenteRepository.save(studenteDB);
+			if(studenteDB == null){
+				return null;
 			}
 
 			List<CorsoInteresse> ci = new ArrayList<CorsoInteresse>();
@@ -126,16 +108,18 @@ public class CorsoInteresseController {
 		return null;
 	}
 
+
+	
+	
+	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return Studente
+	 * @param adId
+	 * @return true se il corso di interesse è seguito
 	 * @throws IOException
-	 * 
-	 *             Sincronizza con unidata service corsi in carriera
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/corsointeresse/{adId}/seguito")
 	public @ResponseBody
@@ -178,20 +162,18 @@ public class CorsoInteresseController {
 		return null;
 	}
 
+
+	
+	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @param corso
-	 * @return boolean
+	 * @param idAttivitaDidattica
+	 * @return cambia lo stato follow/unfollow di un'attività didattica
 	 * @throws IOException
-	 * 
-	 *             Dato un corso restituisce al client true se il corso � di
-	 *             interesse dello studente altrimenti false
-	 * 
 	 */
-	@SuppressWarnings("unused")
 	@RequestMapping(method = RequestMethod.POST, value = "/corsointeresse/{adId}/seguo")
 	//
 	public @ResponseBody
@@ -210,31 +192,33 @@ public class CorsoInteresseController {
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
 
-			// test
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
 
 			AttivitaDidattica aDidattica = attivitaDidatticaRepository
 					.findOne(idAttivitaDidattica);
 
+			if (aDidattica == null)
+				return false;
+			
 			CorsoInteresse cInteresse = corsoInteresseRepository
 					.findCorsoInteresseByAttivitaIdAndStudenteId(
 							studente.getId(), aDidattica.getAdId());
 
 			if (cInteresse == null) {
-
-				if (aDidattica == null)
-					return false;
-
+				
 				cInteresse = new CorsoInteresse();
 				cInteresse.setId(aDidattica.getAdId());
 				cInteresse.setAttivitaDidattica(aDidattica);
 				cInteresse.setStudenteId(studente.getId());
 				corsoInteresseRepository.save(cInteresse);
+				
 			} else {
-				if (!cInteresse.isCorsoCarriera())
+				
+				if (!cInteresse.isCorsoCarriera()){
 					corsoInteresseRepository.delete(cInteresse);
-				else
+				}else{
 					return false;
+				}
 			}
 
 			return true;
@@ -250,18 +234,17 @@ public class CorsoInteresseController {
 	
 	
 	
+
+	
+	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @param corso
-	 * @return boolean
+	 * @param attivitaDidatticaCod
+	 * @return true se un corso di interesse viene eliminato con successo, altrimenti false
 	 * @throws IOException
-	 * 
-	 *             Dato un corso restituisce al client true se il corso � di
-	 *             interesse dello studente altrimenti false
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/corsointeresse/{adCod}/delete")
 	public @ResponseBody
@@ -293,7 +276,6 @@ public class CorsoInteresseController {
 					.findCorsoInteresseByAttivitaCodAndStudenteId(
 							studente.getId(), aDidattica.get(0).getAdCod());
 
-			
 
 			if (!cInteresse.isCorsoCarriera()){
 					corsoInteresseRepository.delete(cInteresse);
@@ -313,6 +295,7 @@ public class CorsoInteresseController {
 	
 	
 
+	
 	/**
 	 * 
 	 * @param request

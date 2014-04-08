@@ -40,16 +40,9 @@ public class GruppiStudioController {
 		INVITO, AVVISO
 	}
 
-	// private static final String CLIENT_ID =
-	// "b8fcb94d-b4cf-438f-802a-c0a560734c88";
-	// private static final String CLIENT_SECRET =
-	// "536560ac-cb74-4e1b-86a1-ef2c06c3313a";
 
 	private static final Logger logger = Logger
 			.getLogger(GruppiStudioController.class);
-	/*
-	 * the base url of the service. Configure it in webtemplate.properties
-	 */
 
 	@Autowired
 	@Value("${profile.address}")
@@ -90,8 +83,15 @@ public class GruppiStudioController {
 	// METODI GET /////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
-	/*
-	 * Ritorna tutti i corsi in versione lite
+
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return ritorna la lista di tutti i gruppi di studio
+	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/all")
 	public @ResponseBody
@@ -130,8 +130,16 @@ public class GruppiStudioController {
 	// METODI GET /////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
-	/*
-	 * Ritorna tutti i corsi in versione lite
+
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return retituisce tutti i gruppi di studio a cui lo studente non è iscritto
+	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/find")
 	public @ResponseBody
@@ -182,8 +190,17 @@ public class GruppiStudioController {
 	// METODI GET /////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
-	/*
-	 * Ritorna tutti i corsi in versione lite
+
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param ad_id
+	 * @return restituisce la lista di tutti i gds associati ad un'attività didattica
+	 * in cui lo studente non è iscritto
+	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/find/{ad_id}")
 	public @ResponseBody
@@ -243,8 +260,18 @@ public class GruppiStudioController {
 				.getPrincipal();
 	}
 
-	/*
-	 * Ritorna i gruppi di un corso
+
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_corso
+	 * @return ritorna tutti i gruppi di studio associati ad un'attività didattica
+	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/{id_corso}")
 	public @ResponseBody
@@ -283,8 +310,17 @@ public class GruppiStudioController {
 		return null;
 	}
 
-	/*
-	 * Ritorna i gruppi di uno studente
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return restituisce la lista di tutti i gruppi di studio a cui è iscritto lo studente
+	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/me")
 	public @ResponseBody
@@ -334,8 +370,19 @@ public class GruppiStudioController {
 		return null;
 	}
 
-	/*
-	 * Ritorna i gruppi di uno studente per un determinato corso
+
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_corso
+	 * @return restituisce tutti i gruppi di studio a cui lo studente è iscritto, filtrati per
+	 * una determinata attività didattica
+	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/{id_corso}/me")
 	public @ResponseBody
@@ -657,8 +704,18 @@ public class GruppiStudioController {
 	// /////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
-	/*
-	 * Cancella lo studente dal gruppo
+
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param gruppodistudio
+	 * @return true se lo studente viene tolto dal gruppo di studio
+	 * @throws IOException
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/delete/me")
 	public @ResponseBody
@@ -701,6 +758,18 @@ public class GruppiStudioController {
 		return false;
 	}
 
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param gruppodistudio
+	 * @return true se il gds viene modificato correttamente
+	 * @throws IOException
+	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/change")
 	public @ResponseBody
 	boolean changeGds(HttpServletRequest request, HttpServletResponse response,
@@ -715,8 +784,6 @@ public class GruppiStudioController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-
-			// Studente studente = studenteRepository.findOne(userId);
 
 			if (userId == null)
 				return false;

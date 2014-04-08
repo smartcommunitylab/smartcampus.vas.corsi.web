@@ -186,7 +186,7 @@ public class ScheduledServiceSync {
 				attivitaDidatticaRepository.save(attivitaDidatticaList);
 			}
 
-			getCalendarFull();
+			getCalendarWeek();
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -204,7 +204,7 @@ public class ScheduledServiceSync {
 	 */
 	//@Scheduled(fixedDelay = 1209600000)
 	public @ResponseBody
-	void getCalendar()
+	void getCalendarFull()
 
 	throws IOException {
 		try {
@@ -275,7 +275,7 @@ public class ScheduledServiceSync {
 	// @Scheduled(cron = "0 0 1 * * ?")
 	@Scheduled(cron = "0 0 * * * *")
 	public @ResponseBody
-	void getCalendarFull()
+	void getCalendarWeek()
 
 	throws IOException {
 		try {
@@ -287,8 +287,6 @@ public class ScheduledServiceSync {
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
 			client_auth_token = clientTokenManager.getClientSmartCampusToken();
-			// client_auth_token = "6a7e5dfc-af50-4c2c-a632-dfd7e8210c59";
-			System.out.println("Client auth token: " + client_auth_token);
 
 			List<Dipartimento> dipartimenti = dipartimentoRepository.findAll();
 

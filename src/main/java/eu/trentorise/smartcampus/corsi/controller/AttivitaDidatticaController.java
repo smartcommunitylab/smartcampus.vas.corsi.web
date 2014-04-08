@@ -77,15 +77,15 @@ public class AttivitaDidatticaController {
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return List<CorsoLaurea>
+	 * @return {@link AttivitaDidattica}
 	 * @throws IOException
 	 * 
-	 *             Restituisce tutti i corsi di laurea
+	 *             Restituisce un'attività didattica dato un ad_id
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/{id_ad}")
 	public @ResponseBody
-	AttivitaDidattica getAttivitaDidatticaById(HttpServletRequest request,
+	AttivitaDidattica getAttivitaDidatticaByAdId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("id_ad") Long id_ad)
 
@@ -116,11 +116,9 @@ public class AttivitaDidatticaController {
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return List<CorsoLaurea>
+	 * @param ad_cod
+	 * @return Restituisce l'attività didattica dato ad_cod
 	 * @throws IOException
-	 * 
-	 *             Restituisce tutti i corsi di laurea
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/adcod/{ad_cod}")
 	public @ResponseBody
@@ -158,11 +156,9 @@ public class AttivitaDidatticaController {
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return List<CorsoLaurea>
+	 * @param id_cds
+	 * @return Restituisce List<AttivitaDidattica> dato id_cds
 	 * @throws IOException
-	 * 
-	 *             Restituisce tutti i corsi di laurea
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/corsolaurea/{id_cds}")
 	public @ResponseBody
@@ -178,6 +174,7 @@ public class AttivitaDidatticaController {
 			getAttivitaDidattica = attivitaDidatticaRepository
 					.findAttivitaDidatticaByCdsId(id_cds);
 
+			// sort per nome
 			Collections.sort(getAttivitaDidattica,
 					new Comparator<AttivitaDidattica>() {
 						public int compare(AttivitaDidattica e1,
@@ -200,16 +197,17 @@ public class AttivitaDidatticaController {
 		return null;
 	}
 
+	
+	
+	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return List<CorsoLaurea>
+	 * @param id_dip
+	 * @return List<AttivitaDidattica> di un determinato dipartimento
 	 * @throws IOException
-	 * 
-	 *             Restituisce tutti i corsi di laurea
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/dipartimento/{id_dip}")
 	public @ResponseBody
@@ -236,6 +234,7 @@ public class AttivitaDidatticaController {
 				attivitaAllByDip.addAll(getAttivitaDidattica);
 			}
 
+			// sort per nome
 			Collections.sort(attivitaAllByDip,
 					new Comparator<AttivitaDidattica>() {
 						public int compare(AttivitaDidattica e1,
@@ -258,16 +257,18 @@ public class AttivitaDidatticaController {
 		return null;
 	}
 
+
+	
+	
+	
+	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return List<CorsoLaurea>
+	 * @return Tutte le attività didattiche
 	 * @throws IOException
-	 * 
-	 *             Restituisce tutti i corsi di laurea
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/all")
 	public @ResponseBody
@@ -281,6 +282,8 @@ public class AttivitaDidatticaController {
 			List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
 			getAttivitaDidattica = attivitaDidatticaRepository.findAll();
 
+			
+			// sort per nome
 			Collections.sort(getAttivitaDidattica,
 					new Comparator<AttivitaDidattica>() {
 						public int compare(AttivitaDidattica e1,
@@ -309,16 +312,19 @@ public class AttivitaDidatticaController {
 		return null;
 	}
 
-	/**
+
+	
+	
+	
+	
+	/***
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return List<CorsoLaurea>
+	 * @param adCod
+	 * @return restituisce true se l'ad_cod associato ad AttivitaDidattica è stato superato dallo studente
 	 * @throws IOException
-	 * 
-	 *             Restituisce tutti i corsi di laurea
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/{ad_cod}/passed")
 	public @ResponseBody
@@ -339,6 +345,8 @@ public class AttivitaDidatticaController {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
+			
+			// dato ad_cod cerco il corso carriera con l'ad_cod associato all'utente
 			CorsoCarriera corsoCarriera = corsoCarrieraRepository
 					.findCorsoCarrieraByAdCodAndStudenteId(adCod,
 							studenteDB.getId());

@@ -59,17 +59,18 @@ public class NotificheController {
 	@Value("${studymate.client.secret}")
 	private String client_secret;
 
+	
+	
+
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return Studente
+	 * @param type
+	 * @param date_from
+	 * @return restituisce una lista di notifiche ottenuta dal communicator filtrata da type e dalla data di inizio
 	 * @throws IOException
-	 * 
-	 *             Restituisce i dati dello studente riferiti allo studente che
-	 *             effetua la richiesta
-	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/notifiche/type/{type}/date/{date_from}")
 	public @ResponseBody
@@ -82,12 +83,6 @@ public class NotificheController {
 		try {
 
 			logger.info("/notifiche/type/{type}/date/{date_from}");
-
-//			String token = getToken(request);
-//			BasicProfileService service = new BasicProfileService(
-//					profileaddress);
-//			BasicProfile profile = service.getBasicProfile(token);
-//			Long userId = Long.valueOf(profile.getUserId());
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
@@ -143,18 +138,5 @@ public class NotificheController {
 		}
 		return null;
 	}
-
-//	/**
-//	 * 
-//	 * @param request
-//	 * @return String
-//	 * 
-//	 *         Ottiene il token riferito alla request
-//	 * 
-//	 */
-//	private String getToken(HttpServletRequest request) {
-//		return (String) SecurityContextHolder.getContext().getAuthentication()
-//				.getPrincipal();
-//	}
 
 }
