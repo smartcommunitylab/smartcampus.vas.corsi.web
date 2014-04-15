@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.EventoId;
+import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 
 @Repository
 public interface EventoRepository extends JpaRepository<Evento, EventoId> {
@@ -23,4 +24,6 @@ public interface EventoRepository extends JpaRepository<Evento, EventoId> {
 
 	Evento findEventoByIdClass(long id, Date date, Time from, Time to,
 			long idStudente);
+	
+	List<Evento> findAttByIdGds(GruppoDiStudio id_gruppodistudio);
 }

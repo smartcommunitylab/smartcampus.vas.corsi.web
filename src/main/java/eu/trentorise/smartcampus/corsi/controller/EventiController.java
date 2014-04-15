@@ -31,11 +31,13 @@ import eu.trentorise.smartcampus.corsi.model.CorsoLaurea;
 import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.EventoId;
+import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
+import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.corsi.util.EventoMapper;
@@ -86,6 +88,9 @@ public class EventiController {
 	private CorsoInteresseRepository corsoInteresseRepository;
 
 	@Autowired
+	private GruppoDiStudioRepository gruppoDiStudioRepository;
+
+	@Autowired
 	@Value("${url.studente.service}")
 	private String unidataaddress;
 
@@ -101,8 +106,6 @@ public class EventiController {
 
 	String client_auth_token;
 
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -112,7 +115,8 @@ public class EventiController {
 	 * @return List<Evento>
 	 * @throws IOException
 	 * 
-	 *             Restituisce tutti gli eventi riferiti ad un corso di studi dato
+	 *             Restituisce tutti gli eventi riferiti ad un corso di studi
+	 *             dato
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/evento/corsolaurea/{id_cds}")
@@ -154,9 +158,10 @@ public class EventiController {
 	 * @return Evento
 	 * @throws IOException
 	 * 
-	 *             Salva nel DB l'evento personale passato dal client e restituisce
-	 *             l'evento se l'operazione va a buon fine, altrimenti false
-	 *             
+	 *             Salva nel DB l'evento personale passato dal client e
+	 *             restituisce l'evento se l'operazione va a buon fine,
+	 *             altrimenti false
+	 * 
 	 *             evento_id = -1 (evento personale)
 	 * 
 	 */
@@ -254,11 +259,7 @@ public class EventiController {
 		}
 		return false;
 	}
-	
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -318,7 +319,6 @@ public class EventiController {
 					}
 				}
 
-				
 				// salvo l'evento nel db
 				eventoChanged = eventoRepository.save(eventoChanged);
 
@@ -345,8 +345,8 @@ public class EventiController {
 	 * @return List<Evento>
 	 * @throws IOException
 	 * 
-	 *             Restituisce tutti gli eventi di tutti i corsi da libretto + 
-	 *             i corsi di interesse riferiti allo studente 
+	 *             Restituisce tutti gli eventi di tutti i corsi da libretto + i
+	 *             corsi di interesse riferiti allo studente
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/evento/me")
@@ -366,7 +366,6 @@ public class EventiController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			List<Evento> listEventi = new ArrayList<Evento>();
-
 
 			// eventi corsi di interesse
 
@@ -396,10 +395,19 @@ public class EventiController {
 							.compareTo(date.getTime()) >= 0) {
 						listEventi.add(evento);
 					}
+
+					if (evento.getGruppo() != null) {
+
+						GruppoDiStudio gds = gruppoDiStudioRepository
+								.findOne(evento.getGruppo().getId());
+
+						if (gds != null && !gds.isContainsStudente(userId)) {
+							listEventi.remove(evento);
+						}
+					}
 				}
 			}
 
-			
 			// sort per data
 			Collections.sort(listEventi, new Comparator<Evento>() {
 				public int compare(Evento e1, Evento e2) {

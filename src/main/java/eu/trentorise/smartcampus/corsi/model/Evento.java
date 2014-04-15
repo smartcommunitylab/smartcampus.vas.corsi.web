@@ -3,6 +3,9 @@ package eu.trentorise.smartcampus.corsi.model;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -11,8 +14,9 @@ import javax.persistence.Table;
 @NamedQueries({
 		@NamedQuery(name = "Evento.findEventoByCds", query = "select e from Evento e where e.cds = ?1"),
 		@NamedQuery(name = "Evento.findEventoByAdAndYear", query = "select e from Evento e, CorsoCarriera cc where e.title = ?1 and e.yearCds <= ?2"),
-		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where (e.title = ?1) and (e.eventoId.idStudente = ?2 or e.eventoId.idStudente = -1)"),
-		@NamedQuery(name = "Evento.findEventoByIdClass", query = "select e from Evento e where (e.eventoId.idEventAd = ?1) and (e.eventoId.date = ?2) and (e.eventoId.start = ?3) and (e.eventoId.stop = ?4) and (e.eventoId.stop = ?5)") })
+		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where (e.title = ?1) and (e.eventoId.idStudente = ?2 or e.eventoId.idStudente = -1 or e.eventoId.idEventAd = -2)"),
+		@NamedQuery(name = "Evento.findEventoByIdClass", query = "select e from Evento e where (e.eventoId.idEventAd = ?1) and (e.eventoId.date = ?2) and (e.eventoId.start = ?3) and (e.eventoId.stop = ?4) and (e.eventoId.stop = ?5)"),
+		@NamedQuery(name = "Evento.findAttByIdGds", query = "select e from Evento e where e.gruppo = ?1")})
 @Table(name = "evento")
 public class Evento {
 	/**
@@ -49,6 +53,10 @@ public class Evento {
 
 	@Column(name = "PERSONAL_DESCRIPTION")
 	private String personalDescription;
+	
+	@JoinColumn(name = "GRUPPODISTUDIO_ID")
+	@ManyToOne(fetch=FetchType.EAGER)
+	private GruppoDiStudio gruppo;
 
 	public String getRoom() {
 		return room;
@@ -129,5 +137,14 @@ public class Evento {
 	public void setPersonalDescription(String personalDescription) {
 		this.personalDescription = personalDescription;
 	}
+
+	public GruppoDiStudio getGruppo() {
+		return gruppo;
+	}
+
+	public void setGruppo(GruppoDiStudio gruppo) {
+		this.gruppo = gruppo;
+	}
+	
 
 }

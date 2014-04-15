@@ -9,8 +9,8 @@ import javax.persistence.NamedQuery;
 @NamedQuery(name = "AttivitaDiStudio.findAttByIdGds", query = "select a from AttivitaDiStudio a where a.gruppo = ?1")
 public class AttivitaDiStudio extends Evento {
 	// gds di riferimentoì
-	@JoinColumn(name = "GRUPPODISTUDIO_ID")
-	private long gruppo;
+//	@JoinColumn(name = "GRUPPODISTUDIO_ID")
+//	private long gruppo;
 
 	// topic
 	@Column(name = "Topic")
@@ -27,13 +27,13 @@ public class AttivitaDiStudio extends Evento {
 		this.topic = topic;
 	}
 
-	public long getGruppo() {
-		return gruppo;
-	}
-
-	public void setGruppo(long gruppo) {
-		this.gruppo = gruppo;
-	}
+//	public long getGruppo() {
+//		return gruppo;
+//	}
+//
+//	public void setGruppo(long gruppo) {
+//		this.gruppo = gruppo;
+//	}
 
 	// public Collection<Allegato> getAllegato() {
 	// return allegato;

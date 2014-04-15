@@ -26,10 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
-import eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio;
+import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.EventoId;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
-import eu.trentorise.smartcampus.corsi.repository.AttivitaStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
@@ -68,9 +67,6 @@ public class AttivitaStudioController {
 	private String communicatoraddress;
 
 	@Autowired
-	private AttivitaStudioRepository attivitastudioRepository;
-
-	@Autowired
 	private GruppoDiStudioRepository gruppstudioRepository;
 
 	@Autowired
@@ -95,7 +91,7 @@ public class AttivitaStudioController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/attivitadistudio/{id_gruppodistudio}")
 	public @ResponseBody
-	List<AttivitaDiStudio> getAttivitadistudioByID(HttpServletRequest request,
+	List<Evento> getAttivitadistudioByID(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("id_gruppodistudio") Long id_gruppodistudio)
 
@@ -105,8 +101,10 @@ public class AttivitaStudioController {
 
 			if (id_gruppodistudio == null)
 				return null;
+			
+			GruppoDiStudio gdsRefer = gruppstudioRepository.findOne(id_gruppodistudio);
 
-			return attivitastudioRepository.findAttByIdGds(id_gruppodistudio);
+			return eventoRepository.findAttByIdGds(gdsRefer);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,7 +117,6 @@ public class AttivitaStudioController {
 	// METODI POST ////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
-	
 	/**
 	 * 
 	 * @param request
@@ -134,7 +131,7 @@ public class AttivitaStudioController {
 	public @ResponseBody
 	boolean saveAttivitaStudio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@RequestBody AttivitaDiStudio atDiStudio)
+			@RequestBody Evento atDiStudio)
 
 	throws IOException {
 		try {
@@ -155,7 +152,7 @@ public class AttivitaStudioController {
 				// ottengo i membri che fanno parte del gruppo di studio
 				// relativo all'attività di studio
 				GruppoDiStudio gruppoRefersAttivita = gruppstudioRepository
-						.findOne(atDiStudio.getGruppo());
+						.findOne(atDiStudio.getGruppo().getId());
 
 				// controllo se lo studente che manda la richiesta fa parte del
 				// gruppo associato all'attività e se il gruppo esiste
@@ -213,8 +210,7 @@ public class AttivitaStudioController {
 				}
 
 				// salvo l'attività di studio
-				AttivitaDiStudio attivitaSaved = attivitastudioRepository
-						.save(atDiStudio);
+				Evento attivitaSaved = eventoRepository.save(atDiStudio);
 
 				if (attivitaSaved == null)
 					return false;
@@ -250,7 +246,7 @@ public class AttivitaStudioController {
 	public @ResponseBody
 	boolean changeAttivitaDiStudio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,@PathVariable("date") long date, @PathVariable("from") long from,
-			@PathVariable("to") long to, @RequestBody AttivitaDiStudio attivitadistudio)
+			@PathVariable("to") long to, @RequestBody Evento attivitadistudio)
 
 	throws IOException {
 		try {
@@ -282,7 +278,7 @@ public class AttivitaStudioController {
 			// ottengo i membri che fanno parte del gruppo di studio relativo
 			// all'attività di studio
 			GruppoDiStudio gruppoRefersAttivita = gruppstudioRepository
-					.findOne(attivitadistudio.getGruppo());
+					.findOne(attivitadistudio.getGruppo().getId());
 
 			// controllo se lo studente che manda la richiesta fa parte del
 			// gruppo associato all'attività e se il gruppo esiste
@@ -336,9 +332,9 @@ public class AttivitaStudioController {
 //						tManager.getClientSmartCampusToken());
 			}
 			
-			attivitastudioRepository.delete(eventoToChange);
+			eventoRepository.delete(eventoToChange);
 
-			AttivitaDiStudio attivitadistudioAggiornato = attivitastudioRepository
+			Evento attivitadistudioAggiornato = eventoRepository
 					.save(attivitadistudio);
 
 			if (attivitadistudioAggiornato == null) {
@@ -380,7 +376,7 @@ public class AttivitaStudioController {
 	public @ResponseBody
 	boolean deleteAttivita(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@RequestBody AttivitaDiStudio attivitadistudio)
+			@RequestBody Evento attivitadistudio)
 
 	throws IOException {
 		try {
@@ -403,7 +399,7 @@ public class AttivitaStudioController {
 			// ottengo i membri che fanno parte del gruppo di studio relativo
 			// all'attività di studio
 			GruppoDiStudio gruppoRefersAttivita = gruppstudioRepository
-					.findOne(attivitadistudio.getGruppo());
+					.findOne(attivitadistudio.getGruppo().getId());
 
 			// controllo se lo studente che manda la richiesta fa parte del
 			// gruppo associato all'attività e se il gruppo esiste
@@ -457,13 +453,13 @@ public class AttivitaStudioController {
 //						tManager.getClientSmartCampusToken());
 			}
 
-			AttivitaDiStudio AttivitaFromDB = attivitastudioRepository
+			Evento AttivitaFromDB = eventoRepository
 					.findOne(attivitadistudio.getEventoId());
 
 			if (AttivitaFromDB == null)
 				return false;
 
-			attivitastudioRepository.delete(AttivitaFromDB);
+			eventoRepository.delete(AttivitaFromDB);
 
 			return true;
 
