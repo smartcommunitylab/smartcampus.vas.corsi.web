@@ -24,10 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
+import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 import eu.trentorise.smartcampus.corsi.model.Studente;
 import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
+import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
@@ -72,6 +74,9 @@ public class GruppiStudioController {
 
 	@Autowired
 	private AttivitaDidatticaRepository attivitaDidatticaRepository;
+	
+	@Autowired
+	private EventoRepository eventoRepository;
 
 	@Autowired
 	private StudenteRepository studenteRepository;
@@ -744,11 +749,21 @@ public class GruppiStudioController {
 			gdsFromDB.removeStudenteGruppo(userId);
 			gdsFromDB.setIfVisibleFromNumMembers();
 			// se il gruppo ha 0 membri lo elimino dal db
-			if (gdsFromDB.canRemoveGruppoDiStudioIfVoid())
+			if (gdsFromDB.canRemoveGruppoDiStudioIfVoid()){
+				List<Evento> eventsToRemove = eventoRepository.selectEventsGdsOfStudent(gdsFromDB,userId);
+				for (Evento evento : eventsToRemove) {
+					eventoRepository.delete(evento);
+				}
 				gruppidistudioRepository.delete(gdsFromDB);
-			else
+				
+			}else{
 				gruppidistudioRepository.save(gdsFromDB);
-
+				List<Evento> eventsToRemove = eventoRepository.selectEventsGdsOfStudent(gdsFromDB,userId);
+				for (Evento evento : eventsToRemove) {
+					eventoRepository.delete(evento);
+				}
+				
+			}
 			return true;
 
 		} catch (Exception e) {

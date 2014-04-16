@@ -26,4 +26,6 @@ public interface EventoRepository extends JpaRepository<Evento, EventoId> {
 			long idStudente);
 	
 	List<Evento> findAttByIdGds(GruppoDiStudio id_gruppodistudio);
+	
+	List<Evento> selectEventsGdsOfStudent(GruppoDiStudio gds, long idStudente);
 }
