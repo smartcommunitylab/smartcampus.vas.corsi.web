@@ -287,6 +287,80 @@ public class EventiController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
+			
+			
+			// se l'evento è un'attività di studio allora lo gestisco controllando le restrinzioni
+			if(eventoChanged.getGruppo().getId() > 0){
+				eventoChanged.getEventoId().setIdEventAd(-2);
+				eventoChanged.getEventoId().setIdStudente(userId);
+
+				// Studente studente = studenteRepository.findOne(userId);
+
+				// ottengo i membri che fanno parte del gruppo di studio relativo
+				// all'attività di studio
+				GruppoDiStudio gruppoRefersAttivita = gruppoDiStudioRepository
+						.findOne(eventoChanged.getGruppo().getId());
+
+				// controllo se lo studente che manda la richiesta fa parte del
+				// gruppo associato all'attività e se il gruppo esiste
+				if (gruppoRefersAttivita == null
+						|| !gruppoRefersAttivita.isContainsStudente(userId))
+					return false;
+
+				List<String> users = new ArrayList<String>();
+				List<String> idsInvited = gruppoRefersAttivita
+						.getListInvited(userId);
+
+				// controllo se lo studente che manda la richiesta fa parte del
+				// gruppo associato all'attività e se il gruppo esiste
+				for (String id : idsInvited) {
+					users.add(id);
+				}
+
+				// controllo se campi validi
+				if (eventoChanged != null && eventoChanged.getTitle() != ""
+						&& eventoChanged.getEventoId().getIdStudente() != -1) {
+
+					EventoId eventoToChange = new EventoId();
+					eventoToChange.setIdEventAd(-2);
+					eventoToChange.setDate(new Date(date));
+					eventoToChange.setStart(new Time(from));
+					eventoToChange.setStop(new Time(to));
+					eventoToChange.setIdStudente(userId);
+
+					List<Evento> eventoToDelete = eventoRepository.selectEventsGdsOfStudent(
+							gruppoRefersAttivita, userId);
+
+					for (Evento evento : eventoToDelete) {
+						long roundDate = 10000 * (evento.getEventoId().getDate()
+								.getTime() / 10000);
+						date = 10000 * (date / 10000);
+						if (evento.getEventoId().getIdEventAd() == -2
+								&& roundDate == date
+								&& evento.getEventoId().getStart().getTime() == from
+								&& evento.getEventoId().getStop().getTime() == to) {
+
+							eventoRepository.delete(evento);
+							eventoRepository.flush();
+
+						}
+					}
+
+					// salvo l'evento nel db
+					Evento attivitadistudioDB = eventoRepository.save(eventoChanged);
+
+					if (attivitadistudioDB != null)
+						return true;
+					else
+						return false;
+
+				} else
+					return false;
+
+			}
+			
+			
+			// altrimenti l'evento è un evento pubblico o personale
 
 			eventoChanged.getEventoId().setIdStudente(userId);
 			eventoChanged.getEventoId().setIdEventAd(-1);
