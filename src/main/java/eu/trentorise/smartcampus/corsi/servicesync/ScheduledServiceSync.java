@@ -272,8 +272,8 @@ public class ScheduledServiceSync {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("deprecation")
-	// @Scheduled(cron = "0 0 1 * * ?")
-	@Scheduled(cron = "0 0 * * * *")
+	@Scheduled(cron = "0 0 1 * * ?")
+	//@Scheduled(cron = "0 0 * * * *")
 	public @ResponseBody
 	void getCalendarWeek()
 
