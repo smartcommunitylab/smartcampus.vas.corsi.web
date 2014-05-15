@@ -34,7 +34,7 @@
 
 	
   <context:property-placeholder location="classpath:corsi.properties" />
-  
+  <bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer" />
   
 <http xmlns="http://www.springframework.org/schema/security" pattern="/web/css/**" security="none"/>
   <http xmlns="http://www.springframework.org/schema/security" pattern="/web/img/**" security="none"/>
@@ -64,25 +64,28 @@
     
 	
 	
-	<sec:http pattern="/rest/**" create-session="never" entry-point-ref="oauthAuthenticationEntryPoint"
-		xmlns="http://www.springframework.org/schema/security"
-		authentication-manager-ref="authenticationManager">
-		<sec:anonymous enabled="false" />
-		<sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
-		<custom-filter ref="resourceFilter" before="PRE_AUTH_FILTER" />
-		<access-denied-handler ref="oauthAccessDeniedHandler" />
+	<sec:http pattern="/rest**" entry-point-ref="forbEntryPoint" use-expressions="true" create-session="stateless">
+		<sec:custom-filter position="PRE_AUTH_FILTER" ref="authTokenFilter" />
+		 <sec:intercept-url pattern="/**" access="isFullyAuthenticated()" />
 	</sec:http>
+
 	
 	
+<bean id="forbEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint">
+	</bean>
 
-	<bean id="oauthAuthenticationEntryPoint"
-		class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint" />
-	<bean id="oauthAccessDeniedHandler"
-		class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
+	<bean id="authTokenFilter" class="eu.trentorise.smartcampus.aac.conf.OAuthTokenFilter">
+	    <property name="authenticationManager" ref="authenticationManager"/>
+	</bean>    
 
-	<bean id="resourceFilter"
-		class="eu.trentorise.smartcampus.resourceprovider.filter.ResourceFilter">
-		<property name="authenticationManager" ref="resourceAuthenticationManager" />
+	<sec:authentication-manager alias="authenticationManager">
+		<sec:authentication-provider ref="preauthAuthProvider" />
+	</sec:authentication-manager>
+
+	<bean id="preauthAuthProvider" class="eu.trentorise.smartcampus.aac.conf.OAuthAuthenticationProvider">
+<!-- 	  <property name="tokenStore" ref="tokenStore"/>   
+    <property name="aacURL" value="https://vas-dev.smartcampuslab.it/aac"/>  
+     <property name="scope" value="smartcampus.profile.basicprofile.me"/>  -->
 	</bean>
 
 	<bean id="tokenStore"
@@ -126,12 +129,6 @@
 		<sec:authentication-provider ref="preauthAuthProvider" />
 	</sec:authentication-manager>
 	
-	<bean id="preauthAuthProvider"
-		class="eu.trentorise.smartcampus.aac.conf.OAuthAuthenticationProvider">
-<!-- 		<property name="tokenStore" ref="tokenStore" /> -->
-<!-- 		<property name="aacURL" value="https://vas-dev.smartcampuslab.it/aac" /> -->
-<!-- 		<property name="scope" value="smartcampus.profile.basicprofile.me" /> -->
-	</bean>
 
 	<bean id="authServices"
 		class="eu.trentorise.smartcampus.resourceprovider.jdbc.JdbcServices">
@@ -139,7 +136,6 @@
 	</bean>
 
 
-	<context:component-scan base-package="eu.trentorise.smartcampus.resourceprovider" />
 
 	<mvc:annotation-driven />
 </beans>
