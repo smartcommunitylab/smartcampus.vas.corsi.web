@@ -493,11 +493,18 @@ public class CommentiController {
 									commentoDaModificare.getId().toString(),
 									userId, tkm.getClientSmartCampusToken()));
 
+					
+					
+					
+					
 					if (commentoDaModificare.isApproved()) {
+						
+						AttivitaDidattica ad_commento = attivitaDidatticaRepository.findOne(commentoDaModificare.getCorso());
+						
 						mediationParserImpl.remoteValidationComment(
 								commentoDaModificare.getTesto(),
 								commentoDaModificare.getId().toString(),
-								userId, tkm.getClientSmartCampusToken());
+								userId, ad_commento.getDescription(), tkm.getClientSmartCampusToken());
 					}
 
 					if (commentoDaModificare.isApproved()) {
@@ -548,9 +555,12 @@ public class CommentiController {
 					commentoNuovo = commentiRepository.save(commentoNuovo);
 
 					if (commentoNuovo.isApproved()) {
+						
+						AttivitaDidattica ad_commento = attivitaDidatticaRepository.findOne(commentoDaModificare.getCorso());
+						
 						mediationParserImpl.remoteValidationComment(
 								commentoNuovo.getTesto(), commentoNuovo.getId()
-										.toString(), userId, tkm
+										.toString(), userId, ad_commento.getDescription(), tkm
 										.getClientSmartCampusToken());
 					}
 

@@ -18,7 +18,7 @@ import javax.persistence.Table;
 		@NamedQuery(name = "Evento.findEventoByIdClass", query = "select e from Evento e where (e.eventoId.idEventAd = ?1) and (e.eventoId.date = ?2) and (e.eventoId.start = ?3) and (e.eventoId.stop = ?4) and (e.eventoId.stop = ?5)"),
 		@NamedQuery(name = "Evento.selectEventsGdsOfStudent", query = "select e from Evento e where (e.eventoId.idEventAd = -2) and (e.gruppo = ?1) and (e.eventoId.idStudente = ?2)"),
 		@NamedQuery(name = "Evento.findAttByIdGds", query = "select e from Evento e where e.gruppo = ?1"),
-		@NamedQuery(name = "Evento.findEventsBeforeDate", query = "select e from Evento e where e.eventoId.date < ?1")})
+		@NamedQuery(name = "Evento.findEventsBeforeDate", query = "select e from Evento e where e.eventoId.date < ?1") })
 @Table(name = "evento")
 public class Evento {
 	/**
@@ -55,9 +55,9 @@ public class Evento {
 
 	@Column(name = "PERSONAL_DESCRIPTION")
 	private String personalDescription;
-	
+
 	@JoinColumn(name = "GRUPPODISTUDIO_ID")
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private GruppoDiStudio gruppo;
 
 	public String getRoom() {
@@ -147,6 +147,5 @@ public class Evento {
 	public void setGruppo(GruppoDiStudio gruppo) {
 		this.gruppo = gruppo;
 	}
-	
 
 }

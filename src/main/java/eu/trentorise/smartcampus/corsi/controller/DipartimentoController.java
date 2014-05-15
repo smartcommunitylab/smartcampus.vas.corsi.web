@@ -42,7 +42,7 @@ public class DipartimentoController {
 	 *             Restituisce la lista di tutti i dipartimenti
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/dipartimento/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/dipartimento/all")
 	public @ResponseBody
 	List<Dipartimento> getDipartimentoAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)

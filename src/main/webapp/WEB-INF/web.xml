@@ -43,8 +43,19 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+      <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/img/*</url-pattern>
+        <url-pattern>/css/*</url-pattern>
+        <url-pattern>/lib/*</url-pattern>
+        <url-pattern>/js/*</url-pattern>
+        </servlet-mapping>
   <servlet-mapping>
+      
+      
+      
+      
     <servlet-name>SpringAppDispatcher</servlet-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
 </web-app>
