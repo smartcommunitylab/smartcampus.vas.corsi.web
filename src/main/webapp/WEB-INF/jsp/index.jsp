@@ -5,7 +5,7 @@
 
 <head lang="en">
 <meta charset="utf-8">
-<title>Moderation Console</title>
+<title>StudyMate Statistics Console</title>
 
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
@@ -43,7 +43,6 @@
 
 <script>
 var token="<%=request.getAttribute("token")%>";
-var appsFromDb=<%=request.getAttribute("appsFromDb")%>;
 var user_name="<%=request.getAttribute("user")%>";
 </script>
 
@@ -53,29 +52,59 @@ var user_name="<%=request.getAttribute("user")%>";
 
 
 
-<body ng-controller="MainCtrl">
-<!-- 	<div class="container" style="width: 65%;"> -->
-		<div class="row" style="height: 220px">
-			<h1> Usage statistics Console of StudyMate </h1>
+<body ng-controller="MainCtrl" data-ng-init="init()">
+	<div class="container" style="width: 80%;">
+		<div class="row" style="height: 75px">
+			<h1>Usage statistics Console of StudyMate</h1>
 		</div>
-<!-- 		<div class="row">
-			<div class="span6 "></div>
-			<div class="span4 well">
+		<div class="row">
+			<!-- 	<div class="span6 "></div> -->
+			<div class="span5 well">
 				<div class="row">
 					<div class="span1" style="text-align: center">
 						<i class="fa fa-user fa-5x"></i>
 
 					</div>
-					<div class="span3">
+					<div class="span4">
 						<p>
-							Developer :<strong><span id="developer"></span></strong>
+							User :<strong><span id="developer"></span></strong>
 						</p>
 						<p style="margin-top: 10px;">
-							<button type="button" class="btn btn-success "
-								ng-disabled="app==undefined" ng-click="reload();">
+							<button type="button" class="btn btn-success"
+								ng-click="reload();">
 								<i class="fa fa-refresh"></i> Refresh
 							</button>
 						</p>
+						<p style="margin-top: 25px;">Filter contents by:</p>
+						<div class="btn-group">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								{{department}} <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li ng-repeat="dep in departmentList"><a href>{{dep.description}}</a></li>
+							</ul>
+						</div>
+
+						<div class="btn-group">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								{{degree}} <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li ng-repeat="deg in listDegrees"><a
+									ng-click="onSelectDegree(deg)">{{deg}}</a></li>
+							</ul>
+						</div>
+
+						<div class="btn-group">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								{{course}} <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li ng-repeat="course in listCourses"><a
+									ng-click="onSelectCourse(course)">{{course}}</a></li>
+							</ul>
+						</div>
+
 					</div>
 				</div>
 			</div>
@@ -83,23 +112,12 @@ var user_name="<%=request.getAttribute("user")%>";
 
 		<div class="row">
 
-
-
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span2">
-						<p>Department</p>
-						<div class="btn-group">
-							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								{{selection.department}} <span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li ng-repeat="department in listDepartments"><a
-									ng-click="onSelectDepartment(department)">{{department}}</a></li>
-							</ul>
-						</div>
 
-						<p>Degree</p>
+
+						<!-- 						<p>Degree</p>
 						<div class="btn-group">
 							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 								{{selection.degree}} <span class="caret"></span>
@@ -119,10 +137,10 @@ var user_name="<%=request.getAttribute("user")%>";
 								<li ng-repeat="course in listCourses"><a
 									ng-click="onSelectCourse(course)">{{course}}</a></li>
 							</ul>
-						</div>
+						</div> -->
 
 
-						<h2>General statistics about {{selection.course}}</h2>
+						<h4>General statistics about {{selection.course}}</h4>
 
 						<p>
 							Comments number: <strong>{{generalInfo.number}}</strong>
@@ -131,14 +149,16 @@ var user_name="<%=request.getAttribute("user")%>";
 							Average rate: <strong>{{generalInfo.average}}</strong>
 						</p>
 						<p>
+							Info: <strong>{{$scope.info}}</strong>
+						</p>
 					</div>
 					<div class="span10">
 
 
 						<div class="span3">
 
-									Filter: <input type="search" ng-model="filterContents"
-										placeholder="filter apps..." />
+							Filter contents: <input type="search" ng-model="filterContents"
+								placeholder="Filter..." />
 
 						</div>
 
@@ -179,10 +199,10 @@ var user_name="<%=request.getAttribute("user")%>";
 
 
 
- 
+		</div>
 
 
-		</div>-->
+	</div>
 </body>
 
 </html>
