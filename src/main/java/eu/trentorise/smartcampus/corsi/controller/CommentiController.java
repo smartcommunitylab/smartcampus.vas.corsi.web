@@ -258,29 +258,8 @@ public class CommentiController {
 						.save(commentiAggiornati);
 				return commentiAggiornati;
 			} else {
-				AttivitaDidattica corso = attivitaDidatticaRepository
-						.findOne(id_corso);
-				String token = getToken(request);
-				BasicProfileService service = new BasicProfileService(
-						profileaddress);
-				BasicProfile profile = service.getBasicProfile(token);
-				Long userId = Long.valueOf(profile.getUserId());
-				Studente studente = studenteRepository.findOne(userId);
 
-				Commento commento = new Commento();
-				commento.setId_studente(studente.getId());
-				commento.setCorso(corso.getAdId());
-				commento.setRating_carico_studio((float) -1);
-				commento.setRating_contenuto((float) -1);
-				commento.setRating_esame((float) -1);
-				commento.setRating_lezioni((float) -1);
-				commento.setRating_materiali((float) -1);
-				commento.setTesto(new String(""));
-				commento.setData_inserimento(null);
-
-				commentiAggiornati.add(commento);
-
-				return commentiAggiornati;
+				return null;
 
 			}
 

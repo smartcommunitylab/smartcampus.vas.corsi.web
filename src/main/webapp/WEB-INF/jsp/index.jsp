@@ -65,7 +65,7 @@ var user_name="<%=request.getAttribute("user")%>";
 						<i class="fa fa-user fa-5x"></i>
 
 					</div>
-					<div class="span4" ng-controller="dropdownController">
+					<div class="span3">
 						<p>
 							User :<strong><span id="developer"></span></strong>
 						</p>
@@ -143,13 +143,17 @@ var user_name="<%=request.getAttribute("user")%>";
 						</div> -->
 
 
-						<h4>General statistics about {{department.description}}, {{degree.descripion}}, {{course.description}}</h4>
-
+						<h5>General statistics about </h5>
+						<ul>
+						<li>{{department.description}}</li> 
+						<li>{{degree.descripion}}</li> 
+						<li>{{course.description}}</li>
+						</ul>
 						<p>
-							Comments number: <strong>{{generalInfo.number}}</strong>
+							Comments number: <strong>{{number}}</strong>
 						</p>
 						<p>
-							Average rate: <strong>{{generalInfo.average}}</strong>
+							Average rate: <strong>{{average}}</strong>
 						</p>
 						<p>
 							Info: <strong>{{$scope.info}}</strong>
@@ -182,10 +186,10 @@ var user_name="<%=request.getAttribute("user")%>";
 								</tr>
 							</thead>
 							<tbody class="animate-repeat"
-								ng-repeat="comment in remoteComment | filter:filterContents">
+								ng-repeat="comment in comments | filter:filterContents">
 								<tr>
 									<td>{{comment.id}}</td>
-									<td>{{comment.date | dateformat}}</td>
+									<td>{{comment.date}}</td>
 									<td>{{comment.id_studente}}</td>
 									<td>{{comment.nome_studente}}</td>
 									<td>{{comment.testo}}</td>
