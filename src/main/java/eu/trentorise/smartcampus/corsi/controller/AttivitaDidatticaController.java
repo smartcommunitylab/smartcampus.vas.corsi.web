@@ -160,7 +160,7 @@ public class AttivitaDidatticaController {
 	 * @return Restituisce List<AttivitaDidattica> dato id_cds
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/corsolaurea/{id_cds}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/attivitadidattica/corsolaurea/{id_cds}")
 	public @ResponseBody
 	List<AttivitaDidattica> getAttivitaDidatticaByCds(
 			HttpServletRequest request, HttpServletResponse response,
@@ -168,7 +168,7 @@ public class AttivitaDidatticaController {
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/corsolaurea/" + id_cds);
+			logger.info("/rest/attivitadidattica/corsolaurea/" + id_cds);
 
 			List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
 			getAttivitaDidattica = attivitaDidatticaRepository

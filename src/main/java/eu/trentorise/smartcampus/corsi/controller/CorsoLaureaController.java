@@ -47,7 +47,7 @@ public class CorsoLaureaController {
 	 *             Restituisce tutti i corsi di laurea
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsolaurea/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corsolaurea/all")
 	public @ResponseBody
 	List<CorsoLaurea> getCorsiLaureaAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
@@ -85,7 +85,7 @@ public class CorsoLaureaController {
 	 *             Restituisce tutti i corsi di laurea dato un dipartimento
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsolaurea/{id_dipartimento}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corsolaurea/{id_dipartimento}")
 	public @ResponseBody
 	List<CorsoLaurea> getCorsiLaureaAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -93,7 +93,7 @@ public class CorsoLaureaController {
 
 	throws IOException {
 		try {
-			logger.info("/corsolaurea/{id_dipartimento}");
+			logger.info("/corsolaurea/"+id_dipartimento.toString());
 			if (id_dipartimento == null)
 				return null;
 

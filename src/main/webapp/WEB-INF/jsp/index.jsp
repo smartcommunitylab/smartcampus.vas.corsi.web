@@ -54,8 +54,8 @@ var user_name="<%=request.getAttribute("user")%>";
 
 <body ng-controller="MainCtrl" data-ng-init="init()">
 	<div class="container" style="width: 80%;">
-		<div class="row" style="height: 75px">
-			<h1>Usage statistics Console of StudyMate</h1>
+		<div class="row" style="height: 65px">
+			<h2>Usage statistics Console of StudyMate</h2>
 		</div>
 		<div class="row">
 			<!-- 	<div class="span6 "></div> -->
@@ -65,7 +65,7 @@ var user_name="<%=request.getAttribute("user")%>";
 						<i class="fa fa-user fa-5x"></i>
 
 					</div>
-					<div class="span4">
+					<div class="span4" ng-controller="dropdownController">
 						<p>
 							User :<strong><span id="developer"></span></strong>
 						</p>
@@ -76,35 +76,38 @@ var user_name="<%=request.getAttribute("user")%>";
 							</button>
 						</p>
 						<p style="margin-top: 25px;">Filter contents by:</p>
+						<p>
 						<div class="btn-group">
 							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								{{department}} <span class="caret"></span>
+								{{department.description}} <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li ng-repeat="dep in departmentList"><a href>{{dep.description}}</a></li>
+								<li ng-repeat="dep in departmentList"><a ng-click="setCurrentDep(dep)">{{dep.description}}</a></li>
 							</ul>
 						</div>
-
+						</p>
+						<p>
 						<div class="btn-group">
 							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								{{degree}} <span class="caret"></span>
+								{{degree.descripion}} <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li ng-repeat="deg in listDegrees"><a
-									ng-click="onSelectDegree(deg)">{{deg}}</a></li>
+								<li ng-repeat="deg in degreesList"><a ng-click="setCurrentDeg(deg)">{{deg.descripion}}</a></li>
 							</ul>
 						</div>
-
+						</p>
+						<p>
 						<div class="btn-group">
 							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								{{course}} <span class="caret"></span>
+								{{course.description}} <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li ng-repeat="course in listCourses"><a
-									ng-click="onSelectCourse(course)">{{course}}</a></li>
+								<li ng-repeat="course in coursesList">
+									<a ng-click="setCurrentCourse(course)">{{course.description}}</a>
+								</li>
 							</ul>
 						</div>
-
+						</p>
 					</div>
 				</div>
 			</div>
@@ -140,7 +143,7 @@ var user_name="<%=request.getAttribute("user")%>";
 						</div> -->
 
 
-						<h4>General statistics about {{selection.course}}</h4>
+						<h4>General statistics about {{department.description}}, {{degree.descripion}}, {{course.description}}</h4>
 
 						<p>
 							Comments number: <strong>{{generalInfo.number}}</strong>
