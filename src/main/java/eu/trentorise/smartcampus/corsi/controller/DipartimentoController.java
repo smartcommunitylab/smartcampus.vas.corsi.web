@@ -78,7 +78,7 @@ public class DipartimentoController {
 	 *             Restituisce le informazioni di un dipartimento dato l'id
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/dipartimento/{id_dipartimento}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/dipartimento/{id_dipartimento}")
 	public @ResponseBody
 	Dipartimento getDipartimentoAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,

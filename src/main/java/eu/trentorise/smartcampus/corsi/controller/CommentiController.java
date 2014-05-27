@@ -106,7 +106,6 @@ public class CommentiController {
 
 	private eu.trentorise.smartcampus.corsi.util.EasyTokenManger tkm;
 
-	
 	/**
 	 * Inizializzazione per la gestione delle keywords
 	 */
@@ -231,7 +230,7 @@ public class CommentiController {
 	 *             Ritorna tutte le recensioni dato l'id di un corso
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corso/{id_corso}/commento/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corso/{id_corso}/commento/all")
 	public @ResponseBody
 	List<Commento> getCommentoByCorsoId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -245,7 +244,7 @@ public class CommentiController {
 			// Aggiorno le valutazioni del corso
 			UpdateRatingCorso(attivitaDidatticaRepository.findOne(id_corso));
 
-			logger.info("/corso/{id_corso}/commento/all");
+			logger.info("/rest/corso/{id_corso}/commento/all");
 			if (id_corso == null)
 				return null;
 
@@ -270,10 +269,10 @@ public class CommentiController {
 		return null;
 	}
 
-	
 	/**
 	 * Ogni 15 minuti viene effettuata la sincronizzazione dello stato di
 	 * validazione degli eventi con il moderatore
+	 * 
 	 * @throws AACException
 	 */
 	@Scheduled(fixedDelay = 900000)
@@ -300,12 +299,11 @@ public class CommentiController {
 					commentiRepository.saveAndFlush(c);
 				}
 			}
-			
+
 			logger.info("Scheduled Synchronization comments... "
 					+ updatedCommentList.size() + " comments updated");
 		}
 	}
-
 
 	/*
 	 * Ritorna tutte le recensioni dato l'id di un corso
@@ -322,7 +320,7 @@ public class CommentiController {
 	 *             Restituisce il commento personale per un determinato corso
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/commento/{id_corso}/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/commento/{id_corso}/me")
 	public @ResponseBody
 	Commento getCommentoByStudenteId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -330,7 +328,7 @@ public class CommentiController {
 
 	throws IOException {
 		try {
-			logger.info("/commento/{id_corso}/me");
+			logger.info("/rest/commento/{id_corso}/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -368,7 +366,7 @@ public class CommentiController {
 	 *             Riceve il metodo post dal client e lo salva nel DB. Ritorna
 	 *             true se l'operazione va a buon fine, altrimenti false.
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/commento")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/commento")
 	public @ResponseBody
 	boolean saveCommento(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -376,7 +374,7 @@ public class CommentiController {
 
 	throws IOException {
 		try {
-			logger.info("/commento");
+			logger.info("/rest/commento");
 			// TODO control valid field
 			if (commento == null)
 				return false;
@@ -472,18 +470,16 @@ public class CommentiController {
 									commentoDaModificare.getId().toString(),
 									userId, tkm.getClientSmartCampusToken()));
 
-					
-					
-					
-					
 					if (commentoDaModificare.isApproved()) {
-						
-						AttivitaDidattica ad_commento = attivitaDidatticaRepository.findOne(commentoDaModificare.getCorso());
-						
+
+						AttivitaDidattica ad_commento = attivitaDidatticaRepository
+								.findOne(commentoDaModificare.getCorso());
+
 						mediationParserImpl.remoteValidationComment(
 								commentoDaModificare.getTesto(),
 								commentoDaModificare.getId().toString(),
-								userId, ad_commento.getDescription(), tkm.getClientSmartCampusToken());
+								userId, ad_commento.getDescription(),
+								tkm.getClientSmartCampusToken());
 					}
 
 					if (commentoDaModificare.isApproved()) {
@@ -534,12 +530,14 @@ public class CommentiController {
 					commentoNuovo = commentiRepository.save(commentoNuovo);
 
 					if (commentoNuovo.isApproved()) {
-						
-						AttivitaDidattica ad_commento = attivitaDidatticaRepository.findOne(commentoDaModificare.getCorso());
-						
+
+						AttivitaDidattica ad_commento = attivitaDidatticaRepository
+								.findOne(commentoDaModificare.getCorso());
+
 						mediationParserImpl.remoteValidationComment(
 								commentoNuovo.getTesto(), commentoNuovo.getId()
-										.toString(), userId, ad_commento.getDescription(), tkm
+										.toString(), userId, ad_commento
+										.getDescription(), tkm
 										.getClientSmartCampusToken());
 					}
 
@@ -565,9 +563,6 @@ public class CommentiController {
 		}
 		return false;
 	}
-	
-	
-	
 
 	/**
 	 * 

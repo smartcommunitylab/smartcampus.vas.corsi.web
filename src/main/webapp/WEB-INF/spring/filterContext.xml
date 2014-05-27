@@ -61,12 +61,11 @@
 			logout-success-url="/logout" />
 	</sec:http>
 	
-    
 	
 	
-	<sec:http pattern="/rest**" entry-point-ref="forbEntryPoint" use-expressions="true" create-session="stateless">
+	<sec:http entry-point-ref="forbEntryPoint" use-expressions="true" create-session="stateless">
 		<sec:custom-filter position="PRE_AUTH_FILTER" ref="authTokenFilter" />
-		 <sec:intercept-url pattern="/**" access="isFullyAuthenticated()" />
+		 <sec:intercept-url pattern="/rest**" access="isFullyAuthenticated()" />
 	</sec:http>
 
 	

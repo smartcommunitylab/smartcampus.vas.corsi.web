@@ -54,7 +54,7 @@ public class CorsoLaureaController {
 
 	throws IOException {
 		try {
-			logger.info("/corsolaurea/all");
+			logger.info("/rest/corsolaurea/all");
 
 			List<CorsoLaurea> getCorsiLaurea = new ArrayList<CorsoLaurea>();
 			getCorsiLaurea = corsoLaureaRepository.findAll();
@@ -93,7 +93,7 @@ public class CorsoLaureaController {
 
 	throws IOException {
 		try {
-			logger.info("/corsolaurea/"+id_dipartimento.toString());
+			logger.info("/rest/corsolaurea/" + id_dipartimento.toString());
 			if (id_dipartimento == null)
 				return null;
 

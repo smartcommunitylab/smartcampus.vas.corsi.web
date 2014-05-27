@@ -42,7 +42,6 @@ public class GruppiStudioController {
 		INVITO, AVVISO
 	}
 
-
 	private static final Logger logger = Logger
 			.getLogger(GruppiStudioController.class);
 
@@ -74,7 +73,7 @@ public class GruppiStudioController {
 
 	@Autowired
 	private AttivitaDidatticaRepository attivitaDidatticaRepository;
-	
+
 	@Autowired
 	private EventoRepository eventoRepository;
 
@@ -88,8 +87,6 @@ public class GruppiStudioController {
 	// METODI GET /////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
-
-	
 	/**
 	 * 
 	 * @param request
@@ -98,14 +95,14 @@ public class GruppiStudioController {
 	 * @return ritorna la lista di tutti i gruppi di studio
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/gruppodistudio/all")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/all");
+			logger.info("/rest/gruppodistudio/all");
 			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository
 					.findAll();
 
@@ -135,18 +132,16 @@ public class GruppiStudioController {
 	// METODI GET /////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
-
-	
-	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return retituisce tutti i gruppi di studio a cui lo studente non è iscritto
+	 * @return retituisce tutti i gruppi di studio a cui lo studente non è
+	 *         iscritto
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/find")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/gruppodistudio/find")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioSearchToSubscribe(
 			HttpServletRequest request, HttpServletResponse response,
@@ -154,7 +149,7 @@ public class GruppiStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/find");
+			logger.info("/rest/gruppodistudio/find");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -195,19 +190,17 @@ public class GruppiStudioController {
 	// METODI GET /////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
-
-	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
 	 * @param ad_id
-	 * @return restituisce la lista di tutti i gds associati ad un'attività didattica
-	 * in cui lo studente non è iscritto
+	 * @return restituisce la lista di tutti i gds associati ad un'attività
+	 *         didattica in cui lo studente non è iscritto
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/find/{ad_id}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/gruppodistudio/find/{ad_id}")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioSearchToSubscribeByAd(
 			HttpServletRequest request, HttpServletResponse response,
@@ -215,7 +208,7 @@ public class GruppiStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/find/{ad_id}");
+			logger.info("/rest/gruppodistudio/find/{ad_id}");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -229,24 +222,24 @@ public class GruppiStudioController {
 			List<GruppoDiStudio> getGds = new ArrayList<GruppoDiStudio>();
 			for (GruppoDiStudio gruppoDiStudio : getgruppidistudio) {
 
-
 				if (gruppoDiStudio.getCorso() == ad_id) {
 					List<Long> listStudIscritti = convertIdsAllStudentsToList(gruppoDiStudio
 							.getIdsStudenti());
 					List<Studente> studentiGruppo = new ArrayList<Studente>();
 					for (Long studenteId : listStudIscritti) {
 						if (studenteId != userId) {
-							Studente studente = studenteRepository.findOne(studenteId);
-							
+							Studente studente = studenteRepository
+									.findOne(studenteId);
+
 							studentiGruppo.add(studente);
 						}
 
 					}
-					
-					if(!gruppoDiStudio.isContainsStudente(userId)){
+
+					if (!gruppoDiStudio.isContainsStudente(userId)) {
 						gruppoDiStudio.setStudentiGruppo(studentiGruppo);
 						getGds.add(gruppoDiStudio);
-								
+
 					}
 				}
 			}
@@ -265,20 +258,17 @@ public class GruppiStudioController {
 				.getPrincipal();
 	}
 
-
-	
-	
-	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
 	 * @param id_corso
-	 * @return ritorna tutti i gruppi di studio associati ad un'attività didattica
+	 * @return ritorna tutti i gruppi di studio associati ad un'attività
+	 *         didattica
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/{id_corso}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/gruppodistudio/{id_corso}")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioByIDCourse(
 			HttpServletRequest request, HttpServletResponse response,
@@ -286,13 +276,14 @@ public class GruppiStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/{id_corso}");
+			logger.info("/rest/gruppodistudio/{id_corso}");
 
 			if (id_corso == null)
 				return null;
-			
-			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository.findGdsBycourseId(id_corso);
-			
+
+			List<GruppoDiStudio> getgruppidistudio = gruppidistudioRepository
+					.findGdsBycourseId(id_corso);
+
 			for (GruppoDiStudio gruppoDiStudio : getgruppidistudio) {
 
 				List<Long> idsStudenti = convertIdsAllStudentsToList(gruppoDiStudio
@@ -306,8 +297,6 @@ public class GruppiStudioController {
 				gruppoDiStudio.setStudentiGruppo(studentiGruppo);
 			}
 
-			
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -315,26 +304,23 @@ public class GruppiStudioController {
 		return null;
 	}
 
-	
-	
-	
-	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return restituisce la lista di tutti i gruppi di studio a cui è iscritto lo studente
+	 * @return restituisce la lista di tutti i gruppi di studio a cui è iscritto
+	 *         lo studente
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/gruppodistudio/me")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioByMe(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/me");
+			logger.info("/rest/gruppodistudio/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -375,21 +361,17 @@ public class GruppiStudioController {
 		return null;
 	}
 
-
-	
-	
-	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
 	 * @param id_corso
-	 * @return restituisce tutti i gruppi di studio a cui lo studente è iscritto, filtrati per
-	 * una determinata attività didattica
+	 * @return restituisce tutti i gruppi di studio a cui lo studente è
+	 *         iscritto, filtrati per una determinata attività didattica
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/gruppodistudio/{id_corso}/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/gruppodistudio/{id_corso}/me")
 	public @ResponseBody
 	List<GruppoDiStudio> getgruppidistudioByIDCourseByMe(
 			HttpServletRequest request, HttpServletResponse response,
@@ -397,7 +379,7 @@ public class GruppiStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/gruppidistudio/{id_corso}/me");
+			logger.info("/rest/gruppidistudio/{id_corso}/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -466,7 +448,7 @@ public class GruppiStudioController {
 
 					}
 					gruppoDiStudio.setStudentiGruppo(studentiGruppo);
-					
+
 					listaGruppiCorsoStudente.add(gruppoDiStudio);
 				}
 			}
@@ -497,14 +479,14 @@ public class GruppiStudioController {
 	 *             appartenente al gruppo è chi ha fatto la POST.
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/add")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/gruppodistudio/add")
 	public @ResponseBody
 	boolean AddGds(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/add");
+			logger.info("/rest/gruppodistudio/add");
 			// TODO control valid field
 			if (gruppodistudio == null)
 				return false;
@@ -597,14 +579,14 @@ public class GruppiStudioController {
 	 *             input.
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/accept")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/gruppodistudio/accept")
 	public @ResponseBody
 	boolean AcceptGds(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/accept");
+			logger.info("/rest/gruppodistudio/accept");
 			// TODO control valid field
 			if (gruppodistudio == null)
 				return false;
@@ -625,62 +607,62 @@ public class GruppiStudioController {
 				return false;
 
 			gdsFromDB.addStudenteGruppo(userId); // aggiungo il membro al gruppo
-			//gdsFromDB.setIfVisibleFromNumMembers();
+			// gdsFromDB.setIfVisibleFromNumMembers();
 
 			// mando una notifica se il gruppo diventa visibile (ci sono almeno
 			// 2 membri)
-			//if (gdsFromDB.isVisible()) {
+			// if (gdsFromDB.isVisible()) {
 
-				// CommunicatorConnector communicatorConnector = new
-				// CommunicatorConnector(
-				// communicatoraddress, appName);
+			// CommunicatorConnector communicatorConnector = new
+			// CommunicatorConnector(
+			// communicatoraddress, appName);
 
-				List<String> users = new ArrayList<String>();
-				List<String> idsInvited = gdsFromDB.getListInvited(userId);
+			List<String> users = new ArrayList<String>();
+			List<String> idsInvited = gdsFromDB.getListInvited(userId);
 
-				for (String id : idsInvited) {
-					users.add(id);
-				}
+			for (String id : idsInvited) {
+				users.add(id);
+			}
 
-				// se ci sono notifiche da mandare
-				if (users.size() > 0) {
+			// se ci sono notifiche da mandare
+			if (users.size() > 0) {
 
-					Notification n = new Notification();
-					n.setTitle(gdsFromDB.getNome());
-					NotificationAuthor nAuthor = new NotificationAuthor();
-					nAuthor.setAppId(appName);
-					nAuthor.setUserId(userId.toString());
-					n.setAuthor(nAuthor);
-					n.setUser(userId.toString());
-					n.setType(TypeNotification.AVVISO.toString());
-					n.setTimestamp(System.currentTimeMillis());
-					n.setDescription("Il gruppo " + gdsFromDB.getNome()
-							+ " a cui sei iscritto ora è visibile");
-					Map<String, Object> mapGruppo = new HashMap<String, Object>();
+				Notification n = new Notification();
+				n.setTitle(gdsFromDB.getNome());
+				NotificationAuthor nAuthor = new NotificationAuthor();
+				nAuthor.setAppId(appName);
+				nAuthor.setUserId(userId.toString());
+				n.setAuthor(nAuthor);
+				n.setUser(userId.toString());
+				n.setType(TypeNotification.AVVISO.toString());
+				n.setTimestamp(System.currentTimeMillis());
+				n.setDescription("Il gruppo " + gdsFromDB.getNome()
+						+ " a cui sei iscritto ora è visibile");
+				Map<String, Object> mapGruppo = new HashMap<String, Object>();
 
-					//gdsFromDB.initStudenteGruppo(userId); // inizializzo i
-															// membri del gruppo
-					gdsFromDB.setVisible(true); // setto a visible = false
-													// finchè non ci saranno
-													// almeno 2 componenti
-					mapGruppo.put("GruppoDiStudio", gdsFromDB); // passo come
-																// contenuto
-																// della
-																// notifica
-																// l'hashmap con
-																// l'attivita
+				// gdsFromDB.initStudenteGruppo(userId); // inizializzo i
+				// membri del gruppo
+				gdsFromDB.setVisible(true); // setto a visible = false
+											// finchè non ci saranno
+											// almeno 2 componenti
+				mapGruppo.put("GruppoDiStudio", gdsFromDB); // passo come
+															// contenuto
+															// della
+															// notifica
+															// l'hashmap con
+															// l'attivita
 
-					n.setContent(mapGruppo);
+				n.setContent(mapGruppo);
 
-					// ottengo il client token
-					// EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
-					// CLIENT_SECRET, profileaddress);
+				// ottengo il client token
+				// EasyTokenManger tManager = new EasyTokenManger(CLIENT_ID,
+				// CLIENT_SECRET, profileaddress);
 
-					// communicatorConnector.sendAppNotification(n, appName,
-					// users, tManager.getClientSmartCampusToken());
+				// communicatorConnector.sendAppNotification(n, appName,
+				// users, tManager.getClientSmartCampusToken());
 
-				}
-			//}
+			}
+			// }
 
 			GruppoDiStudio gruppodistudioAggiornato = gruppidistudioRepository
 					.save(gdsFromDB);
@@ -709,10 +691,6 @@ public class GruppiStudioController {
 	// /////////////////////////////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////
 
-
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -722,7 +700,7 @@ public class GruppiStudioController {
 	 * @return true se lo studente viene tolto dal gruppo di studio
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/delete/me")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/gruppodistudio/delete/me")
 	public @ResponseBody
 	boolean deleteMeByGds(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -730,7 +708,7 @@ public class GruppiStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/delete/me");
+			logger.info("/rest/gruppodistudio/delete/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -749,20 +727,22 @@ public class GruppiStudioController {
 			gdsFromDB.removeStudenteGruppo(userId);
 			gdsFromDB.setIfVisibleFromNumMembers();
 			// se il gruppo ha 0 membri lo elimino dal db
-			if (gdsFromDB.canRemoveGruppoDiStudioIfVoid()){
-				List<Evento> eventsToRemove = eventoRepository.selectEventsGdsOfStudent(gdsFromDB,userId);
+			if (gdsFromDB.canRemoveGruppoDiStudioIfVoid()) {
+				List<Evento> eventsToRemove = eventoRepository
+						.selectEventsGdsOfStudent(gdsFromDB, userId);
 				for (Evento evento : eventsToRemove) {
 					eventoRepository.delete(evento);
 				}
 				gruppidistudioRepository.delete(gdsFromDB);
-				
-			}else{
+
+			} else {
 				gruppidistudioRepository.save(gdsFromDB);
-				List<Evento> eventsToRemove = eventoRepository.selectEventsGdsOfStudent(gdsFromDB,userId);
+				List<Evento> eventsToRemove = eventoRepository
+						.selectEventsGdsOfStudent(gdsFromDB, userId);
 				for (Evento evento : eventsToRemove) {
 					eventoRepository.delete(evento);
 				}
-				
+
 			}
 			return true;
 
@@ -773,9 +753,6 @@ public class GruppiStudioController {
 		return false;
 	}
 
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -785,14 +762,14 @@ public class GruppiStudioController {
 	 * @return true se il gds viene modificato correttamente
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/gruppodistudio/change")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/gruppodistudio/change")
 	public @ResponseBody
 	boolean changeGds(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @RequestBody GruppoDiStudio gruppodistudio)
 
 	throws IOException {
 		try {
-			logger.info("/gruppodistudio/change");
+			logger.info("/rest/gruppodistudio/change");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(

@@ -82,14 +82,14 @@ public class CorsoCarrieraController {
 	 *             Sincronizza con unidata service corsi in carriera
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/sync/corsocarriera/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/sync/corsocarriera/me")
 	public @ResponseBody
 	List<CorsoCarriera> getCorsiCarrieraSync(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/sync/corsocarriera/me");
+			logger.info("/rest/sync/corsocarriera/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -183,14 +183,14 @@ public class CorsoCarrieraController {
 	 *             Ritorna i corsi in carriera nel db
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corsocarriera/me")
 	public @ResponseBody
 	List<CorsoCarriera> getCorsiCarriera(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/corsocarriera/me");
+			logger.info("/rest/corsocarriera/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -265,14 +265,14 @@ public class CorsoCarrieraController {
 	 *             Ritorna i corsi in carriera nel db non ancora superati + i corsi di interesse settati manualmente
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/notpassed/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corsocarriera/notpassed/me")
 	public @ResponseBody
 	List<CorsoCarriera> getCorsiCarrieraNotPassed(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/corsocarriera/notpassed/me");
+			logger.info("/rest/corsocarriera/notpassed/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -377,14 +377,14 @@ public class CorsoCarrieraController {
 	 *             Ritorna i corsi in carriera nel db superati
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/passed/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corsocarriera/passed/me")
 	public @ResponseBody
 	List<CorsoCarriera> getCorsiCarrieraPassed(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/corsocarriera/passed/me");
+			logger.info("/rest/corsocarriera/passed/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -465,7 +465,7 @@ public class CorsoCarrieraController {
 	 * @return true se l'ad è stata superata dallo studente
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsocarriera/{ad_cod}/superato")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corsocarriera/{ad_cod}/superato")
 	public @ResponseBody
 	boolean isCorsoCarrieraPassed(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -473,7 +473,7 @@ public class CorsoCarrieraController {
 
 	throws IOException {
 		try {
-			logger.info("/corsocarriera/{ad_cod}/superato");
+			logger.info("/rest/corsocarriera/{ad_cod}/superato");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(

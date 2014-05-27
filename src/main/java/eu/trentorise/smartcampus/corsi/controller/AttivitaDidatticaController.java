@@ -83,7 +83,7 @@ public class AttivitaDidatticaController {
 	 *             Restituisce un'attività didattica dato un ad_id
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/{id_ad}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/attivitadidattica/{id_ad}")
 	public @ResponseBody
 	AttivitaDidattica getAttivitaDidatticaByAdId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -91,7 +91,7 @@ public class AttivitaDidatticaController {
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/" + id_ad);
+			logger.info("/rest/attivitadidattica/" + id_ad);
 
 			AttivitaDidattica getAttivitaDidattica = new AttivitaDidattica();
 			getAttivitaDidattica = attivitaDidatticaRepository.findOne(id_ad);
@@ -105,12 +105,7 @@ public class AttivitaDidatticaController {
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * @param request
@@ -120,7 +115,7 @@ public class AttivitaDidatticaController {
 	 * @return Restituisce l'attività didattica dato ad_cod
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/adcod/{ad_cod}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/attivitadidattica/adcod/{ad_cod}")
 	public @ResponseBody
 	AttivitaDidattica getAttivitaDidatticaByCod(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -128,14 +123,15 @@ public class AttivitaDidatticaController {
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/" + ad_cod);
+			logger.info("/rest/attivitadidattica/" + ad_cod);
 
-			List<AttivitaDidattica> getAttivitaDidattica = attivitaDidatticaRepository.findAttivitaDidatticaByAdCod(String.valueOf(ad_cod));
+			List<AttivitaDidattica> getAttivitaDidattica = attivitaDidatticaRepository
+					.findAttivitaDidatticaByAdCod(String.valueOf(ad_cod));
 
-			if(getAttivitaDidattica.size()==0){
+			if (getAttivitaDidattica.size() == 0) {
 				return null;
 			}
-			
+
 			return getAttivitaDidattica.get(0);
 
 		} catch (Exception e) {
@@ -145,11 +141,6 @@ public class AttivitaDidatticaController {
 		}
 		return null;
 	}
-	
-	
-	
-	
-	
 
 	/**
 	 * 
@@ -197,9 +188,6 @@ public class AttivitaDidatticaController {
 		return null;
 	}
 
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -209,7 +197,7 @@ public class AttivitaDidatticaController {
 	 * @return List<AttivitaDidattica> di un determinato dipartimento
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/dipartimento/{id_dip}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/attivitadidattica/dipartimento/{id_dip}")
 	public @ResponseBody
 	List<AttivitaDidattica> getAttivitaDidatticaByDipartimento(
 			HttpServletRequest request, HttpServletResponse response,
@@ -217,7 +205,7 @@ public class AttivitaDidatticaController {
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/dipartimento/" + id_dip);
+			logger.info("/rest/attivitadidattica/dipartimento/" + id_dip);
 
 			Dipartimento dipartimento = dipartimentoRepository.findOne(id_dip);
 
@@ -257,11 +245,6 @@ public class AttivitaDidatticaController {
 		return null;
 	}
 
-
-	
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -270,19 +253,18 @@ public class AttivitaDidatticaController {
 	 * @return Tutte le attività didattiche
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/attivitadidattica/all")
 	public @ResponseBody
 	List<AttivitaDidattica> getAttivitaDidatticaAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/all");
+			logger.info("/rest/attivitadidattica/all");
 
 			List<AttivitaDidattica> getAttivitaDidattica = new ArrayList<AttivitaDidattica>();
 			getAttivitaDidattica = attivitaDidatticaRepository.findAll();
 
-			
 			// sort per nome
 			Collections.sort(getAttivitaDidattica,
 					new Comparator<AttivitaDidattica>() {
@@ -312,21 +294,17 @@ public class AttivitaDidatticaController {
 		return null;
 	}
 
-
-	
-	
-	
-	
 	/***
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
 	 * @param adCod
-	 * @return restituisce true se l'ad_cod associato ad AttivitaDidattica è stato superato dallo studente
+	 * @return restituisce true se l'ad_cod associato ad AttivitaDidattica è
+	 *         stato superato dallo studente
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/attivitadidattica/{ad_cod}/passed")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/attivitadidattica/{ad_cod}/passed")
 	public @ResponseBody
 	boolean isAttivitaDidatticaPassed(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -334,7 +312,7 @@ public class AttivitaDidatticaController {
 
 	throws IOException {
 		try {
-			logger.info("/attivitadidattica/{ad_cod}/passed");
+			logger.info("/rest/attivitadidattica/{ad_cod}/passed");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -345,8 +323,8 @@ public class AttivitaDidatticaController {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
-			
-			// dato ad_cod cerco il corso carriera con l'ad_cod associato all'utente
+			// dato ad_cod cerco il corso carriera con l'ad_cod associato
+			// all'utente
 			CorsoCarriera corsoCarriera = corsoCarrieraRepository
 					.findCorsoCarrieraByAdCodAndStudenteId(adCod,
 							studenteDB.getId());

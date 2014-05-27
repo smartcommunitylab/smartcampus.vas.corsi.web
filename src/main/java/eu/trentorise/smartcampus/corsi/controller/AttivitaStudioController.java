@@ -89,7 +89,7 @@ public class AttivitaStudioController {
 	 * @return le attività di studio dato l'id di un gds
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/attivitadistudio/{id_gruppodistudio}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/attivitadistudio/{id_gruppodistudio}")
 	public @ResponseBody
 	List<Evento> getAttivitadistudioByID(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -97,7 +97,7 @@ public class AttivitaStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/attivitastudio/{id_gruppidistudio}");
+			logger.info("/rest/attivitastudio/{id_gruppidistudio}");
 
 			if (id_gruppodistudio == null)
 				return null;
@@ -127,7 +127,7 @@ public class AttivitaStudioController {
 	 * @return Aggiunta di un'attività di studio evento_id = -2
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/add")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/attivitadistudio/add")
 	public @ResponseBody
 	boolean saveAttivitaStudio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -136,7 +136,7 @@ public class AttivitaStudioController {
 	throws IOException {
 		try {
 
-			logger.info("/attivitadistudio/add");
+			logger.info("/rest/attivitadistudio/add");
 
 			// controllo se i campi sono validi
 			if (atDiStudio != null && atDiStudio.getTitle() != "") {
@@ -199,7 +199,7 @@ public class AttivitaStudioController {
 	 *         gruppo può modificarla) evento_id = -2
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/change/date/{date}/from/{from}/to/{to}")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/attivitadistudio/change/date/{date}/from/{from}/to/{to}")
 	public @ResponseBody
 	boolean changeAttivitaDiStudio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -208,7 +208,7 @@ public class AttivitaStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/attivitadistudio/change");
+			logger.info("/rest/attivitadistudio/change");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -304,7 +304,7 @@ public class AttivitaStudioController {
 	 *             Elimina un'attività di studio
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/attivitadistudio/delete")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/attivitadistudio/delete")
 	public @ResponseBody
 	boolean deleteAttivita(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -312,7 +312,7 @@ public class AttivitaStudioController {
 
 	throws IOException {
 		try {
-			logger.info("/attivitadistudio/delete");
+			logger.info("/rest/attivitadistudio/delete");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(

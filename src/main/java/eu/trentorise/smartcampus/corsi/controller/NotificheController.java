@@ -59,9 +59,6 @@ public class NotificheController {
 	@Value("${studymate.client.secret}")
 	private String client_secret;
 
-	
-	
-
 	/**
 	 * 
 	 * @param request
@@ -69,10 +66,11 @@ public class NotificheController {
 	 * @param session
 	 * @param type
 	 * @param date_from
-	 * @return restituisce una lista di notifiche ottenuta dal communicator filtrata da type e dalla data di inizio
+	 * @return restituisce una lista di notifiche ottenuta dal communicator
+	 *         filtrata da type e dalla data di inizio
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/notifiche/type/{type}/date/{date_from}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/notifiche/type/{type}/date/{date_from}")
 	public @ResponseBody
 	List<Notification> getInfoStudentFromId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -82,7 +80,7 @@ public class NotificheController {
 	throws IOException {
 		try {
 
-			logger.info("/notifiche/type/{type}/date/{date_from}");
+			logger.info("/rest/notifiche/type/{type}/date/{date_from}");
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);

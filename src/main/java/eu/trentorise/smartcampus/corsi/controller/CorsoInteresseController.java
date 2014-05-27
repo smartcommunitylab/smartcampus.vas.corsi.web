@@ -59,10 +59,6 @@ public class CorsoInteresseController {
 	@Value("${url.studente.service}")
 	private String unidataaddress;
 
-
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -71,14 +67,14 @@ public class CorsoInteresseController {
 	 * @return lista dei corsi di interesse settati manualmente
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsointeresse/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corsointeresse/me")
 	public @ResponseBody
 	List<CorsoInteresse> getCorsiInteresseStudente(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/corsoInteresse/me");
+			logger.info("/rest/corsoInteresse/me");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -89,7 +85,7 @@ public class CorsoInteresseController {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
-			if(studenteDB == null){
+			if (studenteDB == null) {
 				return null;
 			}
 
@@ -108,10 +104,6 @@ public class CorsoInteresseController {
 		return null;
 	}
 
-
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -121,7 +113,7 @@ public class CorsoInteresseController {
 	 * @return true se il corso di interesse è seguito
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/corsointeresse/{adId}/seguito")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corsointeresse/{adId}/seguito")
 	public @ResponseBody
 	CorsoInteresse isCorsoInteresseSeguito(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -129,7 +121,7 @@ public class CorsoInteresseController {
 
 	throws IOException {
 		try {
-			logger.info("/corsointeresse/{adId}/seguito");
+			logger.info("/rest/corsointeresse/{adId}/seguito");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -140,9 +132,9 @@ public class CorsoInteresseController {
 
 			Studente studenteDB = studenteRepository.findOne(userId);
 
-			if(studenteDB == null)
+			if (studenteDB == null)
 				return null;
-			
+
 			AttivitaDidattica aDidattica = attivitaDidatticaRepository
 					.findOne(adId);
 
@@ -162,9 +154,6 @@ public class CorsoInteresseController {
 		return null;
 	}
 
-
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -174,7 +163,7 @@ public class CorsoInteresseController {
 	 * @return cambia lo stato follow/unfollow di un'attività didattica
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/corsointeresse/{adId}/seguo")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/corsointeresse/{adId}/seguo")
 	//
 	public @ResponseBody
 	boolean setCorsoAsFollowUnflollow(HttpServletRequest request,
@@ -184,7 +173,7 @@ public class CorsoInteresseController {
 	throws IOException {
 		try {
 
-			logger.info("/corsointeresse/{adId}/seguo");
+			logger.info("/rest/corsointeresse/{adId}/seguo");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -199,24 +188,24 @@ public class CorsoInteresseController {
 
 			if (aDidattica == null)
 				return false;
-			
+
 			CorsoInteresse cInteresse = corsoInteresseRepository
 					.findCorsoInteresseByAttivitaIdAndStudenteId(
 							studente.getId(), aDidattica.getAdId());
 
 			if (cInteresse == null) {
-				
+
 				cInteresse = new CorsoInteresse();
 				cInteresse.setId(aDidattica.getAdId());
 				cInteresse.setAttivitaDidattica(aDidattica);
 				cInteresse.setStudenteId(studente.getId());
 				corsoInteresseRepository.save(cInteresse);
-				
+
 			} else {
-				
-				if (!cInteresse.isCorsoCarriera()){
+
+				if (!cInteresse.isCorsoCarriera()) {
 					corsoInteresseRepository.delete(cInteresse);
-				}else{
+				} else {
 					return false;
 				}
 			}
@@ -230,23 +219,18 @@ public class CorsoInteresseController {
 		}
 		return false;
 	}
-	
-	
-	
-	
 
-	
-	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
 	 * @param attivitaDidatticaCod
-	 * @return true se un corso di interesse viene eliminato con successo, altrimenti false
+	 * @return true se un corso di interesse viene eliminato con successo,
+	 *         altrimenti false
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/corsointeresse/{adCod}/delete")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/corsointeresse/{adCod}/delete")
 	public @ResponseBody
 	boolean setCorsoAsUnflollow(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -255,7 +239,7 @@ public class CorsoInteresseController {
 	throws IOException {
 		try {
 
-			logger.info("/corsointeresse/{adCod}/delete");
+			logger.info("/rest/corsointeresse/{adCod}/delete");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -268,19 +252,18 @@ public class CorsoInteresseController {
 
 			List<AttivitaDidattica> aDidattica = attivitaDidatticaRepository
 					.findAttivitaDidatticaByAdCod(attivitaDidatticaCod);
-			
-			if(aDidattica.size() == 0)
+
+			if (aDidattica.size() == 0)
 				return false;
 
 			CorsoInteresse cInteresse = corsoInteresseRepository
 					.findCorsoInteresseByAttivitaCodAndStudenteId(
 							studente.getId(), aDidattica.get(0).getAdCod());
 
-
-			if (!cInteresse.isCorsoCarriera()){
-					corsoInteresseRepository.delete(cInteresse);
-			}else{
-					return false;
+			if (!cInteresse.isCorsoCarriera()) {
+				corsoInteresseRepository.delete(cInteresse);
+			} else {
+				return false;
 			}
 
 			return true;
@@ -292,10 +275,7 @@ public class CorsoInteresseController {
 		}
 		return false;
 	}
-	
-	
 
-	
 	/**
 	 * 
 	 * @param request

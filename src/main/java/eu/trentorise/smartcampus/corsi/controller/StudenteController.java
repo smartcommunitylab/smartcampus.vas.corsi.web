@@ -61,9 +61,6 @@ public class StudenteController {
 	@Autowired
 	private StudenteServiceSync controllerSyncStudente;
 
-	
-	
-
 	/**
 	 * 
 	 * @param request
@@ -76,7 +73,7 @@ public class StudenteController {
 	 *             effettua la richiesta
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/studente/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/studente/me")
 	public @ResponseBody
 	Studente getInfoStudentFromId(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
@@ -93,7 +90,7 @@ public class StudenteController {
 			Long userId = Long.valueOf(profile.getUserId());
 
 			Studente studente = studenteRepository.findStudenteByUserId(userId);
-			
+
 			return studente;
 
 		} catch (Exception e) {
@@ -103,10 +100,6 @@ public class StudenteController {
 		return null;
 	}
 
-	
-	
-	
-	
 	/**
 	 * 
 	 * @param request
@@ -119,18 +112,20 @@ public class StudenteController {
 	 *             effettua la richiesta
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/studente/{id_studente}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/studente/{id_studente}")
 	public @ResponseBody
 	Studente getInfoStudent(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, @PathVariable("id_studente") Long id_studente)
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_studente") Long id_studente)
 
 	throws IOException {
 		try {
 
 			logger.info("/studente/{id_studente}");
 
-			Studente studente = studenteRepository.findStudenteByUserId(id_studente);
-			
+			Studente studente = studenteRepository
+					.findStudenteByUserId(id_studente);
+
 			return studente;
 
 		} catch (Exception e) {
@@ -140,19 +135,16 @@ public class StudenteController {
 		return null;
 	}
 
-	
-	
-	
-	
 	/**
 	 * 
 	 * @param request
 	 * @param response
 	 * @param session
-	 * @return restituisce lo studente sincronizzato con unidata e viene salvato nel db locale
+	 * @return restituisce lo studente sincronizzato con unidata e viene salvato
+	 *         nel db locale
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/sync/studente/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/sync/studente/me")
 	public @ResponseBody
 	Studente getStudenteSync(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
@@ -162,36 +154,32 @@ public class StudenteController {
 			logger.info("/sync/studente/me");
 
 			String token = getToken(request);
-			
-			
-			
-			BasicProfileService service = new BasicProfileService(profileaddress);
+
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
 
 			AccountProfile accProfile = service.getAccountProfile(token);
-			
+
 			Set<String> accountNames = accProfile.getAccountNames();
 			Iterator<String> iter = accountNames.iterator();
 			Set<String> attributesAccount = null;
 			if (iter.hasNext()) {
 				attributesAccount = accProfile.getAccountNames();
 				String provider = attributesAccount.toString();
-				if(provider.equals("[fbk]") || provider.equals("[google]")){
-					
-					
-					
-					service = new BasicProfileService(
-							profileaddress);
+				if (provider.equals("[fbk]") || provider.equals("[google]")) {
+
+					service = new BasicProfileService(profileaddress);
 
 					BasicProfile profile = service.getBasicProfile(token);
 					Long userId = Long.valueOf(profile.getUserId());
-					
+
 					Studente stdBase = new Studente();
 					stdBase.setNome(profile.getName());
 					stdBase.setCognome(profile.getSurname());
 					stdBase.setId(userId);
-					
-					stdBase =studenteRepository.save(stdBase);
-					
+
+					stdBase = studenteRepository.save(stdBase);
+
 					return stdBase;
 				}
 			}
@@ -222,12 +210,10 @@ public class StudenteController {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			
-			return null;//fbk account
+
+			return null;// fbk account
 		}
 	}
-
-	
 
 	/**
 	 * 

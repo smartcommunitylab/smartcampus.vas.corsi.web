@@ -119,7 +119,7 @@ public class EventiController {
 	 *             dato
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/evento/corsolaurea/{id_cds}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/evento/corsolaurea/{id_cds}")
 	public @ResponseBody
 	List<Evento> getEventoByCorsoLaurea(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -165,7 +165,7 @@ public class EventiController {
 	 *             evento_id = -1 (evento personale)
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/evento")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/evento")
 	public @ResponseBody
 	Evento saveEvento(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @RequestBody Evento evento)
@@ -230,7 +230,7 @@ public class EventiController {
 	 *             l'evento se l'operazione va a buon fine, altrimenti false
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/evento/delete")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/evento/delete")
 	public @ResponseBody
 	boolean deleteEvento(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -272,7 +272,7 @@ public class EventiController {
 	 * @return true se l'evento personale viene modificato con successo
 	 * @throws IOException
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/evento/change/date/{date}/from/{from}/to/{to}")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/evento/change/date/{date}/from/{from}/to/{to}")
 	public @ResponseBody
 	boolean changeEvento(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -287,16 +287,17 @@ public class EventiController {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
-			
-			
-			// se l'evento è un'attività di studio allora lo gestisco controllando le restrinzioni
-			if(eventoChanged.getGruppo().getId() > 0){
+
+			// se l'evento è un'attività di studio allora lo gestisco
+			// controllando le restrinzioni
+			if (eventoChanged.getGruppo().getId() > 0) {
 				eventoChanged.getEventoId().setIdEventAd(-2);
 				eventoChanged.getEventoId().setIdStudente(userId);
 
 				// Studente studente = studenteRepository.findOne(userId);
 
-				// ottengo i membri che fanno parte del gruppo di studio relativo
+				// ottengo i membri che fanno parte del gruppo di studio
+				// relativo
 				// all'attività di studio
 				GruppoDiStudio gruppoRefersAttivita = gruppoDiStudioRepository
 						.findOne(eventoChanged.getGruppo().getId());
@@ -328,12 +329,13 @@ public class EventiController {
 					eventoToChange.setStop(new Time(to));
 					eventoToChange.setIdStudente(userId);
 
-					List<Evento> eventoToDelete = eventoRepository.selectEventsGdsOfStudent(
-							gruppoRefersAttivita, userId);
+					List<Evento> eventoToDelete = eventoRepository
+							.selectEventsGdsOfStudent(gruppoRefersAttivita,
+									userId);
 
 					for (Evento evento : eventoToDelete) {
-						long roundDate = 10000 * (evento.getEventoId().getDate()
-								.getTime() / 10000);
+						long roundDate = 10000 * (evento.getEventoId()
+								.getDate().getTime() / 10000);
 						date = 10000 * (date / 10000);
 						if (evento.getEventoId().getIdEventAd() == -2
 								&& roundDate == date
@@ -347,7 +349,8 @@ public class EventiController {
 					}
 
 					// salvo l'evento nel db
-					Evento attivitadistudioDB = eventoRepository.save(eventoChanged);
+					Evento attivitadistudioDB = eventoRepository
+							.save(eventoChanged);
 
 					if (attivitadistudioDB != null)
 						return true;
@@ -358,8 +361,7 @@ public class EventiController {
 					return false;
 
 			}
-			
-			
+
 			// altrimenti l'evento è un evento pubblico o personale
 
 			eventoChanged.getEventoId().setIdStudente(userId);
@@ -423,14 +425,14 @@ public class EventiController {
 	 *             corsi di interesse riferiti allo studente
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/evento/me")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/evento/me")
 	public @ResponseBody
 	List<Evento> getEventoByMe(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/evento/me");
+			logger.info("/rest/evento/me");
 			session.setMaxInactiveInterval(35);
 			String token = getToken(request);
 
@@ -516,7 +518,7 @@ public class EventiController {
 	 *             Sincronizza gli eventi di un cds di un determinato anno
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/sync/evento/{cds}/{year}")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/sync/evento/{cds}/{year}")
 	public @ResponseBody
 	List<Evento> getSyncEventoByCdsAndYear(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -525,7 +527,7 @@ public class EventiController {
 
 	throws IOException {
 		try {
-			logger.info("sync/evento/{cds}/{year}");
+			logger.info("/restsync/evento/{cds}/{year}");
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
@@ -571,7 +573,7 @@ public class EventiController {
 	 *             Sincronizza gli eventi di un cds
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/sync/evento/{cds}/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/sync/evento/{cds}/all")
 	public @ResponseBody
 	List<Evento> getSyncEventoByCdsAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -579,7 +581,7 @@ public class EventiController {
 
 	throws IOException {
 		try {
-			logger.info("/sync/evento/{cds}/all");
+			logger.info("/rest/sync/evento/{cds}/all");
 
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
@@ -637,14 +639,14 @@ public class EventiController {
 	 *             Sincronizza gli eventi di di tutti i cds
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/sync/evento/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/sync/evento/all")
 	public @ResponseBody
 	boolean getSyncEventoByAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 
 	throws IOException {
 		try {
-			logger.info("/sync/evento/all");
+			logger.info("/rest/sync/evento/all");
 
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
