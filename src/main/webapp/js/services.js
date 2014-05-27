@@ -180,7 +180,7 @@ app.controller('MainCtrl', function($scope, $http, $window, $location) {
 			
 			var averValue = 0;
 			for (var i=0; i<data.length; i++) {
-				averValue = averValue + ((data.rating_contenuto + data.rating_carico_studio + data.rating_lezioni + data.rating_materiali + data.rating_esame)/5);
+				averValue = averValue + ((data[i].rating_contenuto + data[i].rating_carico_studio + data[i].rating_lezioni + data[i].rating_materiali + data[i].rating_esame)/5);
 			}
 			
 			$scope.average = averValue / data.length;
