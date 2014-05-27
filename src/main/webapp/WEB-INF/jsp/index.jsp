@@ -188,7 +188,7 @@ var user_name="<%=request.getAttribute("user")%>";
 								ng-repeat="comment in comments | filter:filterContents">
 								<tr>
 									<td>{{comment.id}}</td>
-									<td>{{comment.date | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+									<td>{{comment.date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
 									<td>{{comment.approved}}</td>
 									<td>{{comment.id_studente}}</td>
 									<td>{{comment.nome_studente}}</td>
