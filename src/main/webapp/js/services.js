@@ -171,7 +171,7 @@ app.controller('MainCtrl', function($scope, $http, $window, $location) {
 
 		$http({
 			method : 'GET',
-			url : 'corso/' + course.adId + '/commento/all',
+			url : 'rest/corso/' + course.adId + '/commento/all',
 			params : {},
 			headers : {}
 		}).success(function(data) {
@@ -179,6 +179,13 @@ app.controller('MainCtrl', function($scope, $http, $window, $location) {
 			$scope.number = data.length;
 			
 			var averValue = 0;
+			
+			if(data.length == 1){
+				if(data[0].rating_contenuto == -1){
+					return;	// se non ci sono commenti return
+				}
+			}
+			
 			for (var i=0; i<data.length; i++) {
 				averValue = averValue + ((data[i].rating_contenuto + data[i].rating_carico_studio + data[i].rating_lezioni + data[i].rating_materiali + data[i].rating_esame)/5);
 			}
@@ -194,7 +201,6 @@ app.controller('MainCtrl', function($scope, $http, $window, $location) {
 	};
 	
 });
-
 
 
 angular.module('filters', []).filter('truncate', function() {

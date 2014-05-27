@@ -38,6 +38,7 @@
 <script src="lib/angular-resource.min.js"></script>
 <script src="lib/angular-cookies.min.js"></script>
 <script src="lib/moment.js"></script>
+<script src="lib/progressbar.js"></script>
 
 
 
@@ -155,9 +156,6 @@ var user_name="<%=request.getAttribute("user")%>";
 						<p>
 							Average rate: <strong>{{average}}</strong>
 						</p>
-						<p>
-							Info: <strong>{{$scope.info}}</strong>
-						</p>
 					</div>
 					<div class="span10">
 
@@ -174,14 +172,15 @@ var user_name="<%=request.getAttribute("user")%>";
 								<tr>
 									<th>Id</th>
 									<th>Date</th>
+									<th>Approved</th>
 									<th>Id student</th>
 									<th>Name student</th>
 									<th>Text</th>
-									<th>Rating contents</th>
-									<th>Rating study workload</th>
-									<th>Rating lessons</th>
-									<th>Rating materials</th>
-									<th>Rating exam</th>
+									<th>Contents rating</th>
+									<th>Study workload rating</th>
+									<th>Lessons rating</th>
+									<th>Materials rating</th>
+									<th>Exam rating</th>
 
 								</tr>
 							</thead>
@@ -189,7 +188,8 @@ var user_name="<%=request.getAttribute("user")%>";
 								ng-repeat="comment in comments | filter:filterContents">
 								<tr>
 									<td>{{comment.id}}</td>
-									<td>{{comment.date}}</td>
+									<td>{{comment.date | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
+									<td>{{comment.approved}}</td>
 									<td>{{comment.id_studente}}</td>
 									<td>{{comment.nome_studente}}</td>
 									<td>{{comment.testo}}</td>

@@ -230,9 +230,86 @@ public class CommentiController {
 	 *             Ritorna tutte le recensioni dato l'id di un corso
 	 * 
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/rest/corso/{id_corso}/commento/all")
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corso/{id_corso}/commento/approved")
 	public @ResponseBody
 	List<Commento> getCommentoByCorsoId(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("id_corso") Long id_corso)
+
+	throws IOException {
+		try {
+
+			List<Commento> commentiAggiornati;
+
+			// Aggiorno le valutazioni del corso
+			UpdateRatingCorso(attivitaDidatticaRepository.findOne(id_corso));
+
+			logger.info("/rest/corso/{id_corso}/commento/approved");
+			if (id_corso == null)
+				return null;
+
+			commentiAggiornati = commentiRepository
+					.getCommentoByCorsoApproved(attivitaDidatticaRepository
+							.findOne(id_corso).getAdId());
+
+			if (commentiAggiornati.size() != 0) {
+				commentiAggiornati = commentiRepository
+						.save(commentiAggiornati);
+				return commentiAggiornati;
+			} else {
+
+				AttivitaDidattica corso = attivitaDidatticaRepository
+						.findOne(id_corso);
+				String token = getToken(request);
+				BasicProfileService service = new BasicProfileService(
+						profileaddress);
+				BasicProfile profile = service.getBasicProfile(token);
+				Long userId = Long.valueOf(profile.getUserId());
+				Studente studente = studenteRepository.findOne(userId);
+
+				Commento commento = new Commento();
+				commento.setId_studente(studente.getId());
+				commento.setCorso(corso.getAdId());
+				commento.setRating_carico_studio((float) -1);
+				commento.setRating_contenuto((float) -1);
+				commento.setRating_esame((float) -1);
+				commento.setRating_lezioni((float) -1);
+				commento.setRating_materiali((float) -1);
+				commento.setTesto(new String(""));
+				commento.setData_inserimento(null);
+
+				commentiAggiornati.add(commento);
+
+				return commentiAggiornati;
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param id_corso
+	 * @return List<Commento>
+	 * @throws IOException
+	 * 
+	 *             Ritorna tutte le recensioni dato l'id di un corso
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/corso/{id_corso}/commento/all")
+	public @ResponseBody
+	List<Commento> getCommentoByCorsoIdAll(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("id_corso") Long id_corso)
 
@@ -249,7 +326,7 @@ public class CommentiController {
 				return null;
 
 			commentiAggiornati = commentiRepository
-					.getCommentoByCorsoApproved(attivitaDidatticaRepository
+					.getCommentoByCorsoAll(attivitaDidatticaRepository
 							.findOne(id_corso).getAdId());
 
 			if (commentiAggiornati.size() != 0) {
@@ -269,6 +346,11 @@ public class CommentiController {
 		return null;
 	}
 
+	
+	
+	
+	
+	
 	/**
 	 * Ogni 15 minuti viene effettuata la sincronizzazione dello stato di
 	 * validazione degli eventi con il moderatore
