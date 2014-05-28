@@ -557,7 +557,7 @@ public class CommentiController {
 						AttivitaDidattica ad_commento = attivitaDidatticaRepository
 								.findOne(commentoDaModificare.getCorso());
 
-						mediationParserImpl.remoteValidationComment(
+						mediationParserImpl.remoteValidationCommentWithSubject(
 								commentoDaModificare.getTesto(),
 								commentoDaModificare.getId().toString(),
 								userId, ad_commento.getDescription(),
@@ -616,7 +616,7 @@ public class CommentiController {
 						AttivitaDidattica ad_commento = attivitaDidatticaRepository
 								.findOne(commentoDaModificare.getCorso());
 
-						mediationParserImpl.remoteValidationComment(
+						mediationParserImpl.remoteValidationCommentWithSubject(
 								commentoNuovo.getTesto(), commentoNuovo.getId()
 										.toString(), userId, ad_commento
 										.getDescription(), tkm
