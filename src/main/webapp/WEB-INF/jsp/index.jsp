@@ -38,7 +38,6 @@
 <script src="lib/angular-resource.min.js"></script>
 <script src="lib/angular-cookies.min.js"></script>
 <script src="lib/moment.js"></script>
-<script src="lib/progressbar.js"></script>
 
 
 
@@ -157,7 +156,7 @@ var user_name="<%=request.getAttribute("user")%>";
 							Average rate: <strong>{{average}}</strong>
 						</p>
 					</div>
-					<div class="span10">
+					<div class="span10" >
 
 
 						<div class="span3">
@@ -167,7 +166,7 @@ var user_name="<%=request.getAttribute("user")%>";
 
 						</div>
 
-						<table class="table table-striped table-bordered">
+						<table class="table table-striped table-bordered table-responsive">
 							<thead>
 								<tr>
 									<th>Id</th>
@@ -186,7 +185,7 @@ var user_name="<%=request.getAttribute("user")%>";
 							</thead>
 							<tbody class="animate-repeat"
 								ng-repeat="comment in comments | filter:filterContents">
-								<tr>
+								<tr class="{{setColorRowTable(comment)}}">
 									<td>{{comment.id}}</td>
 									<td>{{comment.date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
 									<td>{{comment.approved}}</td>
