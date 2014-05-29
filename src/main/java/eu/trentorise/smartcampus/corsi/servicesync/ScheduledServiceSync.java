@@ -98,7 +98,7 @@ public class ScheduledServiceSync {
 	 * @throws IOException
 	 */
 	//@Scheduled(cron = "0 0 0 1 * ?")
-	@Scheduled(fixedDelay = 1196000000)
+	//@Scheduled(fixedDelay = 1196000000)
 	public @ResponseBody
 	void getDipartimentoAndCdsSync()
 

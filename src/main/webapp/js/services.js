@@ -1,8 +1,7 @@
 var app = angular.module('dev', [ 'ngResource', 'ngCookies', 'filters',
 		'$strap.directives' ]);
 
-app
-		.controller(
+app.controller(
 				'MainCtrl',
 				function($scope, $http, $window, $location) {
 
