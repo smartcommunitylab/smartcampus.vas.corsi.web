@@ -165,25 +165,59 @@ var user_name="<%=request.getAttribute("user")%>";
 
 						</div>
 
+						<br><span class="label">Ordered By: {{orderByField}}, Reverse Sort: {{reverseSort}}</span>
 						<table class="table table-striped table-bordered table-hover table-responsive">
 							<thead>
 								<tr>
-									<th>Id</th>
-									<th>Date</th>
-									<th>Approved</th>
-									<th>Id student</th>
-									<th>Name student</th>
-									<th>Text</th>
-									<th>Contents rating</th>
-									<th>Study workload rating</th>
-									<th>Lessons rating</th>
-									<th>Materials rating</th>
-									<th>Exam rating</th>
+									<th><a href="#" ng-click="orderByField='id'; reverseSort = !reverseSort">
+          								Id <span ng-show="orderByField == 'id'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+									<th><a href="#" ng-click="orderByField='data_inserimento'; reverseSort = !reverseSort">
+          								Date <span ng-show="orderByField == 'data_inserimento'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+									<th><a href="#" ng-click="orderByField='approved'; reverseSort = !reverseSort">
+          								Approved <span ng-show="orderByField == 'approved'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+									<th><a href="#" ng-click="orderByField='id_studente'; reverseSort = !reverseSort">
+          								Id student <span ng-show="orderByField == 'id_studente'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+									<th><a href="#" ng-click="orderByField='nome_studente'; reverseSort = !reverseSort">
+          								Student's name <span ng-show="orderByField == 'nome_studente'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+									<th><a href="#" ng-click="orderByField='testo'; reverseSort = !reverseSort">
+          								Text <span ng-show="orderByField == 'testo'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+         							<th><a href="#" ng-click="orderByField='rating_contenuto'; reverseSort = !reverseSort">
+          								Contents rating <span ng-show="orderByField == 'rating_contenuto'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+									<th><a href="#" ng-click="orderByField='rating_carico_studio'; reverseSort = !reverseSort">
+          								Study workload rating <span ng-show="orderByField == 'rating_carico_studio'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+         							<th><a href="#" ng-click="orderByField='rating_lezioni'; reverseSort = !reverseSort">
+          								Lessons rating <span ng-show="orderByField == 'rating_lezioni'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+         							<th><a href="#" ng-click="orderByField='rating_materiali'; reverseSort = !reverseSort">
+          								Materials rating <span ng-show="orderByField == 'rating_materiali'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
+         							<th><a href="#" ng-click="orderByField='rating_esame'; reverseSort = !reverseSort">
+          								Exam rating <span ng-show="orderByField == 'rating_esame'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
 
 								</tr>
 							</thead>
 							<tbody class="animate-repeat"
-								ng-repeat="comment in comments | filter:filterContents">
+								ng-repeat="comment in comments | filter:filterContents | orderBy:orderByField:reverseSort">
 								<tr class="{{setColorRowTable(comment)}}">
 									<td>{{comment.id}}</td>
 									<td>{{comment.data_inserimento | date:'MM/dd/yyyy h:mma'}}</td>

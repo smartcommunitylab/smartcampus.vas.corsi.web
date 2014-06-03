@@ -45,6 +45,9 @@ app.controller(
 					$scope.number = 0;
 					$scope.average = 0;
 					$scope.comments = [];
+					
+					$scope.orderByField = 'data_inserimento';
+					$scope.reverseSort = true;
 
 					$scope.reload = function() {
 						$scope.init();
