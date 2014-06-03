@@ -122,6 +122,7 @@ app.controller(
 						$scope.degree = deg;
 						$scope.initdropdownCourse();
 						$scope.loadCourses(deg);
+						$scope.updateCommentsDegree(deg);
 					};
 
 					$scope.setCurrentCourse = function(course) {
@@ -134,6 +135,11 @@ app.controller(
 							'id' : '0',
 							'description' : 'Department'
 						};
+						$scope.number = 0;
+						$scope.average = 0;
+						$scope.comments = [];
+						$scope.orderByField = 'data_inserimento';
+						$scope.reverseSort = true;
 					};
 
 					$scope.initdropdownDegree = function() {
@@ -150,6 +156,11 @@ app.controller(
 							},
 							'id' : '0'
 						};
+						$scope.number = 0;
+						$scope.average = 0;
+						$scope.comments = [];
+						$scope.orderByField = 'data_inserimento';
+						$scope.reverseSort = true;
 					};
 
 					$scope.initdropdownCourse = function() {
@@ -169,6 +180,11 @@ app.controller(
 							'rating_esame' : '0'
 						};
 
+						$scope.number = 0;
+						$scope.average = 0;
+						$scope.comments = [];
+						$scope.orderByField = 'data_inserimento';
+						$scope.reverseSort = true;
 					};
 
 					$scope.updateCommentsCourse = function(course) {
@@ -215,10 +231,37 @@ app.controller(
 								});
 					};
 
+					
+					
+					
+					$scope.updateCommentsDegree = function(degree) {
+
+						$http(
+								{
+									method : 'GET',
+									url : '/rest/attivitadidattica/corsolaurea/' +degree.cdsId
+											+ '/commento/all',
+									params : {},
+									headers : {}
+								})
+								.success(
+										function(courses_list) {
+											for(var i=0;i<courses_list.length;i++){
+												$scope.updateCommentsCourse(courses_list[i]);
+											}
+										}).error(function(data) {
+									$scope.info = 'Error!';
+									// $scope.error = "No comments found";
+								});
+					};
+					
+					
+					
+					
 					$scope.setColorRowTable = function(comm) {
 
 						if (comm.approved == false) {
-							return "error";
+							return "danger";
 						} else {
 							return "success";
 						}

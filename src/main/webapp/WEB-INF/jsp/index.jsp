@@ -10,14 +10,9 @@
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="css/prettify.css" rel="stylesheet">
-<link
-	href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
-	rel="stylesheet">
-<link
-	href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css"
-	rel="stylesheet">
-
-
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 
 
 
@@ -53,9 +48,9 @@ var user_name="<%=request.getAttribute("user")%>";
 
 
 <body ng-controller="MainCtrl" data-ng-init="init()">
-	<div class="container" style="width: 80%;">
+	<div class="container" style="width: 95%;">
 		<div class="row" style="height: 65px">
-			<h2>Usage statistics Console of StudyMate</h2>
+			<h2>Usage statistics console of StudyMate</h2>
 		</div>
 		<div class="row">
 			<!-- 	<div class="span6 "></div> -->
@@ -65,14 +60,9 @@ var user_name="<%=request.getAttribute("user")%>";
 						<i class="fa fa-user fa-5x"></i>
 
 					</div>
-					<div class="span3">
+					<div class="span4">
 						<p>
 							User :<strong><span id="developer"></span></strong>
-						</p>
-						<p style="margin-top: 10px;">
-							<button type="button" class="btn btn-success">
-								<i class="fa fa-refresh" ng-click="reload()"></i> Refresh
-							</button>
 						</p>
 						<p style="margin-top: 25px;">Filter contents by:</p>
 						<p>
@@ -116,7 +106,7 @@ var user_name="<%=request.getAttribute("user")%>";
 
 			<div class="container-fluid">
 				<div class="row-fluid">
-					<div class="span2">
+					<div class="span2 well">
 
 
 						<!-- 						<p>Degree</p>
@@ -148,29 +138,29 @@ var user_name="<%=request.getAttribute("user")%>";
 						<li>{{degree.descripion}}</li> 
 						<li>{{course.description}}</li>
 						</ul>
-						<p>
-							Comments number: <strong>{{number}}</strong>
+							<span class="glyphicon glyphicon-align-justify"></span> Comments: <strong>{{number}}</strong>
 						</p>
 						<p>
-							Average rate: <strong>{{average}}</strong>
+							<span class="glyphicon glyphicon-star-empty"></span> Average: <strong>{{average.toFixed(2)}}</strong>
 						</p>
 					</div>
-					<div class="span10" >
-
-
+					<div class="span10" title="Table options" >
+						<div class="alert alert-info""> 
+						
 						<div class="span3">
-
+							
 							Filter contents: <input type="search" ng-model="filterContents"
 								placeholder="Filter..." />
 
 						</div>
 
-						<br><span class="label">Ordered By: {{orderByField}}, Reverse Sort: {{reverseSort}}</span>
-						<table class="table table-striped table-bordered table-hover table-responsive">
+						<br><span class="label label-primary">Ordered By: {{orderByField}}, Reverse Sort: {{reverseSort}}</span>
+						</div>
+						<table class="table table-bordered table-hover table-responsive">
 							<thead>
 								<tr>
 									<th><a href="#" ng-click="orderByField='id'; reverseSort = !reverseSort">
-          								Id <span ng-show="orderByField == 'id'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+          								Id <span ng-show="orderByField == 'id'"><span class="glyphicon glyphicon-chevron-up" ng-show="!reverseSort"></span><span class="glyphicon glyphicon-chevron-down" ng-show="reverseSort"></span></span>
          								</a>						
          							</th>
 									<th><a href="#" ng-click="orderByField='data_inserimento'; reverseSort = !reverseSort">
