@@ -122,7 +122,7 @@ app.controller(
 						$scope.degree = deg;
 						$scope.initdropdownCourse();
 						$scope.loadCourses(deg);
-						$scope.updateCommentsDegree(deg);
+						//$scope.updateCommentsDegree(deg);
 					};
 
 					$scope.setCurrentCourse = function(course) {
@@ -234,27 +234,26 @@ app.controller(
 					
 					
 					
-					$scope.updateCommentsDegree = function(degree) {
-
-						$http(
-								{
-									method : 'GET',
-									url : '/rest/attivitadidattica/corsolaurea/' +degree.cdsId
-											+ '/commento/all',
-									params : {},
-									headers : {}
-								})
-								.success(
-										function(courses_list) {
-											for(var i=0;i<courses_list.length;i++){
-												$scope.updateCommentsCourse(courses_list[i]);
-											}
-										}).error(function(data) {
-									$scope.info = 'Error!';
-									// $scope.error = "No comments found";
-								});
-					};
-					
+//					$scope.updateCommentsDegree = function(degree) {
+//
+//						$http(
+//								{
+//									method : 'GET',
+//									url : 'rest/attivitadidattica/corsolaurea/' +degree.cdsId,
+//									params : {},
+//									headers : {}
+//								})
+//								.success(
+//										function(courses_list) {
+//											for(var i=0;i<courses_list.length;i++){
+//												$scope.updateCommentsCourse(courses_list[i]);
+//											}
+//										}).error(function(data) {
+//									$scope.info = 'Error!';
+//									// $scope.error = "No comments found";
+//								});
+//					};
+				
 					
 					
 					

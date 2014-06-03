@@ -38,9 +38,6 @@ import eu.trentorise.smartcampus.resourceprovider.model.AuthServices;
 @Controller
 public class PortalController extends SCController {
 
-	private static final String MODERATOR_SERVICE_ID = "smartcampus.moderation";
-	private static final String MODERATOR_RESOURCE_PARAMETER_ID = "app";
-
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -50,11 +47,11 @@ public class PortalController extends SCController {
 	private String aacURL;
 
 	@Autowired
-	@Value("${studymate.client.id}")
+	@Value("${studymate.webapp.client.id}")
 	private String client_id;
 
 	@Autowired
-	@Value("${studymate.client.secret}")
+	@Value("${studymate.webapp.client.secret}")
 	private String client_secret;
 
 	@Autowired
