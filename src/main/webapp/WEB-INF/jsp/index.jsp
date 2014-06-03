@@ -38,7 +38,6 @@
 <script src="lib/angular-resource.min.js"></script>
 <script src="lib/angular-cookies.min.js"></script>
 <script src="lib/moment.js"></script>
-<script src="lib/progressbar.js"></script>
 
 
 
@@ -71,9 +70,8 @@ var user_name="<%=request.getAttribute("user")%>";
 							User :<strong><span id="developer"></span></strong>
 						</p>
 						<p style="margin-top: 10px;">
-							<button type="button" class="btn btn-success"
-								ng-click="reload();">
-								<i class="fa fa-refresh"></i> Refresh
+							<button type="button" class="btn btn-success">
+								<i class="fa fa-refresh" ng-click="reload()"></i> Refresh
 							</button>
 						</p>
 						<p style="margin-top: 25px;">Filter contents by:</p>
@@ -157,7 +155,7 @@ var user_name="<%=request.getAttribute("user")%>";
 							Average rate: <strong>{{average}}</strong>
 						</p>
 					</div>
-					<div class="span10">
+					<div class="span10" >
 
 
 						<div class="span3">
@@ -167,7 +165,7 @@ var user_name="<%=request.getAttribute("user")%>";
 
 						</div>
 
-						<table class="table table-striped table-bordered">
+						<table class="table table-striped table-bordered table-hover table-responsive">
 							<thead>
 								<tr>
 									<th>Id</th>
@@ -186,9 +184,9 @@ var user_name="<%=request.getAttribute("user")%>";
 							</thead>
 							<tbody class="animate-repeat"
 								ng-repeat="comment in comments | filter:filterContents">
-								<tr>
+								<tr class="{{setColorRowTable(comment)}}">
 									<td>{{comment.id}}</td>
-									<td>{{comment.date | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+									<td>{{comment.data_inserimento | date:'MM/dd/yyyy h:mma'}}</td>
 									<td>{{comment.approved}}</td>
 									<td>{{comment.id_studente}}</td>
 									<td>{{comment.nome_studente}}</td>
