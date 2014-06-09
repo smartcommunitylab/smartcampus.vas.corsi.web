@@ -12,7 +12,7 @@
 <link href="css/prettify.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
 
 
 
@@ -20,7 +20,6 @@
 
 <script src="lib/jquery.min.js"></script>
 <script src="lib/angular.js"></script>
-
 <script src="lib/bootstrap.min.js"></script>
 <script src="lib/angular-strap.js"></script>
 <script src="js/services.js"></script>
@@ -33,6 +32,8 @@
 <script src="lib/angular-resource.min.js"></script>
 <script src="lib/angular-cookies.min.js"></script>
 <script src="lib/moment.js"></script>
+<script src="lib/ng-csv.js"></script>
+<script src="lib/ng-csv.min.js"></script> 
 
 
 
@@ -48,7 +49,7 @@ var user_name="<%=request.getAttribute("user")%>";
 
 
 <body ng-controller="MainCtrl" data-ng-init="init()">
-	<div class="container" style="width: 95%;">
+	<div class="container" style="width: 90%;">
 		<div class="row" style="height: 65px">
 			<h2>Usage statistics console of StudyMate</h2>
 		</div>
@@ -108,30 +109,6 @@ var user_name="<%=request.getAttribute("user")%>";
 				<div class="row-fluid">
 					<div class="span2 well">
 
-
-						<!-- 						<p>Degree</p>
-						<div class="btn-group">
-							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								{{selection.degree}} <span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li ng-repeat="degree in listDegrees"><a
-									ng-click="onSelectDegree(degree)">{{degree}}</a></li>
-							</ul>
-						</div>
-
-						<p>Course</p>
-						<div class="btn-group">
-							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								{{selection.course}} <span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu">
-								<li ng-repeat="course in listCourses"><a
-									ng-click="onSelectCourse(course)">{{course}}</a></li>
-							</ul>
-						</div> -->
-
-
 						<h5>General statistics about </h5>
 						<ul>
 						<li>{{department.description}}</li> 
@@ -142,6 +119,10 @@ var user_name="<%=request.getAttribute("user")%>";
 						</p>
 						<p>
 							<span class="glyphicon glyphicon-star-empty"></span> Average: <strong>{{average.toFixed(2)}}</strong>
+						</p>
+						<br>
+						<p>
+						<button type="button" ng-csv="comments" csv-header="['Id', 'Date', 'Approved','Id student','Student's name','Text','Contents rating','Study workload rating','Lessons rating','Materials rating','Exam rating']"  filename="comments.csv"><span class="glyphicon glyphicon-floppy-disk"></span> Export </button>
 						</p>
 					</div>
 					<div class="span10" title="Table options" >

@@ -1,5 +1,5 @@
 var app = angular.module('dev', [ 'ngResource', 'ngCookies', 'filters',
-		'$strap.directives' ]);
+		'$strap.directives'/*, 'ngCsv', 'ngSanitize' */]);
 
 app.controller(
 				'MainCtrl',
@@ -232,7 +232,7 @@ app.controller(
 					};
 
 					
-					
+					$scope.gridOptions = { data: '$scope.comments' };
 					
 //					$scope.updateCommentsDegree = function(degree) {
 //
@@ -300,3 +300,5 @@ angular.module('filters', []).filter('truncate', function() {
 			return input;
 	};
 });
+
+
