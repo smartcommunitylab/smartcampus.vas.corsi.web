@@ -7,20 +7,26 @@
 <meta charset="utf-8">
 <title>StudyMate Statistics Console</title>
 
-<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap.min.css" rel="stylesheet"> 
 <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="css/prettify.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 
 <!-- required libraries -->
 
-<script src="lib/jquery.min.js"></script>
+<!-- <script src="lib/jquery.min.js"></script> -->
 <script src="lib/angular.js"></script>
-<script src="lib/bootstrap.min.js"></script>
+<!-- <script src="lib/bootstrap.min.js"></script> -->
+<script src="http://code.angularjs.org/1.1.2/angular-sanitize.js"></script>
 <script src="lib/angular-strap.js"></script>
 <script src="js/services.js"></script>
 
@@ -49,7 +55,7 @@ var user_name="<%=request.getAttribute("user")%>";
 
 
 <body ng-controller="MainCtrl" data-ng-init="init()">
-	<div class="container" style="width: 90%;">
+	<div class="container" style="width: 85%;">
 		<div class="row" style="height: 65px">
 			<h2>Usage statistics console of StudyMate</h2>
 		</div>
@@ -122,7 +128,7 @@ var user_name="<%=request.getAttribute("user")%>";
 						</p>
 						<br>
 						<p>
-						<button type="button" ng-csv="comments" csv-header="['Id', 'Date', 'Approved','Id student','Student's name','Text','Contents rating','Study workload rating','Lessons rating','Materials rating','Exam rating']"  filename="comments.csv"><span class="glyphicon glyphicon-floppy-disk"></span> Export </button>
+						<button type="button" ng-csv="comments" csv-header="['Id', 'Date', 'Approved','Id student','Student name','Text','Contents rating','Study workload rating','Lessons rating','Materials rating','Exam rating']"  filename="comments.csv"><span class="glyphicon glyphicon-floppy-disk"></span> Export </button>
 						</p>
 					</div>
 					<div class="span10" title="Table options" >
@@ -207,10 +213,7 @@ var user_name="<%=request.getAttribute("user")%>";
 				</div>
 			</div>
 
-
-
 		</div>
-
 
 	</div>
 </body>
