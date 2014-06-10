@@ -232,29 +232,48 @@ app.controller(
 					};
 
 					
-					//$scope.gridOptions = { data: '$scope.comments' };
-					
-//					$scope.updateCommentsDegree = function(degree) {
-//
-//						$http(
-//								{
-//									method : 'GET',
-//									url : 'rest/attivitadidattica/corsolaurea/' +degree.cdsId,
-//									params : {},
-//									headers : {}
-//								})
-//								.success(
-//										function(courses_list) {
-//											for(var i=0;i<courses_list.length;i++){
-//												$scope.updateCommentsCourse(courses_list[i]);
-//											}
-//										}).error(function(data) {
-//									$scope.info = 'Error!';
-//									// $scope.error = "No comments found";
-//								});
-//					};
-				
-					
+					$scope.getAllComments = function() {
+
+						$http(
+								{
+									method : 'GET',
+									url : 'rest/commento/all',
+									params : {},
+									headers : {}
+								})
+								.success(
+										function(data) {
+											$scope.comments = data;
+											$scope.number = data.length;
+
+											var averValue = 0;
+
+											if (data.length == 1) {
+												if (data[0].rating_contenuto == -1) {
+													return; // se non ci sono
+															// commenti return
+												}
+											}
+
+											for (var i = 0; i < data.length; i++) {
+												averValue = averValue
+														+ ((data[i].rating_contenuto
+																+ data[i].rating_carico_studio
+																+ data[i].rating_lezioni
+																+ data[i].rating_materiali + data[i].rating_esame) / 5);
+											}
+
+											$scope.average = averValue
+													/ data.length;
+
+											// $scope.info = 'Find latest
+											// comments inserted';
+											// $scope.error = '';
+										}).error(function(data) {
+									$scope.info = 'Error!';
+									// $scope.error = "No comments found";
+								});
+					};
 					
 					
 					$scope.setColorRowTable = function(comm) {

@@ -70,6 +70,7 @@ var user_name="<%=request.getAttribute("user")%>";
 					<div class="span4">
 						<p>
 							User :<strong><span id="developer"></span></strong>
+							<button style="margin-left: 70px;" class="btn btn-primary" ng-click="getAllComments()"> Load all comments </button>
 						</p>
 						<p style="margin-top: 25px;">Filter contents by:</p>
 						<p>
@@ -80,6 +81,7 @@ var user_name="<%=request.getAttribute("user")%>";
 							<ul class="dropdown-menu">
 								<li ng-repeat="dep in departmentList"><a ng-click="setCurrentDep(dep)">{{dep.description}}</a></li>
 							</ul>
+							
 						</div>
 						</p>
 						<p>
@@ -128,7 +130,7 @@ var user_name="<%=request.getAttribute("user")%>";
 						</p>
 						<br>
 						<p>
-						<button type="button" ng-csv="comments" csv-header="['Id', 'Date', 'Approved','Id student','Student name','Text','Contents rating','Study workload rating','Lessons rating','Materials rating','Exam rating']"  filename="comments.csv"><span class="glyphicon glyphicon-floppy-disk"></span> Export </button>
+						<button class="btn btn-primary" ng-csv="comments" csv-header="['Id', 'Date', 'Approved','Id student','Student name','Text','Contents rating','Study workload rating','Lessons rating','Materials rating','Exam rating']"  filename="comments.csv"><span class="glyphicon glyphicon-floppy-disk"></span> Export .csv </button>
 						</p>
 					</div>
 					<div class="span10" title="Table options" >

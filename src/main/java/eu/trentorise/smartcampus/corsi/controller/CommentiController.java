@@ -645,6 +645,41 @@ public class CommentiController {
 		}
 		return false;
 	}
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @param commento
+	 * @return boolean
+	 * @throws IOException
+	 * 
+	 *             Riceve il metodo post dal client e lo salva nel DB. Ritorna
+	 *             true se l'operazione va a buon fine, altrimenti false.
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/commento/all")
+	public @ResponseBody
+	List<Commento> getAllComments(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			
+			logger.info("/rest/commento/all");
+			
+			List<Commento> allComments = commentiRepository.findAll();
+			
+			return allComments;
+	
+		} catch (Exception e) {
+
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
 
 	/**
 	 * 
