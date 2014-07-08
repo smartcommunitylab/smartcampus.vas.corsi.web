@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.communicator.CommunicatorConnector;
 import eu.trentorise.smartcampus.communicator.model.Notification;
 import eu.trentorise.smartcampus.communicator.model.NotificationAuthor;
 import eu.trentorise.smartcampus.corsi.model.AttivitaDidattica;
@@ -32,6 +33,7 @@ import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
+import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
@@ -501,6 +503,9 @@ public class GruppiStudioController {
 			// gruppodistudio.getEventoId().setIdEventAd(-1);
 
 			// mediationParserImpl.updateKeyWord(token);
+			
+			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+					communicatoraddress, appName);
 
 			List<String> users = new ArrayList<String>();
 			List<String> idsInvited = gruppodistudio.getListInvited(userId);
@@ -536,13 +541,11 @@ public class GruppiStudioController {
 			n.setContent(mapGruppo);
 
 			// ottengo il client token
-			// tkm = new EasyTokenManger(profileaddress, clientId,
-			// clientSecret);
-			// communicatorConnector.sendAppNotification(n, appName, users,
-			// tkm.getClientSmartCampusToken());
+			EasyTokenManger tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
+			communicatorConnector.sendAppNotification(n, appName, users,
+			tkm.getClientSmartCampusToken());
 
-			// communicatorConnector.sendAppNotification(n, appName,
-			// users,tManager.getClientSmartCampusToken());
+			communicatorConnector.sendAppNotification(n, appName, users,tkm.getClientSmartCampusToken());
 
 			gruppodistudio.setId(-1); // setto l'id a -1 per evitare che il
 										// commento venga sovrascritto

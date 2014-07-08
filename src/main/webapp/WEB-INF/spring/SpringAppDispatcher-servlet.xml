@@ -66,5 +66,11 @@
 	</bean>
 		
 	 -->
+	 
+	 	 <bean id="MediationParserImpl"
+		class="eu.trentorise.smartcampus.mediation.engine.MediationParserImpl">
+		<property name="urlServermediation" value="${url.mediation.services}" />
+		<property name="webappname" value="${webapp.name}" />
+	</bean>
 	
 </beans>

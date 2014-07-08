@@ -51,10 +51,6 @@
         <url-pattern>/js/*</url-pattern>
         </servlet-mapping>
   <servlet-mapping>
-      
-      
-      
-      
     <servlet-name>SpringAppDispatcher</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>

@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Copyright 2012-2013 Trento RISE
-  
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-  
-         http://www.apache.org/licenses/LICENSE-2.0
-  
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
--->
+<!-- Copyright 2012-2013 Trento RISE Licensed under the Apache License, Version 
+	2.0 (the "License"); you may not use this file except in compliance with 
+	the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
@@ -32,59 +24,58 @@
     http://www.springframework.org/schema/security 
   	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	
-  <context:property-placeholder location="classpath:corsi.properties" />
-  <bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer" />
-  
-<http xmlns="http://www.springframework.org/schema/security" pattern="/web/css/**" security="none"/>
-  <http xmlns="http://www.springframework.org/schema/security" pattern="/web/img/**" security="none"/>
-  <http xmlns="http://www.springframework.org/schema/security" pattern="/web/js/**" security="none"/>
-  <http xmlns="http://www.springframework.org/schema/security" pattern="/web/lib/**" security="none"/>
-<!--   <http xmlns="http://www.springframework.org/schema/security" pattern="/web/**" security="none"/> -->
-	
-<!-- 	<http create-session="never" entry-point-ref="oauthAuthenticationEntryPoint"
-		xmlns="http://www.springframework.org/schema/security"
-		authentication-manager-ref="resourceAuthenticationManager" >
-		<anonymous enabled="false" />
-		<sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
-		<custom-filter ref="resourceFilter" before="PRE_AUTH_FILTER" />		
-		<access-denied-handler ref="oauthAccessDeniedHandler" />
-	</http> -->
-	
-	 
-	<sec:http create-session='always' pattern="/web/**" disable-url-rewriting="true" auto-config="false" authentication-manager-ref="resourceAuthenticationManager">
-		
+
+	<context:property-placeholder location="classpath:corsi.properties" />
+	<bean
+		class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer" />
+
+	<http xmlns="http://www.springframework.org/schema/security"
+		pattern="/web/css/**" security="none" />
+	<http xmlns="http://www.springframework.org/schema/security"
+		pattern="/web/img/**" security="none" />
+	<http xmlns="http://www.springframework.org/schema/security"
+		pattern="/web/js/**" security="none" />
+	<http xmlns="http://www.springframework.org/schema/security"
+		pattern="/web/lib/**" security="none" />
+
+
+	<sec:http create-session='always' pattern="/web/**"
+		disable-url-rewriting="true" auto-config="false"
+		authentication-manager-ref="resourceAuthenticationManager">
+
 		<sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
 		<sec:form-login login-page="/login" />
 		<sec:logout invalidate-session="true" logout-url="/logout"
 			delete-cookies="JSESSIONID,open_id_session_id,vasdevgoogle"
 			logout-success-url="/logout" />
 	</sec:http>
-	
-	
-	
-	<sec:http entry-point-ref="forbEntryPoint" use-expressions="true" create-session="stateless">
+
+
+
+	<sec:http entry-point-ref="forbEntryPoint" use-expressions="true"
+		create-session="stateless">
 		<sec:custom-filter position="PRE_AUTH_FILTER" ref="authTokenFilter" />
-		 <sec:intercept-url pattern="/rest**" access="isFullyAuthenticated()" />
+		<sec:intercept-url pattern="/rest**" access="isFullyAuthenticated()" />
 	</sec:http>
 
-	
-	
-<bean id="forbEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint">
+
+
+	<bean id="forbEntryPoint"
+		class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint">
 	</bean>
 
 	<bean id="authTokenFilter" class="eu.trentorise.smartcampus.aac.conf.OAuthTokenFilter">
-	    <property name="authenticationManager" ref="authenticationManager"/>
-	</bean>    
+		<property name="authenticationManager" ref="authenticationManager" />
+	</bean>
 
 	<sec:authentication-manager alias="authenticationManager">
 		<sec:authentication-provider ref="preauthAuthProvider" />
 	</sec:authentication-manager>
 
-	<bean id="preauthAuthProvider" class="eu.trentorise.smartcampus.aac.conf.OAuthAuthenticationProvider">
-<!-- 	  <property name="tokenStore" ref="tokenStore"/>   
-    <property name="aacURL" value="https://vas-dev.smartcampuslab.it/aac"/>  
-     <property name="scope" value="smartcampus.profile.basicprofile.me"/>  -->
+	<bean id="preauthAuthProvider"
+		class="eu.trentorise.smartcampus.aac.conf.OAuthAuthenticationProvider">
+		<!-- <property name="tokenStore" ref="tokenStore"/> <property name="aacURL" 
+			value="https://vas-dev.smartcampuslab.it/aac"/> <property name="scope" value="smartcampus.profile.basicprofile.me"/> -->
 	</bean>
 
 	<bean id="tokenStore"
@@ -92,49 +83,40 @@
 		<constructor-arg ref="dataSource" />
 	</bean>
 
-<!-- 	<bean id="dataSource" destroy-method="close" 
-		class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="${jdbc.driver}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.user}" />
-		<property name="password" value="${jdbc.password}" />
-	</bean>  -->
-	
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
-	destroy-method="close">
-	<property name="driverClass" value="${jdbc.driver}" />
-	<property name="jdbcUrl" value="${jdbc.url}" />
-	<property name="user" value="${jdbc.user}" />
-	<property name="password" value="${jdbc.password}" />
-  <property name="acquireIncrement" value="5" />
-  <property name="idleConnectionTestPeriod" value="60" />
-  <property name="maxPoolSize" value="100" />
-  <property name="maxStatements" value="50" />
-  <property name="minPoolSize" value="10" />
-  <property name="maxIdleTime" value="20" />
-</bean>
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="acquireIncrement" value="5" />
+		<property name="idleConnectionTestPeriod" value="60" />
+		<property name="maxPoolSize" value="100" />
+		<property name="maxStatements" value="50" />
+		<property name="minPoolSize" value="10" />
+		<property name="maxIdleTime" value="20" />
+	</bean>
 
 	<bean id="resourceAuthenticationManager"
 		class="eu.trentorise.smartcampus.resourceprovider.filter.ResourceAuthenticationManager">
 		<property name="tokenStore" ref="tokenStore" />
 		<property name="authServices" ref="authServices" />
 	</bean>
-	
-	<bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache"> 
-    <property name="createSessionAllowed" value="false" /> 
-</bean>
-	
+
+	<bean id="httpSessionRequestCache"
+		class="org.springframework.security.web.savedrequest.HttpSessionRequestCache">
+		<property name="createSessionAllowed" value="false" />
+	</bean>
+
 	<sec:authentication-manager alias="authenticationManager">
 		<sec:authentication-provider ref="preauthAuthProvider" />
 	</sec:authentication-manager>
-	
+
 
 	<bean id="authServices"
 		class="eu.trentorise.smartcampus.resourceprovider.jdbc.JdbcServices">
 		<constructor-arg ref="dataSource" />
 	</bean>
-
-
 
 	<mvc:annotation-driven />
 </beans>
