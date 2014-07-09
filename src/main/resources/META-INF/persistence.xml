@@ -9,11 +9,10 @@
  		<class>eu.trentorise.smartcampus.corsi.model.CorsoLaurea</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Studente</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Allegato</class>
+ 		<class>eu.trentorise.smartcampus.corsi.model.ChatMessage</class>
  		<class>eu.trentorise.smartcampus.corsi.model.AttivitaDiStudio</class>
- 		<class>eu.trentorise.smartcampus.corsi.model.Message</class>
  		<class>eu.trentorise.smartcampus.corsi.model.Dipartimento</class>
  		<class>eu.trentorise.smartcampus.corsi.model.GruppoDiStudio</class>
- 		<class>eu.trentorise.smartcampus.corsi.model.Servizio</class>
  		<class>eu.trentorise.smartcampus.mediation.model.CommentBaseEntity</class>
  		<class>eu.trentorise.smartcampus.corsi.model.AttivitaDidattica</class>
  		<class>eu.trentorise.smartcampus.corsi.model.CorsoCarriera</class>

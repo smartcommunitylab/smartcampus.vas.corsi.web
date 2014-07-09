@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
-public class Allegato extends ChatObj {
+public class Allegato extends ChatMessage {
 
 	// Nome del gruppo
 	@Column(name = "URI")
