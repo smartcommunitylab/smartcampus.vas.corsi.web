@@ -16,7 +16,7 @@ public class ChatMessage {
 	private String nome_studente;
 	
 	@Column(name = "STUDENT_ID")
-	private String id_studente;
+	private long id_studente;
 
 	@Column(name = "TIME")
 	private long data;
@@ -52,11 +52,11 @@ public class ChatMessage {
 		this.nome_studente = nome_studente;
 	}
 
-	public String getId_studente() {
+	public long getId_studente() {
 		return id_studente;
 	}
 
-	public void setId_studente(String id_studente) {
+	public void setId_studente(long id_studente) {
 		this.id_studente = id_studente;
 	}
 

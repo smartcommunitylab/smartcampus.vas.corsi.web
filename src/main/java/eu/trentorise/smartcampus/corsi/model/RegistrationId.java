@@ -3,8 +3,12 @@ package eu.trentorise.smartcampus.corsi.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "RegistrationId.findRegIdsByStudent", query = "select r from RegistrationId r where r.studentId = ?1")})
 public class RegistrationId {
 
 	@Id
