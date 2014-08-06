@@ -92,6 +92,8 @@ public class GCMBroadcastChatService {
 
 	private static final String KEY_GCM_MESSAGE = "gcm-message-gds";
 
+	private static final String GCM_KEY_GDS = "message-gds-gcm";
+
 	@RequestMapping(method = RequestMethod.POST, value = "/rest/gcm/message/gds/{gds_id}/text/{text}")
 	public @ResponseBody
 	boolean postTextChat(HttpServletRequest request,
@@ -159,7 +161,7 @@ public class GCMBroadcastChatService {
 				androidTargets.add(registrationId.getRegId());
 			}
 
-			sendMessagesToGcm(regId_students, text);
+			sendMessagesToGcm(regId_students, text, gds_id);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -184,7 +186,7 @@ public class GCMBroadcastChatService {
 		// BasicProfile profile = service.getBasicProfile(token);
 		// Long userId = Long.valueOf(profile.getUserId());
 
-		Long userId = (long) 87;
+		Long userId = (long) 87;///////////////////////////////////////////////////////////////////test
 
 		// save the message on db
 		ChatMessage messageChat = new ChatMessage();
@@ -228,23 +230,24 @@ public class GCMBroadcastChatService {
 			}
 		}
 
-		regId_students = registrationRepository.findRegIdsByStudent(Long
+		regId_students = registrationRepository.findRegIdsByStudent(Long   ////////////////////////test
 				.valueOf(87));
-
-		androidTargets.add(regId_students.get(0).getRegId());
+ 
+		androidTargets.add(regId_students.get(0).getRegId());  ////////////////////test
 		
 		try {
-			return sendMessagesToGcm(regId_students, text);
+			return sendMessagesToGcm(regId_students, text, gds_id);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+		return false;
 		
 	}
 
 	private boolean sendMessagesToGcm(List<RegistrationId> regId_students,
-			String text) throws IOException {
+			String text, long gds) throws IOException {
 		// Instance of com.android.gcm.server.Sender, that does the
 		// transmission of a Message to the Google Cloud Messaging service.
 
@@ -262,8 +265,10 @@ public class GCMBroadcastChatService {
 				// transmissions, will only receive the latest message for
 				// that key when
 				// it goes back on-line.
-				.collapseKey("Test-gcm").timeToLive(30).delayWhileIdle(true)
-				.addData("message", text).build();
+				.collapseKey(GCM_KEY_GDS).timeToLive(30).delayWhileIdle(true)
+				.addData("message", text)
+				.addData("gds", gruppidistudioRepository.findOne(gds).getNome())
+				.build();
 
 		// use this for multicast messages. The second parameter
 		// of sender.send() will need to be an array of register ids.

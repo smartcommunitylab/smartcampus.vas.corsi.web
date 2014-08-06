@@ -4,8 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
+@NamedQueries({
+	@NamedQuery(name = "ChatMessage.getMessagesOfGds", query = "select cm from ChatMessage cm where cm.gds = ?1") })
 public class ChatMessage {
 
 	@Id
@@ -19,7 +23,7 @@ public class ChatMessage {
 	private long id_studente;
 
 	@Column(name = "TIME")
-	private long data;
+	private Long data;
 	
 	@Column(name = "TESTO")
 	private String testo;
@@ -38,11 +42,11 @@ public class ChatMessage {
 	public ChatMessage() {
 	}
 
-	public long getData() {
+	public Long getData() {
 		return data;
 	}
 
-	public void setData(long data) {
+	public void setData(Long data) {
 		this.data = data;
 	}
 
