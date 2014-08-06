@@ -23,7 +23,9 @@ public class ChatMessage {
 	
 	@Column(name = "TESTO")
 	private String testo;
-
+	
+	@Column(name = "GDS_ID")
+	private long gds;
 	
 	public String getTesto() {
 		return testo;
@@ -60,5 +62,14 @@ public class ChatMessage {
 		this.id_studente = id_studente;
 	}
 
+	public long getGds() {
+		return gds;
+	}
 
+	public void setGds(long gds) {
+		this.gds = gds;
+	}
+
+
+	
 }
