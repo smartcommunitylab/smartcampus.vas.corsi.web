@@ -2,6 +2,7 @@ package eu.trentorise.smartcampus.corsi.gcmservice;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -257,6 +258,8 @@ public class GCMBroadcastChatService {
 
 		Sender sender = new Sender(SENDER_ID);
 
+		String timestampNow = String.valueOf(System.currentTimeMillis());
+		
 		// This Message object will hold the data that is being transmitted
 		// to the Android client devices. For this demo, it is a simple text
 		// string, but could certainly be a JSON object.
@@ -273,6 +276,7 @@ public class GCMBroadcastChatService {
 				.addData("message", text)
 				.addData("gds", String.valueOf(gds))
 				.addData("gds_name", gruppidistudioRepository.findOne(gds).getNome())
+				.addData("date", timestampNow)
 				.build();
 
 		// use this for multicast messages. The second parameter
