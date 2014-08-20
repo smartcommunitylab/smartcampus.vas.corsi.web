@@ -46,6 +46,7 @@ import eu.trentorise.smartcampus.corsi.repository.RegistrationIdRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
 import eu.trentorise.smartcampus.network.RemoteException;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
+import eu.trentorise.smartcampus.profileservice.ProfileServiceException;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 
 @Controller("GCMBroadcastChatService")
@@ -70,7 +71,7 @@ public class GCMBroadcastChatService {
 	// message.
 	// for this demo, it will only have the ANDROID_DEVICE id that was captured
 	// when we ran the Android client app through Eclipse.
-	private List<String> androidTargets = new ArrayList<String>();
+	private List<String> androidTargets;
 
 	@Autowired
 	private RegistrationIdRepository registrationRepository;
@@ -104,13 +105,13 @@ public class GCMBroadcastChatService {
 	throws IOException {
 		try {
 
-			// String token = getToken(request);
-			// BasicProfileService service = new BasicProfileService(
-			// profileaddress);
-			// BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
+			 String token = getToken(request);
+			 BasicProfileService service = new BasicProfileService(
+			 profileaddress);
+			 BasicProfile profile = service.getBasicProfile(token);
+			 Long userId = Long.valueOf(profile.getUserId());
 
-			Long userId = (long) 87;
+			//Long userId = (long) 87;
 
 			// save the message on db
 			ChatMessage messageChat = new ChatMessage();
@@ -178,15 +179,18 @@ public class GCMBroadcastChatService {
 			@PathVariable("gds_id") Long gds_id,
 			@PathVariable("text") String text)
 
-	throws IOException {
+	throws IOException, SecurityException, ProfileServiceException {
 
-		// String token = getToken(request);
-		// BasicProfileService service = new BasicProfileService(
-		// profileaddress);
-		// BasicProfile profile = service.getBasicProfile(token);
-		// Long userId = Long.valueOf(profile.getUserId());
+		try {
+		 String token = getToken(request);
+		 BasicProfileService service = new BasicProfileService(
+		 profileaddress);
+		 BasicProfile profile = service.getBasicProfile(token);
+		 Long userId = Long.valueOf(profile.getUserId());
 
-		Long userId = (long) 87;///////////////////////////////////////////////////////////////////test
+		//Long userId = (long) 87;///////////////////////////////////////////////////////////////////test
+		 
+		androidTargets = new ArrayList<String>();
 
 		// save the message on db
 		ChatMessage messageChat = new ChatMessage();
@@ -202,10 +206,10 @@ public class GCMBroadcastChatService {
 			return false;
 		}
 
-		GruppoDiStudio gds_chat = gruppidistudioRepository.findOne(gds_id);
+		GruppoDiStudio gds_chat = gruppidistudioRepository.findGdsById(gds_id.longValue());
 
 		if (gds_chat == null) {
-			logger.error("Gds with id = " + gds_id + "does not exist.");
+			logger.error("Gds with id = " + gds_id + " does not exist.");
 			return false;
 		}
 
@@ -230,12 +234,12 @@ public class GCMBroadcastChatService {
 			}
 		}
 
-		regId_students = registrationRepository.findRegIdsByStudent(Long   ////////////////////////test
-				.valueOf(87));
+		//regId_students = registrationRepository.findRegIdsByStudent(Long   ////////////////////////test
+		//		.valueOf(87));
  
-		androidTargets.add(regId_students.get(0).getRegId());  ////////////////////test
+		//androidTargets.add(regId_students.get(0).getRegId());  ////////////////////test
 		
-		try {
+		
 			return sendMessagesToGcm(regId_students, text, gds_id);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -267,7 +271,8 @@ public class GCMBroadcastChatService {
 				// it goes back on-line.
 				.collapseKey(GCM_KEY_GDS).timeToLive(30).delayWhileIdle(true)
 				.addData("message", text)
-				.addData("gds", gruppidistudioRepository.findOne(gds).getNome())
+				.addData("gds", String.valueOf(gds))
+				.addData("gds_name", gruppidistudioRepository.findOne(gds).getNome())
 				.build();
 
 		// use this for multicast messages. The second parameter
@@ -275,8 +280,8 @@ public class GCMBroadcastChatService {
 		MulticastResult result = sender.send(message, androidTargets, 1);
 
 		if (result.getResults() != null) {
-			int canonicalRegId = result.getCanonicalIds();
-			if (canonicalRegId == 0) {
+			int canonicalRegId = result.getSuccess();
+			if (canonicalRegId == regId_students.size()) {
 				return true;
 			}
 		} else {

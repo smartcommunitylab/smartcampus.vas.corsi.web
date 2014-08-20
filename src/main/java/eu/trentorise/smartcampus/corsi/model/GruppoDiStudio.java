@@ -8,11 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
 
 @Entity
-@NamedQuery(name = "GruppoDiStudio.findGdsBycourseId", query = "select gds from GruppoDiStudio gds where gds.corso = ?1")
+@NamedQueries({ @NamedQuery(name = "GruppoDiStudio.findGdsBycourseId", query = "select gds from GruppoDiStudio gds where gds.corso = ?1"),
+				@NamedQuery(name = "GruppoDiStudio.findGdsById", query = "select gds from GruppoDiStudio gds where gds.id = ?1")})
 public class GruppoDiStudio {
 	// id del gruppo
 	@Id

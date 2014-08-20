@@ -11,4 +11,6 @@ import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
 public interface GruppoDiStudioRepository extends
 		JpaRepository<GruppoDiStudio, Long> {
 	List<GruppoDiStudio> findGdsBycourseId(Long corso);
+	
+	GruppoDiStudio findGdsById(Long id);
 }
