@@ -10,7 +10,12 @@ import javax.persistence.NamedQuery;
 @Entity
 @NamedQueries({
 	@NamedQuery(name = "ChatMessage.getMessagesOfGds", query = "select cm from ChatMessage cm where cm.gds = ?1") })
-public class ChatMessage {
+public class ChatMessage extends BasicEntity{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 611754594410053426L;
 
 	@Id
 	@GeneratedValue

@@ -106,13 +106,13 @@ public class GCMBroadcastChatService {
 	throws IOException {
 		try {
 
-			 String token = getToken(request);
-			 BasicProfileService service = new BasicProfileService(
-			 profileaddress);
-			 BasicProfile profile = service.getBasicProfile(token);
-			 Long userId = Long.valueOf(profile.getUserId());
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 
-			//Long userId = (long) 87;
+			// Long userId = (long) 87;
 
 			// save the message on db
 			ChatMessage messageChat = new ChatMessage();
@@ -183,72 +183,87 @@ public class GCMBroadcastChatService {
 	throws IOException, SecurityException, ProfileServiceException {
 
 		try {
-		 String token = getToken(request);
-		 BasicProfileService service = new BasicProfileService(
-		 profileaddress);
-		 BasicProfile profile = service.getBasicProfile(token);
-		 Long userId = Long.valueOf(profile.getUserId());
 
-		//Long userId = (long) 87;///////////////////////////////////////////////////////////////////test
-		 
-		androidTargets = new ArrayList<String>();
+			logger.info("/rest/gcm/messagecommunicator/gds/"+gds_id+"/text/"+text);
+			
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 
-		// save the message on db
-		ChatMessage messageChat = new ChatMessage();
-		messageChat.setId_studente(userId);
-		messageChat.setNome_studente(studenteRepository.findOne(userId)
-				.getNome());
-		messageChat.setTesto(text);
+			// Long userId = (long)
+			// 87;///////////////////////////////////////////////////////////////////test
 
-		if (messageChat.getNome_studente() != null) {
-			chatMessagesRepository.save(messageChat);
-		} else {
-			logger.info("No student found with id: " + userId.toString());
-			return false;
-		}
+			androidTargets = new ArrayList<String>();
 
-		GruppoDiStudio gds_chat = gruppidistudioRepository.findGdsById(gds_id.longValue());
+			// save the message on db
+			ChatMessage messageChat = new ChatMessage();
+			messageChat.setId_studente(userId);
+			messageChat.setNome_studente(studenteRepository.findOne(userId)
+					.getNome());
+			messageChat.setTesto(text);
+			messageChat.setData(System.currentTimeMillis());
+			messageChat.setGds(gds_id);
 
-		if (gds_chat == null) {
-			logger.error("Gds with id = " + gds_id + " does not exist.");
-			return false;
-		}
+			if (messageChat.getNome_studente() != null) {
+				chatMessagesRepository.save(messageChat);
+			} else {
+				logger.info("No student found with id: " + userId.toString());
+				return false;
+			}
 
-		String listIds = gds_chat.getIdsStudenti();
-		List<String> listStudents = gds_chat.convertIdsInvitedToList(listIds,
-				userId);
-		List<RegistrationId> regId_students = null;
-		// per ogni studente vado a prendere il relativo reg_id
-		for (String stringId : listStudents) {
+			GruppoDiStudio gds_chat = gruppidistudioRepository
+					.findGdsById(gds_id.longValue());
 
-			if (!stringId.equals(userId.toString())) {
-				regId_students = registrationRepository
-						.findRegIdsByStudent(Long.valueOf(stringId));
+			if (gds_chat == null) {
+				logger.error("Gds with id = " + gds_id + " does not exist.");
+				return false;
+			}
 
-				if (regId_students != null) {
+			String listIds = gds_chat.getIdsStudenti();
+			List<String> listStudents = gds_chat.convertIdsInvitedToList(
+					listIds, userId);
+			List<RegistrationId> regId_students = null;
+			// per ogni studente vado a prendere il relativo reg_id
+			for (String stringId : listStudents) {
 
-					for (RegistrationId registrationId : regId_students) {
-						androidTargets.add(registrationId.getRegId());
+				if (!stringId.equals(userId.toString())) {
+					regId_students = registrationRepository
+							.findRegIdsByStudent(Long.valueOf(stringId));
+
+					if (regId_students != null) {
+
+						for (RegistrationId registrationId : regId_students) {
+							if(registrationId.getRegId() != null)
+								androidTargets.add(registrationId.getRegId());
+						}
+
 					}
-
 				}
 			}
-		}
 
-		//regId_students = registrationRepository.findRegIdsByStudent(Long   ////////////////////////test
-		//		.valueOf(87));
- 
-		//androidTargets.add(regId_students.get(0).getRegId());  ////////////////////test
-		
-		
-			return sendMessagesToGcm(regId_students, text, gds_id);
+			// regId_students = registrationRepository.findRegIdsByStudent(Long
+			// ////////////////////////test
+			// .valueOf(87));
+
+			// androidTargets.add(regId_students.get(0).getRegId());
+			// ////////////////////test
+			if(androidTargets.size() >= 1){
+				return sendMessagesToGcm(regId_students, text, gds_id);
+			}else{
+				return true;
+			}
+
+			
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			System.out.println(e.getMessage());
 			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;
-		
+
 	}
 
 	private boolean sendMessagesToGcm(List<RegistrationId> regId_students,
@@ -259,7 +274,7 @@ public class GCMBroadcastChatService {
 		Sender sender = new Sender(SENDER_ID);
 
 		String timestampNow = String.valueOf(System.currentTimeMillis());
-		
+
 		// This Message object will hold the data that is being transmitted
 		// to the Android client devices. For this demo, it is a simple text
 		// string, but could certainly be a JSON object.
@@ -272,12 +287,14 @@ public class GCMBroadcastChatService {
 				// transmissions, will only receive the latest message for
 				// that key when
 				// it goes back on-line.
-				.collapseKey(GCM_KEY_GDS).timeToLive(30).delayWhileIdle(true)
+				.collapseKey(GCM_KEY_GDS)
+				.timeToLive(30)
+				.delayWhileIdle(true)
 				.addData("message", text)
 				.addData("gds", String.valueOf(gds))
-				.addData("gds_name", gruppidistudioRepository.findOne(gds).getNome())
-				.addData("date", timestampNow)
-				.build();
+				.addData("gds_name",
+						gruppidistudioRepository.findOne(gds).getNome())
+				.addData("date", timestampNow).build();
 
 		// use this for multicast messages. The second parameter
 		// of sender.send() will need to be an array of register ids.
@@ -309,9 +326,19 @@ public class GCMBroadcastChatService {
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
+			
+			
+			List<RegistrationId> listRegIds = registrationRepository.findRegIdsByStudent(userId);
+			
+			for (RegistrationId registrationId : listRegIds) {			
+				if(registrationId.getRegId().equals(reg_id)){ // se il regId è già salvato ritorno true
+					return true;
+				}
+			}
 
 			RegistrationId newRegIdDeviceApp = new RegistrationId();
 
+			newRegIdDeviceApp.setId((long) 0);
 			newRegIdDeviceApp.setRegId(reg_id);
 			newRegIdDeviceApp.setStudentId(userId);
 

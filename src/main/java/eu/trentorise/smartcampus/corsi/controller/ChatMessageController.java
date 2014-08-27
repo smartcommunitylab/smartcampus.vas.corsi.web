@@ -61,6 +61,9 @@ public class ChatMessageController {
 			
 			List<ChatMessage> messages = chatMessageRepository.getMessagesOfGds(gds_id);
 			
+			if(messages == null)
+				return null;
+			
 			
 			// sorting of messages
 			Collections.sort(messages, new Comparator<ChatMessage>() {
