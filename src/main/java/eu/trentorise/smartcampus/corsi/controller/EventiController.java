@@ -433,7 +433,7 @@ public class EventiController {
 	throws IOException {
 		try {
 			logger.info("/rest/evento/me");
-			session.setMaxInactiveInterval(35);
+			//session.setMaxInactiveInterval(35);
 			String token = getToken(request);
 
 			BasicProfileService service = new BasicProfileService(
@@ -459,16 +459,10 @@ public class EventiController {
 				for (Evento evento : listEventsInteresse) {
 
 					// today
-					Calendar date = new GregorianCalendar();
-					// reset hour, minutes, seconds and millis
-					date.set(Calendar.HOUR_OF_DAY, 0);
-					date.set(Calendar.MINUTE, 0);
-					date.set(Calendar.SECOND, 0);
-					date.set(Calendar.MILLISECOND, 0);
-					date.add(Calendar.DAY_OF_MONTH, 0);
+					Long date = System.currentTimeMillis();
+					
 
-					if (evento.getEventoId().getDate()
-							.compareTo(date.getTime()) >= 0) {
+					if (evento.getEventoId().getDate().getTime() >= date) {
 						listEventi.add(evento);
 					}
 

@@ -163,7 +163,7 @@ public class GCMBroadcastChatService {
 				androidTargets.add(registrationId.getRegId());
 			}
 
-			sendMessagesToGcm(regId_students, text, gds_id);
+			sendMessagesToGcm(regId_students, text, gds_id, profile.getName());
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -250,7 +250,7 @@ public class GCMBroadcastChatService {
 			// androidTargets.add(regId_students.get(0).getRegId());
 			// ////////////////////test
 			if(androidTargets.size() >= 1){
-				return sendMessagesToGcm(regId_students, text, gds_id);
+				return sendMessagesToGcm(regId_students, text, gds_id, profile.getName());
 			}else{
 				return true;
 			}
@@ -267,7 +267,7 @@ public class GCMBroadcastChatService {
 	}
 
 	private boolean sendMessagesToGcm(List<RegistrationId> regId_students,
-			String text, long gds) throws IOException {
+			String text, long gds, String nameStudent) throws IOException {
 		// Instance of com.android.gcm.server.Sender, that does the
 		// transmission of a Message to the Google Cloud Messaging service.
 
@@ -291,6 +291,7 @@ public class GCMBroadcastChatService {
 				.timeToLive(30)
 				.delayWhileIdle(true)
 				.addData("message", text)
+				.addData("name", nameStudent)
 				.addData("gds", String.valueOf(gds))
 				.addData("gds_name",
 						gruppidistudioRepository.findOne(gds).getNome())
