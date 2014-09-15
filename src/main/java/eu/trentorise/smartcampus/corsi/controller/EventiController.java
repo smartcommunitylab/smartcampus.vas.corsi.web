@@ -290,7 +290,7 @@ public class EventiController {
 
 			// se l'evento è un'attività di studio allora lo gestisco
 			// controllando le restrinzioni
-			if (eventoChanged.getGruppo().getId() > 0) {
+			if (eventoChanged.getGruppo() != null) {
 				eventoChanged.getEventoId().setIdEventAd(-2);
 				eventoChanged.getEventoId().setIdStudente(userId);
 
