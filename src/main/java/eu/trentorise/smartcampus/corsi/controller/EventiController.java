@@ -462,7 +462,7 @@ public class EventiController {
 					Long date = System.currentTimeMillis();
 					
 
-					if (evento.getEventoId().getDate().getTime() >= date) {
+					if (evento.getEventoId().getDate().getTime() >= date-86400000) {
 						listEventi.add(evento);
 					}
 
