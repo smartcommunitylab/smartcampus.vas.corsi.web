@@ -3,10 +3,13 @@ package eu.trentorise.smartcampus.corsi.controller;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -104,8 +107,37 @@ public class AttivitaStudioController {
 
 			GruppoDiStudio gdsRefer = gruppstudioRepository
 					.findOne(id_gruppodistudio);
+			
+			List<Evento> attivitaStudioList = new ArrayList<Evento>();
 
-			return eventoRepository.findAttByIdGds(gdsRefer);
+			for (Evento evento : eventoRepository.findAttByIdGds(gdsRefer)) {
+
+				// today
+				Long date = System.currentTimeMillis();
+				
+
+				if (evento.getEventoId().getDate().getTime() >= date-TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) {
+					attivitaStudioList.add(evento);
+				}
+			}
+
+		// sort per data
+		Collections.sort(attivitaStudioList, new Comparator<Evento>() {
+			public int compare(Evento e1, Evento e2) {
+				if (e1.getEventoId().getDate() == null
+						|| e2.getEventoId().getDate() == null)
+					return 0;
+
+				Long millisecondE1 = e1.getEventoId().getDate().getTime();
+				Long millisecondE2 = e2.getEventoId().getDate().getTime();
+
+				return millisecondE1.compareTo(millisecondE2);
+			}
+		});
+
+		
+		return attivitaStudioList;
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();

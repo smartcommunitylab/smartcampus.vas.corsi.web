@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -462,7 +463,7 @@ public class EventiController {
 					Long date = System.currentTimeMillis();
 					
 
-					if (evento.getEventoId().getDate().getTime() >= date-86400000) {
+					if (evento.getEventoId().getDate().getTime() >= date-TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) {
 						listEventi.add(evento);
 					}
 

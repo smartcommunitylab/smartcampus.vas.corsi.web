@@ -518,12 +518,18 @@ public class CommentiController {
 			// presente
 
 			if (profile != null) {
+				
+				Long studId = studenteRepository.findOne(userId).getId();
+				Long adId = attivitaDidatticaRepository.findOne(
+						commento.getCorso()).getAdId();
+				
+				if(adId == null){
+					logger.error("An attivitadidattica with specified id= "+commento.getCorso()+" not exist.");
+					return false;
+				}
 
 				Commento commentoDaModificare = commentiRepository
-						.getCommentoByStudenteApproved(
-								studenteRepository.findOne(userId).getId(),
-								attivitaDidatticaRepository.findOne(
-										commento.getCorso()).getAdId());
+						.getCommentoByStudenteApproved(studId, adId);
 
 				// gestisco il commento nel caso sia già presente
 
