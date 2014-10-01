@@ -620,7 +620,7 @@ public class CommentiController {
 					if (commentoNuovo.isApproved()) {
 
 						AttivitaDidattica ad_commento = attivitaDidatticaRepository
-								.findOne(commentoDaModificare.getCorso());
+								.findOne(commento.getCorso());
 
 						mediationParserImpl.remoteValidationCommentWithSubject(
 								commentoNuovo.getTesto(), commentoNuovo.getId()
