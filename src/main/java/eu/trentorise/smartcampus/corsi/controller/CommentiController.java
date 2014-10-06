@@ -421,9 +421,15 @@ public class CommentiController {
 			if (userId == null)
 				return null;
 
-			return commentiRepository.getCommentoByStudenteApproved(
+			Commento comment = commentiRepository.getCommentoByStudenteApproved(
 					studenteRepository.findOne(userId).getId(),
 					attivitaDidatticaRepository.findOne(id_corso).getAdId());
+			
+			if(comment == null){
+				return null;
+			}else{
+				return comment;
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
