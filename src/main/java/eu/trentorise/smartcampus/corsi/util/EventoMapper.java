@@ -60,7 +60,7 @@ public class EventoMapper {
 	}
 
 	public List<Evento> convert(List<CalendarCdsData> dataCalendarOf2Week,
-			CorsoLaurea cl) {
+			CorsoLaurea cl, long adId) {
 
 		listEvento = new ArrayList<Evento>();
 
@@ -74,6 +74,7 @@ public class EventoMapper {
 			eId.setStop(new Time(eventCal.getTo()));
 			eId.setIdStudente(-1);
 			evento.setEventoId(eId);
+			evento.setAdId(adId);
 			evento.setRoom(eventCal.getRoom());
 			evento.setTeacher(eventCal.getTeacher());
 			evento.setTitle(eventCal.getTitle());

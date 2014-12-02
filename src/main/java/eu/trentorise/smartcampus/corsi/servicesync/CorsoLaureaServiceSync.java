@@ -86,7 +86,7 @@ public class CorsoLaureaServiceSync {
 	 * @return List<Dipartimento>
 	 * @throws IOException
 	 * 
-	 *             Restituisce la lista dei dipartimenti soltanto se sono da sincronizzare
+	 *             Restituisce la lista dei corsi di laurea soltanto se sono da sincronizzare
 	 * 
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/sync/corsolaurea/{id_dipartimento}/all")

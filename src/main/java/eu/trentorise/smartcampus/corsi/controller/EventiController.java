@@ -3,11 +3,9 @@ package eu.trentorise.smartcampus.corsi.controller;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,19 +31,27 @@ import eu.trentorise.smartcampus.corsi.model.Dipartimento;
 import eu.trentorise.smartcampus.corsi.model.Evento;
 import eu.trentorise.smartcampus.corsi.model.EventoId;
 import eu.trentorise.smartcampus.corsi.model.GruppoDiStudio;
+import eu.trentorise.smartcampus.corsi.repository.AttivitaDidatticaRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoCarrieraRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoInteresseRepository;
 import eu.trentorise.smartcampus.corsi.repository.CorsoLaureaRepository;
 import eu.trentorise.smartcampus.corsi.repository.DipartimentoRepository;
 import eu.trentorise.smartcampus.corsi.repository.EventoRepository;
 import eu.trentorise.smartcampus.corsi.repository.GruppoDiStudioRepository;
+import eu.trentorise.smartcampus.corsi.repository.PianoStudiRepository;
 import eu.trentorise.smartcampus.corsi.repository.StudenteRepository;
+import eu.trentorise.smartcampus.corsi.util.AttivitaDidatticaMapper;
 import eu.trentorise.smartcampus.corsi.util.EasyTokenManger;
 import eu.trentorise.smartcampus.corsi.util.EventoMapper;
+import eu.trentorise.smartcampus.corsi.util.UniCourseDegreeMapper;
+import eu.trentorise.smartcampus.corsi.util.UniDepartmentMapper;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.unidataservice.UniversityPlannerService;
+import eu.trentorise.smartcampus.unidataservice.model.AdData;
 import eu.trentorise.smartcampus.unidataservice.model.CalendarCdsData;
+import eu.trentorise.smartcampus.unidataservice.model.CdsData;
+import eu.trentorise.smartcampus.unidataservice.model.FacoltaData;
 
 @Controller("eventiController")
 public class EventiController {
@@ -90,6 +96,12 @@ public class EventiController {
 
 	@Autowired
 	private GruppoDiStudioRepository gruppoDiStudioRepository;
+
+	@Autowired
+	private AttivitaDidatticaRepository attivitaDidatticaRepository;
+
+	@Autowired
+	private PianoStudiRepository pianoStudiRepository;
 
 	@Autowired
 	@Value("${url.studente.service}")
@@ -434,7 +446,7 @@ public class EventiController {
 	throws IOException {
 		try {
 			logger.info("/rest/evento/me");
-			//session.setMaxInactiveInterval(35);
+			// session.setMaxInactiveInterval(35);
 			String token = getToken(request);
 
 			BasicProfileService service = new BasicProfileService(
@@ -454,16 +466,16 @@ public class EventiController {
 			for (CorsoInteresse corsoInteresse : corsiInteresse) {
 				AttivitaDidattica ad = corsoInteresse.getAttivitaDidattica();
 				List<Evento> listEventsInteresse = eventoRepository
-						.findEventoByAd(ad.getDescription(), userId);
+						.findEventoByAdId(ad.getAdId(), userId);
 				logger.info("eventi size = " + corsiInteresse.size());
 
 				for (Evento evento : listEventsInteresse) {
 
 					// today
 					Long date = System.currentTimeMillis();
-					
 
-					if (evento.getEventoId().getDate().getTime() >= date-TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) {
+					if (evento.getEventoId().getDate().getTime() >= date
+							- TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS)) {
 						listEventi.add(evento);
 					}
 
@@ -699,6 +711,140 @@ public class EventiController {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param session
+	 * @return List<Evento>
+	 * @throws IOException
+	 * 
+	 *             Sincronizza gli eventi di di tutti i cds
+	 * 
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/rest/sync/eventoadid/all")
+	public @ResponseBody
+	boolean getSyncEventoAdId(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+
+	throws IOException {
+		try {
+			
+			session.setMaxInactiveInterval(10000);
+
+			logger.info("sync all calendar of 2 week from unidata service");
+			int downloaded = 0;
+			int exception = 0;
+
+			UniversityPlannerService uniConnector = new UniversityPlannerService(
+					unidataaddress);
+
+			EasyTokenManger clientTokenManager = new EasyTokenManger(
+					profileaddress, client_id, client_secret);
+
+			client_auth_token = clientTokenManager.getClientSmartCampusToken();
+			// client_auth_token = "579cd299-dcf9-4e45-bc18-ada61e07f36f";
+			System.out.println("Client auth token: " + client_auth_token);
+
+			List<CorsoLaurea> corsiDiLaurea;
+
+			List<FacoltaData> dataDepartmentsUni = uniConnector
+					.getFacoltaData(client_auth_token);
+
+			if (dataDepartmentsUni == null)
+				return false;
+
+			UniDepartmentMapper departmentMapper = new UniDepartmentMapper();
+			List<Dipartimento> dipartimenti = departmentMapper.convert(
+					dataDepartmentsUni, client_auth_token);
+
+			dipartimenti = dipartimentoRepository.save(dipartimenti);
+
+			if (dipartimenti == null)
+				return false;
+
+			List<Evento> eventsMapped = null;
+
+			for (Dipartimento dip : dipartimenti) {
+				
+				logger.info("Dipartimento: "+dip.getDescription()+" with id = "+dip.getId());
+
+				corsiDiLaurea = new ArrayList<CorsoLaurea>();
+
+				List<CdsData> dataCdsUni = uniConnector.getCdsData(
+						client_auth_token, String.valueOf(dip.getId()));
+
+				UniCourseDegreeMapper cdsMapper = new UniCourseDegreeMapper();
+				corsiDiLaurea = cdsMapper.convert(dataCdsUni,
+						client_auth_token, dipartimentoRepository,
+						pianoStudiRepository);
+
+				corsiDiLaurea = corsoLaureaRepository.save(corsiDiLaurea);
+
+				for (CorsoLaurea cl : corsiDiLaurea) { // per tutti i corsi di
+														// laurea
+					logger.info("Corso di laurea: "+cl.getDescripion()+" with id = "+cl.getCdsId());
+					List<AttivitaDidattica> attivitaDidatticaList;
+
+					List<AdData> adData = uniConnector.getAdData(
+							client_auth_token, String.valueOf(cl.getId()),
+							cl.getAaOrd(), "2014");
+
+					AttivitaDidatticaMapper adMapper = new AttivitaDidatticaMapper();
+					attivitaDidatticaList = adMapper.convert(adData,
+							cl.getCdsId(), cl.getAaOrd(), "2014",
+							client_auth_token);
+
+					attivitaDidatticaList = attivitaDidatticaRepository
+							.save(attivitaDidatticaList);
+
+					List<CalendarCdsData> dataCalendarOfWeek = null;
+
+					for (AttivitaDidattica attivitaDidattica : attivitaDidatticaList) {
+
+						try {
+							dataCalendarOfWeek = uniConnector
+									.getFullAdCalendar(
+											client_auth_token,
+											String.valueOf(attivitaDidattica
+													.getAdId()),
+											System.currentTimeMillis(),
+											System.currentTimeMillis() + 1209600000);
+
+						} catch (Exception e) {
+							logger.error("AttivitaDidattica error: "+attivitaDidattica.getDescription()+" with adid = "+attivitaDidattica.getAdId());
+							exception++;
+							logger.error("Tot. exceptions: "+exception);
+							continue;
+						}
+
+						downloaded++;
+						logger.error("Tot. updated: "+downloaded);
+
+						if (dataCalendarOfWeek != null) {
+							EventoMapper mapperEvento = new EventoMapper();
+							eventsMapped = mapperEvento.convert(
+									dataCalendarOfWeek, cl,
+									attivitaDidattica.getAdId());
+
+							eventoRepository.save(eventsMapped);
+						}
+					}
+
+				}
+
+			}
+
+			logger.info("Events downloaded: " + downloaded);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	/**

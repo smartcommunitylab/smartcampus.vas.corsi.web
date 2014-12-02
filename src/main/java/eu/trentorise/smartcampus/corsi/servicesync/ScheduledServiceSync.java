@@ -97,8 +97,8 @@ public class ScheduledServiceSync {
 	 * 
 	 * @throws IOException
 	 */
-	//@Scheduled(cron = "0 0 0 1 * ?")
-	//@Scheduled(fixedDelay = 1196000000)
+	// @Scheduled(cron = "0 0 0 1 * ?")
+	// @Scheduled(fixedDelay = 1196000000)
 	public @ResponseBody
 	void getDipartimentoAndCdsSync()
 
@@ -112,7 +112,7 @@ public class ScheduledServiceSync {
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
 			client_auth_token = clientTokenManager.getClientSmartCampusToken();
-			 //client_auth_token = "579cd299-dcf9-4e45-bc18-ada61e07f36f";
+			// client_auth_token = "579cd299-dcf9-4e45-bc18-ada61e07f36f";
 			System.out.println("Client auth token: " + client_auth_token);
 			List<FacoltaData> dataDepartmentsUni = uniConnector
 					.getFacoltaData(client_auth_token);
@@ -207,19 +207,35 @@ public class ScheduledServiceSync {
 	void getCalendarFull()
 
 	throws IOException {
-		try {
+try {
+			
 			logger.info("sync all calendar of 2 week from unidata service");
+			int downloaded = 0;
+			int exception = 0;
 
 			UniversityPlannerService uniConnector = new UniversityPlannerService(
 					unidataaddress);
 
 			EasyTokenManger clientTokenManager = new EasyTokenManger(
 					profileaddress, client_id, client_secret);
+
 			client_auth_token = clientTokenManager.getClientSmartCampusToken();
-			//client_auth_token = "579cd299-dcf9-4e45-bc18-ada61e07f36f";
+			// client_auth_token = "579cd299-dcf9-4e45-bc18-ada61e07f36f";
 			System.out.println("Client auth token: " + client_auth_token);
 
-			List<Dipartimento> dipartimenti = dipartimentoRepository.findAll();
+			List<CorsoLaurea> corsiDiLaurea;
+
+			List<FacoltaData> dataDepartmentsUni = uniConnector
+					.getFacoltaData(client_auth_token);
+
+			if (dataDepartmentsUni == null)
+				return;
+
+			UniDepartmentMapper departmentMapper = new UniDepartmentMapper();
+			List<Dipartimento> dipartimenti = departmentMapper.convert(
+					dataDepartmentsUni, client_auth_token);
+
+			dipartimenti = dipartimentoRepository.save(dipartimenti);
 
 			if (dipartimenti == null)
 				return;
@@ -227,43 +243,87 @@ public class ScheduledServiceSync {
 			List<Evento> eventsMapped = null;
 
 			for (Dipartimento dip : dipartimenti) {
+				
+				logger.info("Dipartimento: "+dip.getDescription()+" with id = "+dip.getId());
 
 				corsiDiLaurea = new ArrayList<CorsoLaurea>();
 
-				corsiDiLaurea = corsoLaureaRepository
-						.getCorsiLaureaByDipartimento(dip);
+				List<CdsData> dataCdsUni = uniConnector.getCdsData(
+						client_auth_token, String.valueOf(dip.getId()));
+
+				UniCourseDegreeMapper cdsMapper = new UniCourseDegreeMapper();
+				corsiDiLaurea = cdsMapper.convert(dataCdsUni,
+						client_auth_token, dipartimentoRepository,
+						pianoStudiRepository);
+
+				corsiDiLaurea = corsoLaureaRepository.save(corsiDiLaurea);
 
 				for (CorsoLaurea cl : corsiDiLaurea) { // per tutti i corsi di
 														// laurea
+					logger.info("Corso di laurea: "+cl.getDescripion()+" with id = "+cl.getCdsId());
+					List<AttivitaDidattica> attivitaDidatticaList;
 
-					List<AttivitaDidattica> attivitaDidatticaList = attivitaDidatticaRepository
-							.findAttivitaDidatticaByCdsId(cl.getCdsId());
+					List<AdData> adData = uniConnector.getAdData(
+							client_auth_token, String.valueOf(cl.getId()),
+							cl.getAaOrd(), "2014");
+
+					AttivitaDidatticaMapper adMapper = new AttivitaDidatticaMapper();
+					attivitaDidatticaList = adMapper.convert(adData,
+							cl.getCdsId(), cl.getAaOrd(), "2014",
+							client_auth_token);
+
+					attivitaDidatticaList = attivitaDidatticaRepository
+							.save(attivitaDidatticaList);
+
+					List<CalendarCdsData> dataCalendarOfWeek = null;
 
 					for (AttivitaDidattica attivitaDidattica : attivitaDidatticaList) {
-						List<CalendarCdsData> dataCalendarOfWeek = uniConnector
-								.getFullAdCalendar(client_auth_token, String
-										.valueOf(attivitaDidattica.getAdId()),
-										System.currentTimeMillis(),
-										System.currentTimeMillis() + 1209600000);
 
-						EventoMapper mapperEvento = new EventoMapper();
-						eventsMapped = mapperEvento.convert(dataCalendarOfWeek,
-								cl);
+						try {
+							
+							downloaded++;
+							logger.error("Tot. attempts: "+downloaded);
+							
+							dataCalendarOfWeek = uniConnector
+									.getFullAdCalendar(
+											client_auth_token,
+											String.valueOf(attivitaDidattica
+													.getAdId()),
+											System.currentTimeMillis(),
+											System.currentTimeMillis() + 1209600000);
 
-						eventoRepository.save(eventsMapped);
+						} catch (Exception e) {
+							logger.error("AttivitaDidattica error: "+attivitaDidattica.getDescription()+" with adid = "+attivitaDidattica.getAdId());
+							exception++;
+							logger.error("Tot. exceptions: "+exception+" / "+downloaded);
+							continue;
+						}
+
+						
+
+						if (dataCalendarOfWeek != null) {
+							EventoMapper mapperEvento = new EventoMapper();
+							eventsMapped = mapperEvento.convert(
+									dataCalendarOfWeek, cl,
+									attivitaDidattica.getAdId());
+
+							eventoRepository.save(eventsMapped);
+						}
 					}
 
 				}
 
 			}
 
-			logger.info("Oh yeah! I am just finished the synchronization of events! I want a beer...");
+			logger.info("Events downloaded: " + downloaded);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
+			return;
 		}
 		return;
+
 	}
 
 	/**
@@ -273,7 +333,7 @@ public class ScheduledServiceSync {
 	 */
 	@SuppressWarnings("deprecation")
 	@Scheduled(cron = "0 0 1 * * ?")
-	//@Scheduled(cron = "0 0 * * * *")
+	// @Scheduled(cron = "0 0 * * * *")
 	public @ResponseBody
 	void getCalendarWeek()
 
@@ -314,11 +374,11 @@ public class ScheduledServiceSync {
 						do {
 
 							dataCalendarOfWeek = null;
-								dataCalendarOfWeek = uniConnector
-										.getCdsCalendar(client_auth_token,
-												String.valueOf(cl.getCdsId()),
-												String.valueOf(year));
-								tentativi++;
+							dataCalendarOfWeek = uniConnector.getCdsCalendar(
+									client_auth_token,
+									String.valueOf(cl.getCdsId()),
+									String.valueOf(year));
+							tentativi++;
 
 						} while (tentativi <= 2
 								&& dataCalendarOfWeek.size() == 0);
