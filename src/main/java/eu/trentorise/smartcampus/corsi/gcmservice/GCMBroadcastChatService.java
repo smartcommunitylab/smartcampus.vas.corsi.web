@@ -60,8 +60,9 @@ public class GCMBroadcastChatService {
 
 	// The SENDER_ID here is the "Browser Key" that was generated when I
 	// created the API keys for my Google APIs project.
-	private static final String SENDER_ID = "AIzaSyAB0Vz4H7385yy1T_nxTg0gPnP1ao7JRxg";
-
+	//private static final String SENDER_ID = "AIzaSyAB0Vz4H7385yy1T_nxTg0gPnP1ao7JRxg"; // TEST
+	private static final String SENDER_ID = "AIzaSyBmKVWmFzh2JHT7q1MLmQRQ7jC4AhkRBDs";
+	
 	// This is a *cheat* It is a hard-coded registration ID from an Android
 	// device
 	// that registered itself with GCM using the same project id shown above.

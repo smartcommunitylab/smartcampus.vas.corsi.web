@@ -466,7 +466,7 @@ public class EventiController {
 			for (CorsoInteresse corsoInteresse : corsiInteresse) {
 				AttivitaDidattica ad = corsoInteresse.getAttivitaDidattica();
 				List<Evento> listEventsInteresse = eventoRepository
-						.findEventoByAdId(ad.getAdId(), userId);
+						.findEventoByAd(ad.getDescription(), userId);
 				logger.info("eventi size = " + corsiInteresse.size());
 
 				for (Evento evento : listEventsInteresse) {
@@ -826,8 +826,7 @@ public class EventiController {
 						if (dataCalendarOfWeek != null) {
 							EventoMapper mapperEvento = new EventoMapper();
 							eventsMapped = mapperEvento.convert(
-									dataCalendarOfWeek, cl,
-									attivitaDidattica.getAdId());
+									dataCalendarOfWeek, cl);
 
 							eventoRepository.save(eventsMapped);
 						}

@@ -19,7 +19,7 @@ import javax.persistence.Table;
 		@NamedQuery(name = "Evento.findEventoByCds", query = "select e from Evento e where e.cds = ?1"),
 		@NamedQuery(name = "Evento.findEventoByAdAndYear", query = "select e from Evento e, CorsoCarriera cc where e.title = ?1 and e.yearCds <= ?2"),
 		@NamedQuery(name = "Evento.findEventoByAd", query = "select e from Evento e where (e.title = ?1) and (e.eventoId.idStudente = ?2 or e.eventoId.idStudente = -1 or e.eventoId.idEventAd = -2)"),
-		@NamedQuery(name = "Evento.findEventoByAdId", query = "select e from Evento e where (e.adId = ?1) and (e.eventoId.idStudente = ?2 or e.eventoId.idStudente = -1 or e.eventoId.idEventAd = -2)"),
+//		@NamedQuery(name = "Evento.findEventoByAdId", query = "select e from Evento e where (e.adId = ?1) and (e.eventoId.idStudente = ?2 or e.eventoId.idStudente = -1 or e.eventoId.idEventAd = -2)"),
 		@NamedQuery(name = "Evento.findEventoByIdClass", query = "select e from Evento e where (e.eventoId.idEventAd = ?1) and (e.eventoId.date = ?2) and (e.eventoId.start = ?3) and (e.eventoId.stop = ?4) and (e.eventoId.stop = ?5)"),
 		@NamedQuery(name = "Evento.selectEventsGdsOfStudent", query = "select e from Evento e where (e.eventoId.idEventAd = -2) and (e.gruppo = ?1) and (e.eventoId.idStudente = ?2)"),
 		@NamedQuery(name = "Evento.findAttByIdGds", query = "select e from Evento e where e.gruppo = ?1"),
@@ -40,8 +40,8 @@ public class Evento {
 	@Column(name = "AD_COD")
 	private long adCod;
 	
-	@Column(name = "AD_ID", nullable = true)
-	private long adId;
+//	@Column(name = "AD_ID", nullable = true)
+//	private long adId;
 
 	@Column(name = "YEAR")
 	private int yearCds;
@@ -142,13 +142,13 @@ public class Evento {
 
 	
 	
-	public long getAdId() {
-		return adId;
-	}
-
-	public void setAdId(long adId) {
-		this.adId = adId;
-	}
+//	public long getAdId() {
+//		return adId;
+//	}
+//
+//	public void setAdId(long adId) {
+//		this.adId = adId;
+//	}
 
 	public String getPersonalDescription() {
 		return personalDescription;
