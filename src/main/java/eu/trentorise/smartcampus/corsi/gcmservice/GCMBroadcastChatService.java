@@ -28,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -174,12 +175,12 @@ public class GCMBroadcastChatService {
 		return false;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/rest/gcm/messagecommunicator/gds/{gds_id}/text/{text}")
+	@RequestMapping(method = RequestMethod.POST, value = "/rest/gcm/messagecommunicator/gds/{gds_id}/text")
 	public @ResponseBody
 	boolean postTextChatCommunicator(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("gds_id") Long gds_id,
-			@PathVariable("text") String text)
+			@RequestBody String text)
 
 	throws IOException, SecurityException, ProfileServiceException {
 
