@@ -541,11 +541,11 @@ public class GruppiStudioController {
 			n.setContent(mapGruppo);
 
 			// ottengo il client token
-			EasyTokenManger tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
-			communicatorConnector.sendAppNotification(n, appName, users,
-			tkm.getClientSmartCampusToken());
-
-			communicatorConnector.sendAppNotification(n, appName, users,tkm.getClientSmartCampusToken());
+//			EasyTokenManger tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
+//			communicatorConnector.sendAppNotification(n, appName, users,
+//			tkm.getClientSmartCampusToken());
+//
+//			communicatorConnector.sendAppNotification(n, appName, users,tkm.getClientSmartCampusToken());
 
 			gruppodistudio.setId(-1); // setto l'id a -1 per evitare che il
 										// commento venga sovrascritto
